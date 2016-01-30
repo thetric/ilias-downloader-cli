@@ -13,15 +13,19 @@ jar {
     version = '0.0.1-SNAPSHOT'
     manifest {
         attributes(
-                'Main-Class': 'de.adesso.devazubis.berechtigungsmanagement.App',
+                'Main-Class': 'de.adesso.azubis.iliasdownloader.v3.Main',
                 'Implementation-Version': version
         )
     }
 }
 
 dependencies {
+    compile 'org.controlsfx:controlsfx:8.40.10'
 
     compile 'org.projectlombok:lombok:1.16.6'
+
+    // json mapping
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.0'
 
     // logging libs
     compile('org.apache.logging.log4j:log4j-api:2.5')
@@ -39,3 +43,11 @@ repositories {
 //    maven { url 'https://code.lds.org/nexus/content/groups/main-repo' }
 }
 
+// IntelliJ config
+idea {
+    project {
+        //if you want to set specific jdk and language level
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
+}
