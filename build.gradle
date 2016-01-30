@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+group 'de.adesso.azubis.iliasdownloader.v3'
+version '0.0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar {
+    baseName = 'Ilias Downloader 3'
+    version = '0.0.1-SNAPSHOT'
+    manifest {
+        attributes(
+                'Main-Class': 'de.adesso.devazubis.berechtigungsmanagement.App',
+                'Implementation-Version': version
+        )
+    }
+}
+
+dependencies {
+
+    compile 'org.projectlombok:lombok:1.16.6'
+
+    // logging libs
+    compile('org.apache.logging.log4j:log4j-api:2.5')
+    compile('org.apache.logging.log4j:log4j-core:2.5')
+
+    // test
+    testCompile 'junit:junit:4.12'
+}
+
+
+repositories {
+    mavenCentral()
+    jcenter()
+//    maven { url 'http://repo.spring.io/libs-snapshot' }
+//    maven { url 'https://code.lds.org/nexus/content/groups/main-repo' }
+}
+
