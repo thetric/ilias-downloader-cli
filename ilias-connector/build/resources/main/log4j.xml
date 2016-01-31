@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- Appenders -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="email" class="org.apache.log4j.net.SMTPAppender">
+        <param name="BufferSize" value="512"/>
+        <param name="SMTPHost" value="mx.adesso.de"/>
+        <param name="From" value="weihnachtstool-fehler@adesso.de"/>
+        <param name="To"
+               value="felix.ress@adesso.de, kevin.krummenauer@adesso.de, thomas.schroeer@adesso.de, nicolas.petrol@adesso.de, florian.sommer@adesso.de"/>
+        <param name="Subject" value="Fehler im Weihnachtstool"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{ISO8601}]%n%n%-5p%n%n%c%n%n%m%n%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="error"/>
+            <param name="LevelMax" value="fatal"/>
+        </filter>
+    </appender>
+
+    <appender name="file" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="logs/logfile.log"/>
+        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="org.hibernate.SQL">
+        <level value="info"/>
+    </logger>
+
+    <logger name="org.hibernate">
+        <level value="info"/>
+    </logger>
+
+    <logger name="org.hibernate.type">
+        <level value="info"/>
+    </logger>
+
+    <!--Root Logger -->
+    <root>
+        <priority value="debug"/>
+        <appender-ref ref="console"/>
+        <!-- <appender-ref ref="email" /> -->
+        <appender-ref ref="file"/>
+    </root>
+</log4j:configuration>

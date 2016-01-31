@@ -1,1 +1,5 @@
-rootProject.name = 'ilias-downloader-3-jfx'
+rootProject.name = 'ilias-downloader-v3-jfx'
+
+include 'ilias-connector'
+include 'ilias-downloader-ui-jfx'
+

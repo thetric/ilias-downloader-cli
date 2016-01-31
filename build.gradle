@@ -1,52 +1,70 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-
-group 'de.adesso.azubis.iliasdownloader.v3'
+group 'de.adesso.devazubis.iliasdownloader.v3'
 version '0.0.1-SNAPSHOT'
+
+apply plugin: 'java'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-jar {
-    baseName = 'Ilias Downloader 3'
-    version = '0.0.1-SNAPSHOT'
-    manifest {
-        attributes(
-                'Main-Class': 'de.adesso.azubis.iliasdownloader.v3.Main',
-                'Implementation-Version': version
-        )
+repositories {
+    mavenCentral()
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    version '0.0.1-SNAPSHOT'
+
+    dependencies {
+        compile 'org.projectlombok:lombok:1.16.6'
+
+        // logging libs
+        compile 'org.apache.logging.log4j:log4j-api:2.5'
+        compile 'org.apache.logging.log4j:log4j-core:2.5'
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
     }
 }
 
-dependencies {
-    compile 'org.controlsfx:controlsfx:8.40.10'
+project(":ilias-connector") {
+    description = 'Schnittstelle zum Ilias'
 
-    compile 'org.projectlombok:lombok:1.16.6'
+    dependencies {
+        compile 'commons-io:commons-io:2.4'
+        compile 'commons-codec:commons-codec:1.10'
+        compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.0'
+        compile 'org.simpleframework:simple-xml:2.7.1'
 
-    // json mapping
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.0'
+        // test
+        testCompile 'junit:junit:4.12'
+    }
 
-    // logging libs
-    compile('org.apache.logging.log4j:log4j-api:2.5')
-    compile('org.apache.logging.log4j:log4j-core:2.5')
-
-    // test
-    testCompile 'junit:junit:4.12'
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
+    }
 }
 
+project(":ilias-downloader-ui-jfx") {
+    description = 'JavaFX UI des Ilias Downloaders'
 
-repositories {
-    mavenCentral()
-    jcenter()
-//    maven { url 'http://repo.spring.io/libs-snapshot' }
-//    maven { url 'https://code.lds.org/nexus/content/groups/main-repo' }
+    dependencies {
+        compile 'org.controlsfx:controlsfx:8.40.10'
+
+        // json mapping
+        compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.0'
+    }
 }
 
 // IntelliJ config
 idea {
     project {
-        //if you want to set specific jdk and language level
         jdkName = '1.8'
         languageLevel = '1.8'
     }
