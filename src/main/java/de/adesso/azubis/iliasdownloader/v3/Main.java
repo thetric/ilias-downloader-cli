@@ -8,7 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import java.io.IOException;
 
 /**
- * Created by Dominik Broj on 30.01.2016.
+ * Startklasse der Anwendung.
  *
  * @author Dominik Broj
  * @since 30.01.2016
@@ -21,6 +21,7 @@ public final class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
+		log.info("Creating intro wizard...");
 		new IntroWizard();
 	}
 }

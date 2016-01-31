@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import lombok.extern.log4j.Log4j2;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
  * @author Dominik Broj
  * @since 30.01.2016
  */
+@Log4j2
 final class LicenseWizardPane extends WizardPane {
 	private static final String FXML_FILE = "/fxml/disclaimer.fxml";
 
@@ -43,9 +45,14 @@ final class LicenseWizardPane extends WizardPane {
 	@Override
 	public void onEnteringPage(Wizard wizard) {
 		wizard.setTitle("Ilias Downloader 3 - Lizenz");
-		wizard.setInvalid(true);
+		wizard.setInvalid(!licenseAgreementCheckbox.isSelected());
 		licenseAgreementCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			wizard.setInvalid(!newValue);
 		});
+	}
+
+	@Override
+	public void onExitingPage(Wizard wizard) {
+		wizard.setInvalid(false);
 	}
 }

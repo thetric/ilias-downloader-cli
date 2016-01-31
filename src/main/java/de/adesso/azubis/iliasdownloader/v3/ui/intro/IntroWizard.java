@@ -1,6 +1,7 @@
 package de.adesso.azubis.iliasdownloader.v3.ui.intro;
 
 import javafx.scene.control.ButtonType;
+import lombok.extern.log4j.Log4j2;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 
@@ -12,21 +13,16 @@ import java.io.IOException;
  * @author Dominik Broj
  * @since 30.01.2016
  */
+@Log4j2
 public final class IntroWizard {
-
 	public IntroWizard() throws IOException {
-		// Create pages. Here for simplicity we just create and instance of WizardPane.
+		final WelcomeWizardPane page0 = new WelcomeWizardPane();
 		WizardPane page1 = new LicenseWizardPane();
-		WizardPane page2 = new WizardPane();
-		WizardPane page3 = new WizardPane();
+		final ServerSettingsWizardPane page2 = new ServerSettingsWizardPane();
+		final FinishWizardPane page3 = new FinishWizardPane();
 
-		// create wizard
 		Wizard wizard = new Wizard();
-
-		// create and assign the flow
-		wizard.setFlow(new Wizard.LinearFlow(page1, page2, page3));
-
-		// show wizard and wait for response
+		wizard.setFlow(new Wizard.LinearFlow(page0, page1, page2, page3));
 		wizard.showAndWait().ifPresent(result -> {
 			if (result == ButtonType.FINISH) {
 				System.out.println("Wizard finished, settings: " + wizard.getSettings());
