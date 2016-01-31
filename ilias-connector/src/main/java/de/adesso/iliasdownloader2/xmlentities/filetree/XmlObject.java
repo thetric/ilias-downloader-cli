@@ -10,6 +10,7 @@ import org.simpleframework.xml.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.adesso.iliasdownloader2.util.Functions.cleanFileName;
 import static de.adesso.iliasdownloader2.util.Functions.iliasXmlStringToDate;
@@ -86,11 +87,7 @@ public class XmlObject {
 	}
 
 	public List<Long> getRefIds() {
-		val result = new LinkedList<Long>();
-		for (val x : references) {
-			result.add(x.getRefId());
-		}
-		return result;
+		return references.stream().map(XmlReference::getRefId).collect(Collectors.toCollection(LinkedList::new));
 	}
 
 	public boolean isFolder() {

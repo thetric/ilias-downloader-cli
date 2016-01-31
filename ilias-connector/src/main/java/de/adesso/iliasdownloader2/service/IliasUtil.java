@@ -75,9 +75,7 @@ public class IliasUtil {
 			List<String> cookies = connection.getHeaderFields().get("Set-Cookie");
 
 			if (cookies == null) {
-				InputStream in = null;
-				try {
-					in = connection.getInputStream();
+				try (InputStream in = connection.getInputStream()) {
 				} catch (SSLException e) {
 //					Throwable t = e;
 //					String exceptionString = "";
@@ -90,11 +88,6 @@ public class IliasUtil {
 //					}while(t != null);
 //					throw new IliasHTTPSException("Could not generate SSL Session, try using Java 1.8 or higher, you use Java " + System.getProperty("java.version"), e);
 					throwDefaultHTTPSException(e);
-				}
-				try {
-					in.close();
-				} catch (Exception e) {
-
 				}
 			}
 
