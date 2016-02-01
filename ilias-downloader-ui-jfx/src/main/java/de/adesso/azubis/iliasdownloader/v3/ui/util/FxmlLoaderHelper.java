@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * Hilfsklasse, um FXML mit dem Standard-CSS und Font Awesome zu laden.
@@ -33,6 +34,7 @@ public final class FxmlLoaderHelper {
 	 */
 	public static Parent load(Object ctrl, String fxml) throws IOException {
 		URL url = FxmlLoaderHelper.class.getResource(fxml);
+		Objects.requireNonNull(url, "url");
 		FXMLLoader loader = new FXMLLoader(url);
 		loader.setController(ctrl);
 		final Parent parent = loader.load();
