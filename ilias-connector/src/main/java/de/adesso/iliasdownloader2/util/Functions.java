@@ -6,12 +6,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//import javax.xml.bind.JAXBContext;
-//import javax.xml.bind.Marshaller;
-//import javax.xml.bind.Unmarshaller;
-//import javax.xml.parsers.SAXParserFactory;
-//import javax.xml.transform.sax.SAXSource;
-
+@Deprecated
 public class Functions {
 
 	private static final SimpleDateFormat simpleDateFormatIlias = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

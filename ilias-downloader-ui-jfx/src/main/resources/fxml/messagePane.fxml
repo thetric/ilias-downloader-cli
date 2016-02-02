@@ -10,5 +10,4 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
     <Label fx:id="message" wrapText="true"/>
-    <WebView fx:id="webView" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS"/>
 </VBox>

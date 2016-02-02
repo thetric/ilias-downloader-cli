@@ -1,7 +1,7 @@
 package de.adesso.iliasdownloader2.service;
 
-import de.adesso.iliasdownloader2.exception.IliasException;
-import de.adesso.iliasdownloader2.exception.IliasHTTPSException;
+import de.adesso.iliasdownloader3.exception.IliasException;
+import de.adesso.iliasdownloader3.exception.IliasHttpsException;
 
 import javax.net.ssl.SSLException;
 import java.io.IOException;
@@ -12,9 +12,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class IliasUtil {
-
-
+@Deprecated
+public final class IliasUtil {
 	private static final String LOGIN_PHP = "login.php";
 	private static final String WEBSERVICE_SOAP_SERVER_PHP = "webservice/soap/server.php";
 	private static final String WEBDAV_PHP = "webdav.php";
@@ -86,7 +85,7 @@ public class IliasUtil {
 //						}
 //						t = t.getCause();
 //					}while(t != null);
-//					throw new IliasHTTPSException("Could not generate SSL Session, try using Java 1.8 or higher, you use Java " + System.getProperty("java.version"), e);
+//					throw new IliasHttpsException("Could not generate SSL Session, try using Java 1.8 or higher, you use Java " + System.getProperty("java.version"), e);
 					throwDefaultHTTPSException(e);
 				}
 			}
@@ -108,7 +107,7 @@ public class IliasUtil {
 	}
 
 	public static void throwDefaultHTTPSException(Throwable cause) {
-		throw new IliasHTTPSException("Could not generate SSL Session, try using Java 1.8 or higher, you use Java " + System.getProperty("java.version"), cause);
+		throw new IliasHttpsException("Could not generate SSL Session, try using Java 1.8 or higher, you use Java " + System.getProperty("java.version"), cause);
 	}
 
 //	private static String doHTTPRequest(String loginURL) {

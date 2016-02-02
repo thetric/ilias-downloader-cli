@@ -1,7 +1,8 @@
 package de.adesso.iliasdownloader2.util;
 
-import de.adesso.iliasdownloader2.xmlentities.exercise.XmlExerciseFile;
-import de.adesso.iliasdownloader2.xmlentities.filetree.XmlObject;
+import de.adesso.iliasdownloader3.service.SyncState;
+import de.adesso.iliasdownloader3.xmlentities.exercise.XmlExerciseFile;
+import de.adesso.iliasdownloader3.xmlentities.filetree.XmlObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.io.File;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileObject {
+public final class FileObject {
 
 	private long refId;
 	private File targetFile;

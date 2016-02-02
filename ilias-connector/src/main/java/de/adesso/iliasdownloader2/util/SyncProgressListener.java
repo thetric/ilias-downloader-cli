@@ -1,6 +1,6 @@
 package de.adesso.iliasdownloader2.util;
 
-
+@Deprecated
 public interface SyncProgressListener {
 
 	void progress(int percent);

@@ -1,9 +1,11 @@
 package de.adesso.iliasdownloader2.service;
 
-import de.adesso.iliasdownloader2.exception.IliasException;
+import de.adesso.iliasdownloader3.exception.IliasException;
 import de.adesso.iliasdownloader2.util.*;
-import de.adesso.iliasdownloader2.xmlentities.exercise.XmlExercise;
-import de.adesso.iliasdownloader2.xmlentities.filetree.XmlObject;
+import de.adesso.iliasdownloader3.service.DownloadMethod;
+import de.adesso.iliasdownloader3.service.SyncState;
+import de.adesso.iliasdownloader3.xmlentities.exercise.XmlExercise;
+import de.adesso.iliasdownloader3.xmlentities.filetree.XmlObject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +20,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @NoArgsConstructor
-public class FileSync {
+@Deprecated
+public final class FileSync {
 
 	@Setter
 	private String baseDirectory;
@@ -260,9 +263,8 @@ public class FileSync {
 		file = updateFileName(new File(file.getAbsolutePath() + "/" + f.getFileNameClean()));
 
 		final long refId = f.getRefIdOne();
-		saveBase64StringToFile(new FileObject(f.getRefIdOne(), file, f.getUpdatedDate().getTime(), f.getFileSize(), f, null), downloadAllowed, downloadMethod, object -> {
-			return iliasSoapService.getFile(refId).getContent();//in diese Callback Methode ausgelagert, wird nur aufgerufen, wenn die Datei nicht schon lokal existiert
-		});
+		//in diese Callback Methode ausgelagert, wird nur aufgerufen, wenn die Datei nicht schon lokal existiert
+		saveBase64StringToFile(new FileObject(f.getRefIdOne(), file, f.getUpdatedDate().getTime(), f.getFileSize(), f, null), downloadAllowed, downloadMethod, object -> iliasSoapService.getFile(refId).getContent());
 
 	}
 

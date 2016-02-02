@@ -1,10 +1,10 @@
 package de.adesso.azubis.iliasdownloader.v3.ui.intro;
 
 import de.adesso.azubis.iliasdownloader.v3.ui.util.FxmlLoaderHelper;
-import de.adesso.iliasdownloader2.exception.IliasException;
+import de.adesso.iliasdownloader3.exception.IliasException;
 import de.adesso.iliasdownloader2.service.IliasUtil;
-import de.adesso.iliasdownloader2.util.DownloadMethod;
-import de.adesso.iliasdownloader2.util.LoginType;
+import de.adesso.iliasdownloader3.service.DownloadMethod;
+import de.adesso.iliasdownloader3.service.LoginType;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;

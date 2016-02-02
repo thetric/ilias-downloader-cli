@@ -5,6 +5,7 @@ import lombok.Data;
 import java.io.*;
 
 @Data
+@Deprecated
 public class CircularStream {
 
 	private InputStream inputStream;
