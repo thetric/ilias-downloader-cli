@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import org.controlsfx.control.ToggleSwitch?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0"
+            prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+        <ToolBar fx:id="toolBar">
+            <Button fx:id="syncButton" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                    prefWidth="180.0" text="Synchronisieren"/>
+            <ToggleSwitch fx:id="downloadToggleSwitch" selected="true" text="Inhalte herunterladen">
+                <padding>
+                    <Insets top="5.0"/>
+                </padding>
+            </ToggleSwitch>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <MenuButton fx:id="settingsMenuButton" maxWidth="-Infinity" mnemonicParsing="false">
+                <items>
+                    <MenuItem fx:id="connectSettingsItem" mnemonicParsing="false" text="Verbindungseinstellungen"/>
+                    <MenuItem fx:id="downloadSettingsItem" mnemonicParsing="false" text="Download-Einstellungen"/>
+                    <SeparatorMenuItem mnemonicParsing="false"/>
+                    <Menu fx:id="helpItem" mnemonicParsing="false" text="Hilfe">
+                        <MenuItem fx:id="aboutAppItem" mnemonicParsing="false" text="Über Ilias Downloader 3"/>
+                        <MenuItem fx:id="feedbackItem" mnemonicParsing="false"
+                                  text="Problem melden, Feedback geben..."/>
+                        <MenuItem fx:id="goToWebsiteItem" mnemonicParsing="false" text="Website"/>
+                        <MenuItem fx:id="goToAndroidAppItem" mnemonicParsing="false" text="Android App"/>
+                    </Menu>
+                </items>
+            </MenuButton>
+        </ToolBar>
+    </top>
+    <center>
+        <TreeTableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                       BorderPane.alignment="CENTER">
+            <columns>
+                <TreeTableColumn prefWidth="400.0" text="Name"/>
+                <TreeTableColumn fx:id="syncTreeTableView" prefWidth="330.0" text="Ordner"/>
+                <TreeTableColumn prefWidth="100.0" text="Größe (MiB)"/>
+                <TreeTableColumn minWidth="180.0" prefWidth="-1.0" text="Änderungszeitpunkt"/>
+            </columns>
+        </TreeTableView>
+    </center>
+</BorderPane>

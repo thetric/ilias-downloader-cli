@@ -64,6 +64,7 @@ project(":ilias-downloader-ui-jfx") {
         compile project(":ilias-connector")
 
         compile 'org.controlsfx:controlsfx:8.40.10'
+        compile 'de.jensd:fontawesomefx:8.9'
 
         // xml mapping
         compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.0'
