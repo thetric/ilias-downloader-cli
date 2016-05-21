@@ -8,16 +8,16 @@ import java.io.*;
 @Deprecated
 public class CircularStream {
 
-	private InputStream inputStream;
-	private OutputStream outputStream;
+    private InputStream inputStream;
+    private OutputStream outputStream;
 
-	public CircularStream() {
-		try {
-			PipedInputStream p = new PipedInputStream();
-			inputStream = p;
-			outputStream = new PipedOutputStream(p);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public CircularStream() {
+        try {
+            PipedInputStream p = new PipedInputStream();
+            inputStream = p;
+            outputStream = new PipedOutputStream(p);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

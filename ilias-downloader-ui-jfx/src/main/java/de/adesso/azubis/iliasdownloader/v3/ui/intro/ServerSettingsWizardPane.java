@@ -27,60 +27,60 @@ import java.io.IOException;
  */
 @Log4j2
 final class ServerSettingsWizardPane extends WizardPane {
-	private static final String FXML_FILE = "/fxml/serverSettings.fxml";
+    private static final String FXML_FILE = "/fxml/serverSettings.fxml";
 
-	@FXML
-	private TextField iliasUrlField, clientIdField;
-	@FXML
-	private ComboBox<LoginType> loginMethodsBox;
-	@FXML
-	private ComboBox<DownloadMethod> downloadMethodsBox;
-	@FXML
-	private Button getClientIdButton;
+    @FXML
+    private TextField iliasUrlField, clientIdField;
+    @FXML
+    private ComboBox<LoginType> loginMethodsBox;
+    @FXML
+    private ComboBox<DownloadMethod> downloadMethodsBox;
+    @FXML
+    private Button getClientIdButton;
 
-	@FXML
-	private Label iliasServerUrlValidationLabel;
+    @FXML
+    private Label iliasServerUrlValidationLabel;
 
-	public ServerSettingsWizardPane() throws IOException {
-		Parent content = FxmlLoaderHelper.load(this, FXML_FILE);
-		setContent(content);
-		setHeaderText("Verbindungseinstellungen");
+    public ServerSettingsWizardPane() throws IOException {
+        Parent content = FxmlLoaderHelper.load(this, FXML_FILE);
+        setContent(content);
+        setHeaderText("Verbindungseinstellungen");
 
-		loginMethodsBox.getItems().setAll(LoginType.values());
-		loginMethodsBox.getSelectionModel().select(LoginType.LDAP);
-		downloadMethodsBox.getItems().setAll(DownloadMethod.values());
-		downloadMethodsBox.getSelectionModel().select(DownloadMethod.WEBSERVICE);
-	}
+        loginMethodsBox.getItems().setAll(LoginType.values());
+        loginMethodsBox.getSelectionModel().select(LoginType.LDAP);
+        downloadMethodsBox.getItems().setAll(DownloadMethod.values());
+        downloadMethodsBox.getSelectionModel().select(DownloadMethod.WEBSERVICE);
+    }
 
-	private void checkIliasServerUrl(Wizard wizard, String url) {
-		boolean error = false;
-		try {
-			final String clientId = IliasUtil.findClientByLoginPageOrWebserviceURL(url);
-			clientIdField.setText(clientId);
-			iliasServerUrlValidationLabel.setText("Die Ilias Loginseite ist gültig");
-		} catch (IliasException iliasEx) {
-			log.error("Ungültige Ilias Url", iliasEx.getMessage());
-			error = true;
-			iliasServerUrlValidationLabel.setText("Trage bitte eine gültige URL für die Ilias Loginseite ein und drücke Enter");
-		}
-		wizard.setInvalid(error);
-	}
+    private void checkIliasServerUrl(Wizard wizard, String url) {
+        boolean error = false;
+        try {
+            final String clientId = IliasUtil.findClientByLoginPageOrWebserviceURL(url);
+            clientIdField.setText(clientId);
+            iliasServerUrlValidationLabel.setText("Die Ilias Loginseite ist gültig");
+        } catch (IliasException iliasEx) {
+            log.error("Ungültige Ilias Url", iliasEx.getMessage());
+            error = true;
+            iliasServerUrlValidationLabel.setText("Trage bitte eine gültige URL für die Ilias Loginseite ein und drücke Enter");
+        }
+        wizard.setInvalid(error);
+    }
 
-	@Override
-	public void onEnteringPage(Wizard wizard) {
-		wizard.setTitle("Ilias Downloader 3 - ILIAS Servereinstellungen");
+    @Override
+    public void onEnteringPage(Wizard wizard) {
+        wizard.setTitle("Ilias Downloader 3 - ILIAS Servereinstellungen");
 
-		checkIliasServerUrl(wizard, iliasUrlField.getText());
-		iliasUrlField.requestFocus();
+        checkIliasServerUrl(wizard, iliasUrlField.getText());
+        iliasUrlField.requestFocus();
 
-		final EventHandler<ActionEvent> checkIliasUrlHandler = e -> checkIliasServerUrl(wizard, iliasUrlField.getText());
-		iliasUrlField.setOnAction(checkIliasUrlHandler);
-		getClientIdButton.setOnAction(checkIliasUrlHandler);
-	}
+        final EventHandler<ActionEvent> checkIliasUrlHandler = e -> checkIliasServerUrl(wizard, iliasUrlField.getText());
+        iliasUrlField.setOnAction(checkIliasUrlHandler);
+        getClientIdButton.setOnAction(checkIliasUrlHandler);
+    }
 
-	@Override
-	public void onExitingPage(Wizard wizard) {
-		wizard.setInvalid(false);
-		wizard.invalidProperty().unbind();
-	}
+    @Override
+    public void onExitingPage(Wizard wizard) {
+        wizard.setInvalid(false);
+        wizard.invalidProperty().unbind();
+    }
 }

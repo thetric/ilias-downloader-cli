@@ -21,19 +21,19 @@ import static de.adesso.iliasdownloader2.util.Functions.cleanFileName;
 @NoArgsConstructor
 public class XmlExerciseFile {
 
-	@Attribute(name = "size", required = false)
+    @Attribute(name = "size", required = false)
 //	@XmlAttribute(name="size")
-	private long fileSize;
+    private long fileSize;
 
-	@Element(name = "Filename", required = false)
+    @Element(name = "Filename", required = false)
 //	@XmlElement(name="Filename")
-	private String fileName;
+    private String fileName;
 
-	@Element(name = "Content", required = false)
+    @Element(name = "Content", required = false)
 //	@XmlElement(name="Content")
-	private String content;
+    private String content;
 
-	public String getFileNameClean() {
-		return cleanFileName(fileName);
-	}
+    public String getFileNameClean() {
+        return cleanFileName(fileName);
+    }
 }

@@ -21,31 +21,31 @@ import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
  * @since 31.01.2016
  */
 public final class UserPreferenceServiceImpl implements UserPreferenceService {
-	private final XmlMapper xmlMapper;
-	private final String settingsFilename;
+    private final XmlMapper xmlMapper;
+    private final String settingsFilename;
 
-	public UserPreferenceServiceImpl(@NonNull String userSettingsFilename) {
-		this.settingsFilename = userSettingsFilename;
+    public UserPreferenceServiceImpl(@NonNull String userSettingsFilename) {
+        this.settingsFilename = userSettingsFilename;
 
-		xmlMapper = new XmlMapper();
-		xmlMapper.enable(INDENT_OUTPUT);
-		xmlMapper.disable(FAIL_ON_EMPTY_BEANS);
-		xmlMapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
-	}
+        xmlMapper = new XmlMapper();
+        xmlMapper.enable(INDENT_OUTPUT);
+        xmlMapper.disable(FAIL_ON_EMPTY_BEANS);
+        xmlMapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
+    }
 
-	@Override
-	public UserPreferences loadUserPreferences() throws IOException {
-		final Path iliasDownloaderSettingsPath = Paths.get(settingsFilename);
-		try (final InputStream inputStream = Files.newInputStream(iliasDownloaderSettingsPath)) {
-			return xmlMapper.readValue(inputStream, UserPreferences.class);
-		}
-	}
+    @Override
+    public UserPreferences loadUserPreferences() throws IOException {
+        final Path iliasDownloaderSettingsPath = Paths.get(settingsFilename);
+        try (final InputStream inputStream = Files.newInputStream(iliasDownloaderSettingsPath)) {
+            return xmlMapper.readValue(inputStream, UserPreferences.class);
+        }
+    }
 
-	@Override
-	public void saveUserPreferenfes(@NonNull UserPreferences userPreferences) throws IOException {
-		final Path iliasDownloaderSettingsPath = Paths.get(settingsFilename);
-		try (OutputStream outputStream = Files.newOutputStream(iliasDownloaderSettingsPath)) {
-			xmlMapper.writeValue(outputStream, userPreferences);
-		}
-	}
+    @Override
+    public void saveUserPreferenfes(@NonNull UserPreferences userPreferences) throws IOException {
+        final Path iliasDownloaderSettingsPath = Paths.get(settingsFilename);
+        try (OutputStream outputStream = Files.newOutputStream(iliasDownloaderSettingsPath)) {
+            xmlMapper.writeValue(outputStream, userPreferences);
+        }
+    }
 }

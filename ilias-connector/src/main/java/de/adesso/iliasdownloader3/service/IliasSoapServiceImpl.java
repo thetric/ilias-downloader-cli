@@ -16,15 +16,10 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import javax.net.ssl.SSLException;
 import java.io.IOException;
-import java.net.Authenticator;
-import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static de.adesso.iliasdownloader3.model.DownloadMethod.WEBDAV;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -35,129 +30,99 @@ import static java.util.Objects.requireNonNull;
  */
 @Log4j2
 public final class IliasSoapServiceImpl implements IliasSoapService {
-	private static final String ILIAS_SOAP_XML_NAMESPACE = "http://schemas.xmlsoap.org/soap/envelope/";
+    private static final String ILIAS_SOAP_XML_NAMESPACE = "http://schemas.xmlsoap.org/soap/envelope/";
 
-	private final String iliasSoapServerUrl, clientId;
+    private final String iliasSoapServerUrl, clientId;
 
-	private final AtomicBoolean webdavEnabled = new AtomicBoolean();
-	private String sessionId;
+    private final AtomicBoolean webdavEnabled = new AtomicBoolean();
+    private String sessionId;
 
-	// NOTE: es ist wichtig, in welcher _Reihenfolge_ die Parameter dem SoapObjekt hinzugefügt werden
+    // NOTE: es ist wichtig, in welcher _Reihenfolge_ die Parameter dem SoapObjekt hinzugefügt werden
 
-	public IliasSoapServiceImpl(@NonNull String iliasSoapServerUrl, @NonNull String clientId) {
-		this.iliasSoapServerUrl = iliasSoapServerUrl;
-		this.clientId = clientId;
-	}
+    public IliasSoapServiceImpl(@NonNull String iliasSoapServerUrl, @NonNull String clientId) {
+        this.iliasSoapServerUrl = iliasSoapServerUrl;
+        this.clientId = clientId;
+    }
 
-	private static PropertyInfo createPropertyInfo(String key, String value) {
-		final PropertyInfo propInfo = new PropertyInfo();
-		propInfo.setName(key);
-		propInfo.setValue(value);
-		propInfo.setType(value.getClass());
-		return propInfo;
-	}
+    private static PropertyInfo createPropertyInfo(String key, String value) {
+        final PropertyInfo propInfo = new PropertyInfo();
+        propInfo.setName(key);
+        propInfo.setValue(value);
+        propInfo.setType(value.getClass());
+        return propInfo;
+    }
 
-	private static PropertyInfo createPropertyInfoFromEntry(SoapParameterEntry entry) {
-		return createPropertyInfo(entry.getKey(), entry.getValue());
-	}
+    private static PropertyInfo createPropertyInfoFromEntry(SoapParameterEntry entry) {
+        return createPropertyInfo(entry.getKey(), entry.getValue());
+    }
 
-	@Override
-	public void login(@NonNull LoginData loginData) throws IOException, XmlPullParserException {
-		requireNonNull(loginData.getLoginType(), "loginData.getLoginType()");
+    @Override
+    public void login(@NonNull LoginData loginData) throws IOException, XmlPullParserException {
+        requireNonNull(loginData.getLoginType(), "loginData.getLoginType()");
 
-		sessionId = authenticate(loginData);
+        sessionId = authenticate(loginData);
+    }
 
-		if (loginData.getDownloadMethod() == WEBDAV) setWebDavAuthenticator(loginData);
-		else disableWebDavAuthenticator();
-	}
+    /**
+     * Loggt sich am Ilias ein.
+     *
+     * @param loginData
+     *         Logindaten
+     * @return Session ID
+     * @throws IliasException
+     * @throws IliasHttpsException
+     *         falls es Probleme mit der SSL Verbindung gab (eigentlich nur ein Problem unter Java < 1.8)
+     */
+    private String authenticate(LoginData loginData) throws IliasException, IOException, XmlPullParserException {
+        final String loginMethodName = loginData.getLoginType().getLoginMethodName();
 
-	private void setWebDavAuthenticator(LoginData loginData) {
-		final String username = loginData.getUserName();
-		final String password = loginData.getPassword();
-		Authenticator.setDefault(new Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				try {
-					// TODO geht das nicht besser?
-					if (webdavEnabled.get() && getRequestingURL().getHost().equals(new URL(iliasSoapServerUrl).getHost())) {
-						return new PasswordAuthentication(username, password.toCharArray());
-					}
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-				return null;
-			}
-		});
-		webdavEnabled.set(true);
-	}
+        final Object authResponse = executeSoapRequest(loginMethodName, mapLoginData(loginData));
+        sessionId = ((String) authResponse);
+        return null;
+    }
 
-	private void disableWebDavAuthenticator() {
-		Authenticator.setDefault(null);
-		webdavEnabled.set(false);
-	}
+    private Object executeSoapRequest(String soapMethodName, Collection<SoapParameterEntry> parameters) {
+        SoapObject soapObject = new SoapObject(ILIAS_SOAP_XML_NAMESPACE, soapMethodName);
+        setPropertyInfosFromMap(soapObject, parameters);
 
-	/**
-	 * Loggt sich am Ilias ein.
-	 *
-	 * @param loginData
-	 * 		Logindaten
-	 *
-	 * @return Session ID
-	 *
-	 * @throws IliasException
-	 * @throws IliasHttpsException
-	 * 		falls es Probleme mit der SSL Verbindung gab (eigentlich nur ein Problem unter Java < 1.8)
-	 */
-	private String authenticate(LoginData loginData) throws IliasException, IOException, XmlPullParserException {
-		final String loginMethodName = loginData.getLoginType().getLoginMethodName();
+        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        soapEnvelope.setOutputSoapObject(soapObject);
 
-		final Object authResponse = executeSoapRequest(loginMethodName, mapLoginData(loginData));
-		sessionId = ((String) authResponse);
-		return null;
-	}
+        final HttpTransportSENoUserAgent http = new HttpTransportSENoUserAgent(iliasSoapServerUrl);
+        http.setXmlVersionTag("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 
-	private Object executeSoapRequest(String soapMethodName, Collection<SoapParameterEntry> parameters) {
-		SoapObject soapObject = new SoapObject(ILIAS_SOAP_XML_NAMESPACE, soapMethodName);
-		setPropertyInfosFromMap(soapObject, parameters);
+        final String soapAction = String.join("/", iliasSoapServerUrl, soapMethodName);
+        try {
+            http.call(soapAction, soapEnvelope);
+            return soapEnvelope.getResponse();
+        } catch (SSLException sslEx) {
+            // sollte nur unter Java Version < 1.8 auftreten
+            System.err.println("SSL Exception occurred with soap action: " + soapAction);
+            throw new IliasHttpsException(sslEx);
+        } catch (SoapFault soapEx) {
+            System.err.println("Soap fault occurred with soap action: " + soapAction);
+            throw new IliasAuthenticationException(soapEx);
+        } catch (XmlPullParserException | IOException e) {
+            System.err.println("Exception occurred while trying to authenticate with soap action: " + soapAction);
+            throw new IliasException(e);
+        }
+    }
 
-		SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-		soapEnvelope.setOutputSoapObject(soapObject);
+    private void setPropertyInfosFromMap(SoapObject soapObject, Collection<SoapParameterEntry> parameters) {
+        parameters.stream().map(IliasSoapServiceImpl::createPropertyInfoFromEntry).forEach(soapObject::addProperty);
+    }
 
-		final HttpTransportSENoUserAgent http = new HttpTransportSENoUserAgent(iliasSoapServerUrl);
-		http.setXmlVersionTag("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    private Collection<SoapParameterEntry> mapLoginData(LoginData loginData) {
+        final ArrayList<SoapParameterEntry> entries = new ArrayList<>();
+        entries.add(new SoapParameterEntry("client", clientId));
+        entries.add(new SoapParameterEntry("username", loginData.getUserName()));
+        entries.add(new SoapParameterEntry("password", loginData.getPassword()));
+        return entries;
+    }
 
-		final String soapAction = String.join("/", iliasSoapServerUrl, soapMethodName);
-		try {
-			http.call(soapAction, soapEnvelope);
-			return soapEnvelope.getResponse();
-		} catch (SSLException sslEx) {
-			// sollte nur unter Java Version < 1.8 auftreten
-			System.err.println("SSL Exception occurred with soap action: " + soapAction);
-			throw new IliasHttpsException(sslEx);
-		} catch (SoapFault soapEx) {
-			System.err.println("Soap fault occurred with soap action: " + soapAction);
-			throw new IliasAuthenticationException(soapEx);
-		} catch (XmlPullParserException | IOException e) {
-			System.err.println("Exception occurred while trying to authenticate with soap action: " + soapAction);
-			throw new IliasException(e);
-		}
-	}
-
-	private void setPropertyInfosFromMap(SoapObject soapObject, Collection<SoapParameterEntry> parameters) {
-		parameters.stream().map(IliasSoapServiceImpl::createPropertyInfoFromEntry).forEach(soapObject::addProperty);
-	}
-
-	private Collection<SoapParameterEntry> mapLoginData(LoginData loginData) {
-		final ArrayList<SoapParameterEntry> entries = new ArrayList<>();
-		entries.add(new SoapParameterEntry("client", clientId));
-		entries.add(new SoapParameterEntry("username", loginData.getUserName()));
-		entries.add(new SoapParameterEntry("password", loginData.getPassword()));
-		return entries;
-	}
-
-	@Value
-	private static final class SoapParameterEntry {
-		private final String key, value;
-	}
+    @Value
+    private static final class SoapParameterEntry {
+        private final String key, value;
+    }
 
 }

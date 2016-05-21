@@ -14,11 +14,11 @@ import org.simpleframework.xml.Text;
 @AllArgsConstructor
 public class XmlProperty {
 
-	@Attribute(name = "name", required = false)
+    @Attribute(name = "name", required = false)
 //	@XmlAttribute(name="name")
-	private String key;
+    private String key;
 
-	//	@XmlValue
-	@Text(required = false)
-	private String value;
+    //	@XmlValue
+    @Text(required = false)
+    private String value;
 }

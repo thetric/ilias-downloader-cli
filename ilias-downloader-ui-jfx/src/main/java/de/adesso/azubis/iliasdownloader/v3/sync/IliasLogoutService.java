@@ -14,17 +14,17 @@ import lombok.NonNull;
  */
 @AllArgsConstructor
 public final class IliasLogoutService extends Service<Void> {
-	@NonNull
-	private final ILIASSoapService iliasSoapService;
+    @NonNull
+    private final ILIASSoapService iliasSoapService;
 
-	@Override
-	protected Task<Void> createTask() {
-		return new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				iliasSoapService.logout();
-				return null;
-			}
-		};
-	}
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                iliasSoapService.logout();
+                return null;
+            }
+        };
+    }
 }

@@ -14,15 +14,15 @@ import org.simpleframework.xml.Root;
 @AllArgsConstructor
 public class XmlTimeTarget {
 
-	@Attribute(name = "type", required = false)
+    @Attribute(name = "type", required = false)
 //	@XmlAttribute(name="type")
-	private int type;
+    private int type;
 
-	@Element(name = "Timing", required = false)
+    @Element(name = "Timing", required = false)
 //	@XmlElement(name="Timing")
-	private XmlTiming timing;
+    private XmlTiming timing;
 
-	@Element(name = "Suggestion", required = false)
+    @Element(name = "Suggestion", required = false)
 //	@XmlElement(name="Suggestion")
-	private XmlTiming suggestion;
+    private XmlTiming suggestion;
 }

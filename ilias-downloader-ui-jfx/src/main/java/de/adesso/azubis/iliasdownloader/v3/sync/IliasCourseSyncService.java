@@ -14,14 +14,14 @@ import lombok.NonNull;
  */
 @AllArgsConstructor
 public final class IliasCourseSyncService extends Service<Void> {
-	@NonNull
-	private final ILIASSoapService soapService;
+    @NonNull
+    private final ILIASSoapService soapService;
 
-	@NonNull
-	private final SyncSettings syncSettings;
+    @NonNull
+    private final SyncSettings syncSettings;
 
-	@Override
-	protected Task<Void> createTask() {
-		return null;
-	}
+    @Override
+    protected Task<Void> createTask() {
+        return null;
+    }
 }

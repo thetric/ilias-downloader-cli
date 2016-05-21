@@ -46,26 +46,26 @@ import java.util.List;
 @NoArgsConstructor
 public class XmlExercise {
 
-	@Element(name = "Title", required = false)
+    @Element(name = "Title", required = false)
 //	@XmlElement(name="Title")
-	private String title;
+    private String title;
 
-	@Element(name = "Description", required = false)
+    @Element(name = "Description", required = false)
 //	@XmlElement(name="Description")
-	private String description;
+    private String description;
 
-	@Element(name = "Instruction", required = false)
+    @Element(name = "Instruction", required = false)
 //	@XmlElement(name="Instruction")
-	private String instruction;
+    private String instruction;
 
-	@Element(name = "DueDate", required = false)
+    @Element(name = "DueDate", required = false)
 //	@XmlElement(name="DueDate")
-	private String timestampFinishDate;
+    private String timestampFinishDate;
 
-	//	@XmlElementWrapper(name="Files")
+    //	@XmlElementWrapper(name="Files")
 //	@XmlElement(name="File")
-	@ElementList(name = "Files", required = false)
-	private List<XmlExerciseFile> exerciseFiles;
+    @ElementList(name = "Files", required = false)
+    private List<XmlExerciseFile> exerciseFiles;
 
 
 }

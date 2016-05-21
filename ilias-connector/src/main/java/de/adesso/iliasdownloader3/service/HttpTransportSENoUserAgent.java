@@ -44,7 +44,8 @@ public final class HttpTransportSENoUserAgent extends Transport {
     /**
      * Creates instance of HttpTransportSE with set url
      *
-     * @param url the destination to POST SOAP data
+     * @param url
+     *         the destination to POST SOAP data
      */
     public HttpTransportSENoUserAgent(String url) {
         super(null, url);
@@ -53,8 +54,10 @@ public final class HttpTransportSENoUserAgent extends Transport {
     /**
      * Creates instance of HttpTransportSE with set url and defines a proxy server to use to access it
      *
-     * @param proxy Proxy information or <code>null</code> for direct access
-     * @param url   The destination to POST SOAP data
+     * @param proxy
+     *         Proxy information or <code>null</code> for direct access
+     * @param url
+     *         The destination to POST SOAP data
      */
     public HttpTransportSENoUserAgent(Proxy proxy, String url) {
         super(proxy, url);
@@ -63,8 +66,10 @@ public final class HttpTransportSENoUserAgent extends Transport {
     /**
      * Creates instance of HttpTransportSE with set url
      *
-     * @param url     the destination to POST SOAP data
-     * @param timeout timeout for connection and Read Timeouts (milliseconds)
+     * @param url
+     *         the destination to POST SOAP data
+     * @param timeout
+     *         timeout for connection and Read Timeouts (milliseconds)
      */
     public HttpTransportSENoUserAgent(String url, int timeout) {
         super(url, timeout);
@@ -77,9 +82,12 @@ public final class HttpTransportSENoUserAgent extends Transport {
     /**
      * Creates instance of HttpTransportSE with set url
      *
-     * @param url           the destination to POST SOAP data
-     * @param timeout       timeout for connection and Read Timeouts (milliseconds)
-     * @param contentLength Content Lenght in bytes if known in advance
+     * @param url
+     *         the destination to POST SOAP data
+     * @param timeout
+     *         timeout for connection and Read Timeouts (milliseconds)
+     * @param contentLength
+     *         Content Lenght in bytes if known in advance
      */
     public HttpTransportSENoUserAgent(String url, int timeout, int contentLength) {
         super(url, timeout);
@@ -92,8 +100,10 @@ public final class HttpTransportSENoUserAgent extends Transport {
     /**
      * set the desired soapAction header field
      *
-     * @param soapAction the desired soapAction
-     * @param envelope   the envelope containing the information for the soap call.
+     * @param soapAction
+     *         the desired soapAction
+     * @param envelope
+     *         the envelope containing the information for the soap call.
      * @throws HttpResponseException
      * @throws IOException
      * @throws XmlPullParserException
@@ -114,12 +124,17 @@ public final class HttpTransportSENoUserAgent extends Transport {
      * requires such as cookies. Headers that are returned by the web service will be returned to the caller in the form
      * of a <code>List</code> of <code>HeaderProperty</code> instances.
      *
-     * @param soapAction the namespace with which to perform the call in.
-     * @param envelope   the envelope the contains the information for the call.
-     * @param headers    <code>List</code> of <code>HeaderProperty</code> headers to send with the SOAP request.
-     * @param outputFile a file to stream the response into rather than parsing it, streaming happens when file is not null
+     * @param soapAction
+     *         the namespace with which to perform the call in.
+     * @param envelope
+     *         the envelope the contains the information for the call.
+     * @param headers
+     *         <code>List</code> of <code>HeaderProperty</code> headers to send with the SOAP request.
+     * @param outputFile
+     *         a file to stream the response into rather than parsing it, streaming happens when file is not null
      * @return Headers returned by the web service as a <code>List</code> of <code>HeaderProperty</code> instances.
-     * @throws HttpResponseException an IOException when Http response code is different from 200
+     * @throws HttpResponseException
+     *         an IOException when Http response code is different from 200
      */
     public List call(String soapAction, SoapEnvelope envelope, List headers, File outputFile)
             throws IOException, XmlPullParserException {
@@ -318,7 +333,7 @@ public final class HttpTransportSENoUserAgent extends Transport {
 
     private InputStream getUnZippedInputStream(InputStream inputStream) throws IOException {
         /* workaround for Android 2.3
-		   (see http://stackoverflow.com/questions/5131016/)
+           (see http://stackoverflow.com/questions/5131016/)
         */
         if (!(inputStream instanceof GZIPInputStream)) {
             return new GZIPInputStream(inputStream);

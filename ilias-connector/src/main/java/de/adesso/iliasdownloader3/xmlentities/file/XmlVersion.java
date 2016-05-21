@@ -17,16 +17,16 @@ import org.simpleframework.xml.Root;
 @AllArgsConstructor
 public class XmlVersion {
 
-	@Attribute(name = "id", required = false)
+    @Attribute(name = "id", required = false)
 //	@XmlAttribute(name="id")
-	private String id;
+    private String id;
 
-	@Attribute(name = "date", required = false)
+    @Attribute(name = "date", required = false)
 //	@XmlAttribute(name="date")
-	private long timestamp;
+    private long timestamp;
 
-	@Attribute(name = "usr_id", required = false)
+    @Attribute(name = "usr_id", required = false)
 //	@XmlAttribute(name="usr_id")
-	private String usrId;
+    private String usrId;
 
 }

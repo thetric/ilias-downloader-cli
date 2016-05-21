@@ -12,7 +12,7 @@ import java.util.Set;
  */
 @Value
 public final class SyncSettings {
-	private final String baseDir;
-	private final boolean syncOnly;
-	private final Set<Long> ignoredFileIds;
+    private final String baseDir;
+    private final boolean syncOnly;
+    private final Set<Long> ignoredFileIds;
 }

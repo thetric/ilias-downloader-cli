@@ -17,7 +17,7 @@ import org.simpleframework.xml.Root;
 @NoArgsConstructor
 public class XmlMetaData {
 
-	@Element(name = "General", required = false)
+    @Element(name = "General", required = false)
 //	@XmlElement(name="General")
-	private XmlGeneral general;
+    private XmlGeneral general;
 }

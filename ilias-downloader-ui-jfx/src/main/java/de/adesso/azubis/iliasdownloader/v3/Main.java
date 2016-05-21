@@ -22,41 +22,41 @@ import static javafx.scene.control.ButtonType.FINISH;
  */
 @Log4j2
 public final class Main extends Application {
-	private static final String ILIAS_DOWNLOADER_SETTINGS = "iliasdownloader.xml";
-	private final UserPreferenceService userPreferenceService;
+    private static final String ILIAS_DOWNLOADER_SETTINGS = "iliasdownloader.xml";
+    private final UserPreferenceService userPreferenceService;
 
-	public Main() {
-		this.userPreferenceService = new UserPreferenceServiceImpl(ILIAS_DOWNLOADER_SETTINGS);
-	}
+    public Main() {
+        this.userPreferenceService = new UserPreferenceServiceImpl(ILIAS_DOWNLOADER_SETTINGS);
+    }
 
-	public static void main(String[] args) {
-		Main.launch(args);
-	}
+    public static void main(String[] args) {
+        Main.launch(args);
+    }
 
-	@Override
-	public void start(Stage primaryStage) throws IOException {
-		try {
-			final UserPreferences userPreferences = userPreferenceService.loadUserPreferences();
-			// show main ui
-		} catch (NoSuchFileException noSettingsEx) {
-			log.info("Keine Benutzereinstellungen gefunden, zeige Einrichtungsdialog", noSettingsEx.getLocalizedMessage());
-			showIntroWizard();
-		}
-	}
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+        try {
+            final UserPreferences userPreferences = userPreferenceService.loadUserPreferences();
+            // show main ui
+        } catch (NoSuchFileException noSettingsEx) {
+            log.info("Keine Benutzereinstellungen gefunden, zeige Einrichtungsdialog", noSettingsEx.getLocalizedMessage());
+            showIntroWizard();
+        }
+    }
 
-	private void showIntroWizard() {
-		log.info("Erstelle Einrichtungs-Wizard");
-		try {
-			final IntroWizard introWizard = new IntroWizard();
-			introWizard.showAndWait().filter(result -> result == FINISH).ifPresent(result ->
-					mapWizardSettingsToUserPrefs(introWizard.getSettings()));
-		} catch (IOException e) {
-			log.fatal("Fehler beim Laden der UI", e);
-		}
-	}
+    private void showIntroWizard() {
+        log.info("Erstelle Einrichtungs-Wizard");
+        try {
+            final IntroWizard introWizard = new IntroWizard();
+            introWizard.showAndWait().filter(result -> result == FINISH).ifPresent(result ->
+                    mapWizardSettingsToUserPrefs(introWizard.getSettings()));
+        } catch (IOException e) {
+            log.fatal("Fehler beim Laden der UI", e);
+        }
+    }
 
-	private void mapWizardSettingsToUserPrefs(ObservableMap<String, Object> settings) {
-		final UserPreferences prefs = new UserPreferences();
-		prefs.setIliasServerURL((String) settings.get("iliasUrlField"));
-	}
+    private void mapWizardSettingsToUserPrefs(ObservableMap<String, Object> settings) {
+        final UserPreferences prefs = new UserPreferences();
+        prefs.setIliasServerURL((String) settings.get("iliasUrlField"));
+    }
 }

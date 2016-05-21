@@ -12,5 +12,5 @@ import java.io.IOException;
  * @since 02.02.2016
  */
 public interface IliasSoapService {
-	void login(LoginData loginData) throws IOException, XmlPullParserException;
+    void login(LoginData loginData) throws IOException, XmlPullParserException;
 }

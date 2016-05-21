@@ -17,19 +17,19 @@ import org.simpleframework.xml.Root;
 @NoArgsConstructor
 public class XmlMember {
 
-	@Attribute(name = "id", required = false)
+    @Attribute(name = "id", required = false)
 //	@XmlAttribute(name="id")
-	private String idString;
+    private String idString;
 
-	@Attribute(name = "notification", required = false)
+    @Attribute(name = "notification", required = false)
 //	@XmlAttribute(name="notification")
-	private String notification;
+    private String notification;
 
-	@Attribute(name = "blocked", required = false)
+    @Attribute(name = "blocked", required = false)
 //	@XmlAttribute(name="blocked")
-	private String blocked;
+    private String blocked;
 
-	@Attribute(name = "passed", required = false)
+    @Attribute(name = "passed", required = false)
 //	@XmlAttribute(name="passed")
-	private String passed;
+    private String passed;
 }

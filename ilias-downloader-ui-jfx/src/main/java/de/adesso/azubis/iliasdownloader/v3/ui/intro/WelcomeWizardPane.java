@@ -18,27 +18,27 @@ import java.io.IOException;
  */
 @Log4j2
 final class WelcomeWizardPane extends WizardPane {
-	private static final String FXML_FILE = "/fxml/messagePane.fxml";
+    private static final String FXML_FILE = "/fxml/messagePane.fxml";
 
-	@FXML
-	private Label message;
+    @FXML
+    private Label message;
 
-	public WelcomeWizardPane() throws IOException {
-		Parent content = FxmlLoaderHelper.load(this, FXML_FILE);
-		setContent(content);
-		setHeaderText("Willkommen beim ILIAS Downloader 3!");
+    public WelcomeWizardPane() throws IOException {
+        Parent content = FxmlLoaderHelper.load(this, FXML_FILE);
+        setContent(content);
+        setHeaderText("Willkommen beim ILIAS Downloader 3!");
 
-		message.setText("Willkommen beim ILIAS Downloader 3.0.1-alpha!\n" +
-				"Mit dem folgenden Wizard werden die grundlegenden Einstellungen festgelegt. Diese können später über das Menü bearbeitet werden.");
-	}
+        message.setText("Willkommen beim ILIAS Downloader 3.0.1-alpha!\n" +
+                "Mit dem folgenden Wizard werden die grundlegenden Einstellungen festgelegt. Diese können später über das Menü bearbeitet werden.");
+    }
 
-	@Override
-	public void onExitingPage(Wizard wizard) {
-	}
+    @Override
+    public void onExitingPage(Wizard wizard) {
+    }
 
-	@Override
-	public void onEnteringPage(Wizard wizard) {
-		wizard.setTitle("Ilias Downloader 3 - Willkommen");
-		wizard.setInvalid(false);
-	}
+    @Override
+    public void onEnteringPage(Wizard wizard) {
+        wizard.setTitle("Ilias Downloader 3 - Willkommen");
+        wizard.setInvalid(false);
+    }
 }

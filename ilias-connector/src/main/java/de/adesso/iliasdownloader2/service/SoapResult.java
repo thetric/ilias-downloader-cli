@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Deprecated
 final class SoapResult {
-	private String text;
-	private String error;
-	private boolean faultCode;
+    private String text;
+    private String error;
+    private boolean faultCode;
 }

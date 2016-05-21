@@ -9,43 +9,43 @@ import java.util.Date;
 @Deprecated
 public class Functions {
 
-	private static final SimpleDateFormat simpleDateFormatIlias = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	private static final SimpleDateFormat simpleDateFormatReadable = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
-	public static boolean useJAX = false;
+    private static final SimpleDateFormat simpleDateFormatIlias = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private static final SimpleDateFormat simpleDateFormatReadable = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+    public static boolean useJAX = false;
 
-	public static Date iliasXmlStringToDate(String dateString) {
-		try {
-			return simpleDateFormatIlias.parse(dateString);
-		} catch (Exception e) {
-			return new Date(System.currentTimeMillis());
-		}
-	}
+    public static Date iliasXmlStringToDate(String dateString) {
+        try {
+            return simpleDateFormatIlias.parse(dateString);
+        } catch (Exception e) {
+            return new Date(System.currentTimeMillis());
+        }
+    }
 
-	public static String formatDate(long date) {
-		return formatDate(new Date(date));
-	}
+    public static String formatDate(long date) {
+        return formatDate(new Date(date));
+    }
 
-	public static String formatDate(Date d) {
-		if (d == null) {
-			return "";
-		}
+    public static String formatDate(Date d) {
+        if (d == null) {
+            return "";
+        }
 
-		return simpleDateFormatReadable.format(d);
-	}
+        return simpleDateFormatReadable.format(d);
+    }
 
-	public static String cleanFileName(String name) {
-		return name.replaceAll("[:*?\"<>|\\\\/]", "");
-	}
+    public static String cleanFileName(String name) {
+        return name.replaceAll("[:*?\"<>|\\\\/]", "");
+    }
 
-	public static <T> T parseXmlObject(String input, Class<T> targetClass) {
-		try {
-			return parseXmlObject(new ByteArrayInputStream(input.getBytes("UTF-8")), targetClass);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public static <T> T parseXmlObject(String input, Class<T> targetClass) {
+        try {
+            return parseXmlObject(new ByteArrayInputStream(input.getBytes("UTF-8")), targetClass);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public static <T> T parseXmlObject(InputStream input, Class<T> targetClass) {
+    public static <T> T parseXmlObject(InputStream input, Class<T> targetClass) {
 
 //		if(useJAX){
 //			try {
@@ -68,16 +68,16 @@ public class Functions {
 //			}
 //		}else{
 
-		try {
-			return new Persister().read(targetClass, input);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+        try {
+            return new Persister().read(targetClass, input);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 //		}
-	}
+    }
 
 
-	public static void writeXmlObject(Object jaxbElement, File output) {
+    public static void writeXmlObject(Object jaxbElement, File output) {
 
 //		if(useJAX){
 //			try {			
@@ -100,36 +100,36 @@ public class Functions {
 //
 //		}else{
 
-		try {
-			new Persister().write(jaxbElement, output);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+        try {
+            new Persister().write(jaxbElement, output);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 //		}
-	}
+    }
 
 
-	public static File createTempFileInTempFolder(String fileName) {
-		String name = new File(fileName).getName();
-		int indexOfDot = name.lastIndexOf(".");
-		String prefix, suffix;
+    public static File createTempFileInTempFolder(String fileName) {
+        String name = new File(fileName).getName();
+        int indexOfDot = name.lastIndexOf(".");
+        String prefix, suffix;
 
-		if (indexOfDot != -1) {
-			prefix = name.substring(0, indexOfDot);
-			suffix = name.substring(indexOfDot);
-		} else {
-			prefix = name;
-			suffix = "";
-		}
+        if (indexOfDot != -1) {
+            prefix = name.substring(0, indexOfDot);
+            suffix = name.substring(indexOfDot);
+        } else {
+            prefix = name;
+            suffix = "";
+        }
 
-		try {
-			File f = File.createTempFile(prefix, suffix);
-			f.deleteOnExit();
-			return f;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+        try {
+            File f = File.createTempFile(prefix, suffix);
+            f.deleteOnExit();
+            return f;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 }

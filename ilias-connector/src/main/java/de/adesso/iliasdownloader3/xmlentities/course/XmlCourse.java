@@ -77,9 +77,9 @@ import org.simpleframework.xml.Root;
 @NoArgsConstructor
 public class XmlCourse {
 
-	//	@XmlElement(name="MetaData")
-	@Element(name = "MetaData", required = false)
-	private XmlMetaData metaData;
+    //	@XmlElement(name="MetaData")
+    @Element(name = "MetaData", required = false)
+    private XmlMetaData metaData;
 
 //	@XmlElement(name="Admin")
 //	@Element(name="Admin", required=false)
@@ -89,8 +89,8 @@ public class XmlCourse {
 //	@ElementList(name="Member", required=false, inline=true)
 //	private List<XmlMember> member;
 
-	//	@XmlElement(name="Settings")
-	@Element(name = "Settings", required = false)
-	private XmlSettings settings;
+    //	@XmlElement(name="Settings")
+    @Element(name = "Settings", required = false)
+    private XmlSettings settings;
 
 }

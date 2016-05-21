@@ -10,6 +10,6 @@ import lombok.Value;
  */
 @Value
 final class SessionData {
-	private final String sessionId;
-	private final long userId;
+    private final String sessionId;
+    private final long userId;
 }

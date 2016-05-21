@@ -20,23 +20,23 @@ import static javafx.scene.control.ButtonType.CLOSE;
  * @since 05.02.2016
  */
 final class AboutAppDialog extends Dialog<ButtonType> {
-	@FXML
-	private WebView aboutAppWebView;
+    @FXML
+    private WebView aboutAppWebView;
 
-	public AboutAppDialog() throws IOException {
-		setTitle("Über diese Anwendung");
-		setHeaderText("Über Ilias Downloader 3");
-		final DialogPane dialogPane = getDialogPane();
-		dialogPane.getButtonTypes().setAll(CLOSE);
+    public AboutAppDialog() throws IOException {
+        setTitle("Über diese Anwendung");
+        setHeaderText("Über Ilias Downloader 3");
+        final DialogPane dialogPane = getDialogPane();
+        dialogPane.getButtonTypes().setAll(CLOSE);
 
-		final Parent rootPane = FxmlLoaderHelper.load(this, "/fxml/aboutApp.fxml");
+        final Parent rootPane = FxmlLoaderHelper.load(this, "/fxml/aboutApp.fxml");
 
-		final String aboutApp = AboutAppDialog.class.getResource("/html/aboutApp.html").toExternalForm();
-		final WebEngine engine = aboutAppWebView.getEngine();
-		engine.setUserStyleSheetLocation(getClass().getResource("/html/bootstrap-3.3.6.min.css").toString());
-		engine.load(aboutApp);
+        final String aboutApp = AboutAppDialog.class.getResource("/html/aboutApp.html").toExternalForm();
+        final WebEngine engine = aboutAppWebView.getEngine();
+        engine.setUserStyleSheetLocation(getClass().getResource("/html/bootstrap-3.3.6.min.css").toString());
+        engine.load(aboutApp);
 
-		dialogPane.setContent(aboutAppWebView);
+        dialogPane.setContent(aboutAppWebView);
 
-	}
+    }
 }

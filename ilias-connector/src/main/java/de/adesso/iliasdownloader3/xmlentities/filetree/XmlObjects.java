@@ -346,8 +346,8 @@ import java.util.List;
 @NoArgsConstructor
 public class XmlObjects {
 
-	//	@XmlElement(name="Object")
-	@ElementList(name = "Objects", inline = true, required = false)
-	private List<de.adesso.iliasdownloader3.xmlentities.filetree.XmlObject> objects;
+    //	@XmlElement(name="Object")
+    @ElementList(name = "Objects", inline = true, required = false)
+    private List<de.adesso.iliasdownloader3.xmlentities.filetree.XmlObject> objects;
 
 }

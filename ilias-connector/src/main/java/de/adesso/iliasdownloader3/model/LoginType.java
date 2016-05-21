@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum LoginType {
-	DEFAULT("login"), LDAP("loginLDAP"), CAS("loginCAS");
+    DEFAULT("login"), LDAP("loginLDAP"), CAS("loginCAS");
 
-	private final String loginMethodName;
+    private final String loginMethodName;
 }

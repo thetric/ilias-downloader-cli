@@ -12,11 +12,11 @@ import java.io.IOException;
  * @since 30.01.2016
  */
 public final class IntroWizard extends Wizard {
-	public IntroWizard() throws IOException {
-		final WelcomeWizardPane page0 = new WelcomeWizardPane();
-		WizardPane page1 = new LicenseWizardPane();
-		final ServerSettingsWizardPane page2 = new ServerSettingsWizardPane();
-		final FinishWizardPane page3 = new FinishWizardPane();
-		setFlow(new Wizard.LinearFlow(page0, page1, page2, page3));
-	}
+    public IntroWizard() throws IOException {
+        final WelcomeWizardPane page0 = new WelcomeWizardPane();
+        WizardPane page1 = new LicenseWizardPane();
+        final ServerSettingsWizardPane page2 = new ServerSettingsWizardPane();
+        final FinishWizardPane page3 = new FinishWizardPane();
+        setFlow(new Wizard.LinearFlow(page0, page1, page2, page3));
+    }
 }

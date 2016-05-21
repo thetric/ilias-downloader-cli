@@ -20,39 +20,39 @@ import java.io.IOException;
  */
 @Log4j2
 final class LicenseWizardPane extends WizardPane {
-	private static final String FXML_FILE = "/fxml/disclaimer.fxml";
+    private static final String FXML_FILE = "/fxml/disclaimer.fxml";
 
-	private static final String LICENSE_HTML = "/html/license.html";
+    private static final String LICENSE_HTML = "/html/license.html";
 
-	@FXML
-	private WebView licenseWebview;
-	@FXML
-	private CheckBox licenseAgreementCheckbox;
+    @FXML
+    private WebView licenseWebview;
+    @FXML
+    private CheckBox licenseAgreementCheckbox;
 
-	LicenseWizardPane() throws IOException {
-		Parent content = FxmlLoaderHelper.load(this, FXML_FILE);
-		setContent(content);
-		setHeaderText("Nutzungsbedingungen");
+    LicenseWizardPane() throws IOException {
+        Parent content = FxmlLoaderHelper.load(this, FXML_FILE);
+        setContent(content);
+        setHeaderText("Nutzungsbedingungen");
 
-		licenseAgreementCheckbox.setText("Ich akzeptiere die hier aufgeführten Bedingungen");
+        licenseAgreementCheckbox.setText("Ich akzeptiere die hier aufgeführten Bedingungen");
 
-		final String licenseUrl = LicenseWizardPane.class.getResource(LICENSE_HTML).toExternalForm();
-		final WebEngine engine = licenseWebview.getEngine();
-		engine.setUserStyleSheetLocation(getClass().getResource("/html/bootstrap-3.3.6.min.css").toString());
-		engine.load(licenseUrl);
-	}
+        final String licenseUrl = LicenseWizardPane.class.getResource(LICENSE_HTML).toExternalForm();
+        final WebEngine engine = licenseWebview.getEngine();
+        engine.setUserStyleSheetLocation(getClass().getResource("/html/bootstrap-3.3.6.min.css").toString());
+        engine.load(licenseUrl);
+    }
 
-	@Override
-	public void onEnteringPage(Wizard wizard) {
-		wizard.setTitle("Ilias Downloader 3 - Lizenz");
-		wizard.setInvalid(!licenseAgreementCheckbox.isSelected());
-		licenseAgreementCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			wizard.setInvalid(!newValue);
-		});
-	}
+    @Override
+    public void onEnteringPage(Wizard wizard) {
+        wizard.setTitle("Ilias Downloader 3 - Lizenz");
+        wizard.setInvalid(!licenseAgreementCheckbox.isSelected());
+        licenseAgreementCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            wizard.setInvalid(!newValue);
+        });
+    }
 
-	@Override
-	public void onExitingPage(Wizard wizard) {
-		wizard.setInvalid(false);
-	}
+    @Override
+    public void onExitingPage(Wizard wizard) {
+        wizard.setInvalid(false);
+    }
 }

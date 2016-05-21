@@ -16,26 +16,26 @@ import java.util.List;
 @NoArgsConstructor
 public class XmlReference {
 
-	@Attribute(name = "ref_id", required = false)
+    @Attribute(name = "ref_id", required = false)
 //	@XmlAttribute(name="ref_id")
-	private long refId;
+    private long refId;
 
-	@Attribute(name = "parent_id", required = false)
+    @Attribute(name = "parent_id", required = false)
 //	@XmlAttribute(name="parent_id")
-	private long parentId;
+    private long parentId;
 
-	@Attribute(name = "accessInfo", required = false)
+    @Attribute(name = "accessInfo", required = false)
 //	@XmlAttribute(name="accessInfo")
-	private String accessInfo;
+    private String accessInfo;
 
-	//	@XmlElementWrapper(name="Path")
+    //	@XmlElementWrapper(name="Path")
 //	@XmlElement(name="Element")
-	@ElementList(name = "Path", required = false)
-	private List<XmlPathElement> pathEntries;
+    @ElementList(name = "Path", required = false)
+    private List<XmlPathElement> pathEntries;
 
-	//	@XmlElement(name="TimeTarget")
-	@ElementList(name = "TimeTarget", required = false, inline = true)
-	private List<XmlTimeTarget> timeTargets;
+    //	@XmlElement(name="TimeTarget")
+    @ElementList(name = "TimeTarget", required = false, inline = true)
+    private List<XmlTimeTarget> timeTargets;
 
 
 }

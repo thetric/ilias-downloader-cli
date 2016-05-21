@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Deprecated
 public class TwoObjectsX<A, B> {
-	private A objectA;
-	private B objectB;
+    private A objectA;
+    private B objectB;
 }

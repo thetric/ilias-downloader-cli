@@ -5,8 +5,8 @@ import org.junit.Test;
 
 public class FunctionsTest {
 
-	@Test
-	public void testCreateTempFileInTempFolder() {
+    @Test
+    public void testCreateTempFileInTempFolder() {
 
 //		File f = Functions.createTempFileInTempFolder("hallo");
 //		f = Functions.createTempFileInTempFolder("hallo.xml");
@@ -14,11 +14,11 @@ public class FunctionsTest {
 //		f = Functions.createTempFileInTempFolder("ha.llo..xml");
 
 
-	}
+    }
 
-	@Test
-	public void testCleanFileName() {
-		Assert.assertEquals("abcdefghi", Functions.cleanFileName("ab:c*?\"d<>e|\\fg/hi"));
-	}
+    @Test
+    public void testCleanFileName() {
+        Assert.assertEquals("abcdefghi", Functions.cleanFileName("ab:c*?\"d<>e|\\fg/hi"));
+    }
 
 }

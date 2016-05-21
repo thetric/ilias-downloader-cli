@@ -14,15 +14,15 @@ import org.simpleframework.xml.Text;
 @AllArgsConstructor
 public class XmlPathElement {
 
-	@Attribute(name = "ref_id", required = false)
+    @Attribute(name = "ref_id", required = false)
 //	@XmlAttribute(name="ref_id")
-	private long refId;
+    private long refId;
 
-	@Attribute(name = "type", required = false)
+    @Attribute(name = "type", required = false)
 //	@XmlAttribute(name="type")
-	private String type;
+    private String type;
 
-	//	@XmlValue
-	@Text(required = false)
-	private String name;
+    //	@XmlValue
+    @Text(required = false)
+    private String name;
 }

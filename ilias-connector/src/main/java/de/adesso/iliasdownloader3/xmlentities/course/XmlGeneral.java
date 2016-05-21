@@ -17,11 +17,11 @@ import org.simpleframework.xml.Root;
 @NoArgsConstructor
 public class XmlGeneral {
 
-	@Element(name = "Title", required = false)
+    @Element(name = "Title", required = false)
 //	@XmlElement(name="Title")
-	private String title;
+    private String title;
 
-	@Element(name = "Description", required = false)
+    @Element(name = "Description", required = false)
 //	@XmlElement(name="Description")
-	private String description;
+    private String description;
 }

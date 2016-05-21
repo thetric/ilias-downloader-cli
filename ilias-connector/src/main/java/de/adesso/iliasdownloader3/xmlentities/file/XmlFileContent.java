@@ -45,45 +45,45 @@ import java.util.List;
 @NoArgsConstructor
 public class XmlFileContent {
 
-	@Attribute(name = "obj_id", required = false)
+    @Attribute(name = "obj_id", required = false)
 //	@XmlAttribute(name="obj_id")
-	private String objId;
+    private String objId;
 
-	@Attribute(name = "version", required = false)
+    @Attribute(name = "version", required = false)
 //	@XmlAttribute(name="version")
-	private int version;
+    private int version;
 
-	@Attribute(name = "size", required = false)
+    @Attribute(name = "size", required = false)
 //	@XmlAttribute(name="size")
-	private long size;
+    private long size;
 
-	@Attribute(name = "type", required = false)
+    @Attribute(name = "type", required = false)
 //	@XmlAttribute(name="type")
-	private String type;
+    private String type;
 
-	@Element(name = "Filename", required = false)
+    @Element(name = "Filename", required = false)
 //	@XmlElement(name="Filename")
-	private String filename;
+    private String filename;
 
-	@Element(name = "Title", required = false)
+    @Element(name = "Title", required = false)
 //	@XmlElement(name="Title")
-	private String title;
+    private String title;
 
-	@Element(name = "Description", required = false)
+    @Element(name = "Description", required = false)
 //	@XmlElement(name="Description")
-	private String description;
+    private String description;
 
-	@Element(name = "Rating", required = false)
+    @Element(name = "Rating", required = false)
 //	@XmlElement(name="Rating")
-	private int rating;
+    private int rating;
 
-	@Element(name = "Content", required = false)
+    @Element(name = "Content", required = false)
 //	@XmlElement(name="Content")
-	private String content;
+    private String content;
 
-	@ElementList(name = "Versions", required = false)
+    @ElementList(name = "Versions", required = false)
 //	@XmlElementWrapper(name="Versions")
 //	@XmlElement(name="Version")
-	private List<XmlVersion> versions;
+    private List<XmlVersion> versions;
 
 }
