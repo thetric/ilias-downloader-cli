@@ -10,9 +10,7 @@ compileJava.targetCompatibility = 1.8
 compileJava.options.encoding = 'utf-8'
 
 repositories {
-    mavenCentral()
     jcenter()
-    maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
 }
 
 subprojects {
@@ -23,7 +21,7 @@ subprojects {
     version '0.0.1-SNAPSHOT'
 
     dependencies {
-        compile 'org.projectlombok:lombok:1.16.6'
+        compile 'org.projectlombok:lombok:1.16.8'
 
         // logging libs
         compile 'org.apache.logging.log4j:log4j-api:2.5'
@@ -31,7 +29,6 @@ subprojects {
     }
 
     repositories {
-        mavenCentral()
         jcenter()
         maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
     }
@@ -41,13 +38,7 @@ project(":ilias-connector") {
     description = 'Schnittstelle zum Ilias'
 
     dependencies {
-        compile 'org.projectlombok:lombok:1.16.6'
-
-        // logging libs
-        compile 'org.apache.logging.log4j:log4j-api:2.5'
-        compile 'org.apache.logging.log4j:log4j-core:2.5'
-
-        compile 'commons-io:commons-io:2.4'
+        compile 'commons-io:commons-io:2.5'
         compile 'commons-codec:commons-codec:1.10'
         compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.0'
         compile 'org.simpleframework:simple-xml:2.7.1'
@@ -67,8 +58,8 @@ project(":ilias-downloader-ui-jfx") {
         compile 'de.jensd:fontawesomefx:8.9'
 
         // xml mapping
-        compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.0'
-        compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.7.0'
+        compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.4'
+        compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.7.4'
         compile 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
     }
 }
