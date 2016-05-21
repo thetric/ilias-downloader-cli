@@ -1,4 +1,4 @@
-package de.adesso.iliasdownloader3.service;
+package de.adesso.iliasdownloader3.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

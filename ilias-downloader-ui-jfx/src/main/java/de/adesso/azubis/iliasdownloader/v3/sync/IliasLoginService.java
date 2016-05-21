@@ -1,7 +1,7 @@
 package de.adesso.azubis.iliasdownloader.v3.sync;
 
 import de.adesso.iliasdownloader2.service.ILIASSoapService;
-import de.adesso.iliasdownloader3.service.LoginData;
+import de.adesso.iliasdownloader3.model.LoginData;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.AllArgsConstructor;

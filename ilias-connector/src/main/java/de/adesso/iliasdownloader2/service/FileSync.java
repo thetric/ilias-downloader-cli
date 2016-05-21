@@ -1,9 +1,12 @@
 package de.adesso.iliasdownloader2.service;
 
+import de.adesso.iliasdownloader2.util.FileObject;
+import de.adesso.iliasdownloader2.util.Functions;
+import de.adesso.iliasdownloader2.util.ObjectDoInterfaceX;
+import de.adesso.iliasdownloader2.util.SyncProgressListener;
 import de.adesso.iliasdownloader3.exception.IliasException;
-import de.adesso.iliasdownloader2.util.*;
-import de.adesso.iliasdownloader3.service.DownloadMethod;
-import de.adesso.iliasdownloader3.service.SyncState;
+import de.adesso.iliasdownloader3.model.DownloadMethod;
+import de.adesso.iliasdownloader3.model.SyncState;
 import de.adesso.iliasdownloader3.xmlentities.exercise.XmlExercise;
 import de.adesso.iliasdownloader3.xmlentities.filetree.XmlObject;
 import lombok.Getter;

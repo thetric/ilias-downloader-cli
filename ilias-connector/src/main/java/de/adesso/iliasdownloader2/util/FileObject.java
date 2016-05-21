@@ -1,6 +1,6 @@
 package de.adesso.iliasdownloader2.util;
 
-import de.adesso.iliasdownloader3.service.SyncState;
+import de.adesso.iliasdownloader3.model.SyncState;
 import de.adesso.iliasdownloader3.xmlentities.exercise.XmlExerciseFile;
 import de.adesso.iliasdownloader3.xmlentities.filetree.XmlObject;
 import lombok.AllArgsConstructor;

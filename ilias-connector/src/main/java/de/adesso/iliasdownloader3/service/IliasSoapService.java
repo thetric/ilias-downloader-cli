@@ -1,5 +1,6 @@
 package de.adesso.iliasdownloader3.service;
 
+import de.adesso.iliasdownloader3.model.LoginData;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;

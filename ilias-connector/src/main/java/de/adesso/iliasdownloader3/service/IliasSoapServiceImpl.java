@@ -3,6 +3,7 @@ package de.adesso.iliasdownloader3.service;
 import de.adesso.iliasdownloader3.exception.IliasAuthenticationException;
 import de.adesso.iliasdownloader3.exception.IliasException;
 import de.adesso.iliasdownloader3.exception.IliasHttpsException;
+import de.adesso.iliasdownloader3.model.LoginData;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static de.adesso.iliasdownloader3.service.DownloadMethod.WEBDAV;
+import static de.adesso.iliasdownloader3.model.DownloadMethod.WEBDAV;
 import static java.util.Objects.requireNonNull;
 
 /**
