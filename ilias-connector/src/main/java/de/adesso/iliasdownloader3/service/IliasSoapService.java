@@ -1,7 +1,6 @@
 package de.adesso.iliasdownloader3.service;
 
-import de.adesso.iliasdownloader3.model.LoginData;
-import org.xmlpull.v1.XmlPullParserException;
+import de.adesso.iliasdownloader3.model.SoapParameterEntry;
 
 import java.io.IOException;
 
@@ -12,5 +11,7 @@ import java.io.IOException;
  * @since 02.02.2016
  */
 public interface IliasSoapService {
-    void login(LoginData loginData) throws IOException, XmlPullParserException;
+    Object executeSoapRequest(String soapMethodName, List<SoapParameterEntry> parameters);
+
+    String getClientId();
 }

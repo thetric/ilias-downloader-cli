@@ -2,8 +2,8 @@ package de.adesso.iliasdownloader3.service;
 
 import de.adesso.iliasdownloader3.exception.IliasAuthenticationException;
 import de.adesso.iliasdownloader3.exception.IliasException;
-import de.adesso.iliasdownloader3.exception.IliasHttpsException;
-import de.adesso.iliasdownloader3.model.LoginData;
+import de.adesso.iliasdownloader3.model.SoapParameterEntry;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.log4j.Log4j2;
