@@ -2,7 +2,7 @@ package de.adesso.iliasdownloader3.service;
 
 import de.adesso.iliasdownloader3.model.SoapParameterEntry;
 
-import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Dominik Broj on 02.02.2016.
