@@ -9,7 +9,7 @@ import lombok.Value;
  * @since 01.02.2016
  */
 @Value
-public final class LoginData {
+public final class LoginCredentials {
     private final String userName, password;
     private final LoginType loginType;
     private final DownloadMethod downloadMethod;

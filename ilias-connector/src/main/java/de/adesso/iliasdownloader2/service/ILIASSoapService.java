@@ -4,7 +4,7 @@ import de.adesso.iliasdownloader2.util.TwoObjectsX;
 import de.adesso.iliasdownloader3.exception.IliasAuthenticationException;
 import de.adesso.iliasdownloader3.exception.IliasException;
 import de.adesso.iliasdownloader3.exception.IliasHttpsException;
-import de.adesso.iliasdownloader3.model.LoginData;
+import de.adesso.iliasdownloader3.model.LoginCredentials;
 import de.adesso.iliasdownloader3.service.HttpTransportSENoUserAgent;
 import de.adesso.iliasdownloader3.xmlentities.course.XmlCourse;
 import de.adesso.iliasdownloader3.xmlentities.exercise.XmlExercise;
@@ -73,15 +73,15 @@ public final class ILIASSoapService {
     }
 
     /**
-     * @param loginData
+     * @param loginCredentials
      * @throws IliasAuthenticationException
      */
-    public void login(LoginData loginData) {
+    public void login(LoginCredentials loginCredentials) {
         webdavAuthenticationActive = false;
         String methodName;
         userId = -1;
 
-        switch (loginData.getLoginType()) {
+        switch (loginCredentials.getLoginType()) {
             case DEFAULT:
                 methodName = "login";
                 break;
@@ -92,13 +92,13 @@ public final class ILIASSoapService {
                 methodName = "loginCAS";
                 break;
             default:
-                throw new IliasAuthenticationException("loginType was " + loginData.getLoginType());
+                throw new IliasAuthenticationException("loginType was " + loginCredentials.getLoginType());
         }
 
         SoapResult soapResult;
         try {
             soapResult = sendSoapRequestGetSoapBody(methodName, new TwoObjectsX<>("client", clientName),
-                    new TwoObjectsX<>("username", loginData.getUserName()), new TwoObjectsX<>("password", loginData.getPassword()));
+                    new TwoObjectsX<>("username", loginCredentials.getUserName()), new TwoObjectsX<>("password", loginCredentials.getPassword()));
         } catch (IliasHttpsException e) {
             throw e;
         } catch (Exception e) {
@@ -114,8 +114,8 @@ public final class ILIASSoapService {
                 throw new IliasAuthenticationException("Authentication failed. Wrong username/password");
             }
         } /*else {
-            if (loginData.isWebDavAuthenticationEnabled()) {
-				enableWebdavAuthentication(loginData.getUserName(), loginData.getPassword().toCharArray());
+            if (loginCredentials.isWebDavAuthenticationEnabled()) {
+				enableWebdavAuthentication(loginCredentials.getUserName(), loginCredentials.getPassword().toCharArray());
 			}
 		}*/
 
