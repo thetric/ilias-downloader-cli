@@ -58,6 +58,7 @@ project(":ilias-downloader-ui-jfx") {
         compile 'de.jensd:fontawesomefx:8.9'
 
         // xml mapping
+        compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.4'
         compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.4'
         compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.7.4'
         compile 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
