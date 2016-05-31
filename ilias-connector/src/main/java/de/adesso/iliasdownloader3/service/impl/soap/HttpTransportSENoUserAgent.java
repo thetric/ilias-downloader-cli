@@ -1,4 +1,3 @@
-package de.adesso.iliasdownloader3.service;
 /**
  * Copyright (c) 2003,2004, Stefan Haustein, Oberhausen, Rhld., Germany
  * <p>
@@ -18,6 +17,7 @@ package de.adesso.iliasdownloader3.service;
  * Contributor(s): John D. Beatty, Dave Dash, F. Hunter, Alexander Krebs, Lars Mehrmann, Sean McDaniel, Thomas Strang,
  * Renaud Tognelli
  */
+package de.adesso.iliasdownloader3.service.impl.soap;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
@@ -37,9 +37,9 @@ import java.util.zip.GZIPInputStream;
  * A J2SE based HttpTransport layer.
  * <p>
  * Änderungen von Kevin Krummenauer: Eine Zeile in call(String soapAction, SoapEnvelope envelope, List headers, File
- * outputFile) auskommentiert, nämlich den User-agent, der auf "ksoap2-android/2.6.0+" stand
+ * outputFile) auskommentiert, nämlich den User-agent, der auf "soap-android/2.6.0+" stand
  */
-public final class HttpTransportSENoUserAgent extends Transport {
+public class HttpTransportSENoUserAgent extends Transport {
 
     /**
      * Creates instance of HttpTransportSE with set url
@@ -138,6 +138,7 @@ public final class HttpTransportSENoUserAgent extends Transport {
      */
     public List call(String soapAction, SoapEnvelope envelope, List headers, File outputFile)
             throws IOException, XmlPullParserException {
+
         if (soapAction == null) {
             soapAction = "\"\"";
         }
@@ -149,10 +150,9 @@ public final class HttpTransportSENoUserAgent extends Transport {
 
         ServiceConnection connection = getServiceConnection();
 
-        // auskommentiert, weil das Ilias der FH Dortmund sonst einen 403 Response Code schickt
-        // connection.setRequestProperty("User-Agent", USER_AGENT);
-
-        // SOAPAction is not a valid header for VER12 so do not add it
+        connection.setRequestProperty("User-Agent", USER_AGENT);
+        // SOAPAction is not a valid header for VER12 so do not add
+        // it
         // @see "http://code.google.com/p/ksoap2-android/issues/detail?id=67
         if (envelope.version != SoapSerializationEnvelope.VER12) {
             connection.setRequestProperty("SOAPAction", soapAction);
@@ -229,7 +229,7 @@ public final class HttpTransportSENoUserAgent extends Transport {
             //first check the response code....
             if (status != 200) {
                 //throw new IOException("HTTP request failed, HTTP status: " + status);
-                throw new HttpResponseException("HTTP request failed, HTTP status: " + status, status);
+                throw new HttpResponseException("HTTP request failed, HTTP status: " + status, status, retHeaders);
             }
 
             if (contentLength > 0) {
@@ -252,7 +252,7 @@ public final class HttpTransportSENoUserAgent extends Transport {
 
             if (e instanceof HttpResponseException) {
                 if (!xmlContent) {
-                    if (debug && is != null) {
+                    if (debug && (is != null)) {
                         //go ahead and read the error stream into the debug buffers/file if needed.
                         readDebug(is, contentLength, outputFile);
                     }
@@ -303,7 +303,7 @@ public final class HttpTransportSENoUserAgent extends Transport {
             bos = new FileOutputStream(outputFile);
         } else {
             // If known use the size if not use default value
-            bos = new ByteArrayOutputStream((contentLength > 0) ? contentLength : 256 * 1024);
+            bos = new ByteArrayOutputStream((contentLength > 0) ? contentLength : (256 * 1024));
         }
 
         byte[] buf = new byte[256];
@@ -335,9 +335,11 @@ public final class HttpTransportSENoUserAgent extends Transport {
         /* workaround for Android 2.3
            (see http://stackoverflow.com/questions/5131016/)
         */
-        if (!(inputStream instanceof GZIPInputStream)) {
+        try {
+            return inputStream;
+        } catch (ClassCastException e) {
             return new GZIPInputStream(inputStream);
-        } else return inputStream;
+        }
     }
 
     public ServiceConnection getServiceConnection() throws IOException {

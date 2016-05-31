@@ -1,4 +1,4 @@
-package de.adesso.iliasdownloader3.service;
+package de.adesso.iliasdownloader3.service.impl.soap;
 
 import de.adesso.iliasdownloader3.exception.IliasException;
 import de.adesso.iliasdownloader3.model.SoapParameterEntry;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Log4j2
 @RequiredArgsConstructor
-public final class IliasSoapServiceImpl implements IliasSoapService {
+public final class IliasSoapConnectorImpl implements IliasSoapConnector {
     private static final String ILIAS_SOAP_XML_NAMESPACE = "http://schemas.xmlsoap.org/soap/envelope/";
 
     @NonNull

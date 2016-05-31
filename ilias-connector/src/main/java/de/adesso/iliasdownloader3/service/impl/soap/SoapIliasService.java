@@ -1,7 +1,9 @@
-package de.adesso.iliasdownloader3.service;
+package de.adesso.iliasdownloader3.service.impl.soap;
 
 import de.adesso.iliasdownloader3.model.LoginCredentials;
+import de.adesso.iliasdownloader3.model.LoginType;
 import de.adesso.iliasdownloader3.model.SoapParameterEntry;
+import de.adesso.iliasdownloader3.service.IliasService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,9 +19,9 @@ import static java.util.Collections.singletonList;
  */
 @Log4j2
 @RequiredArgsConstructor
-public final class IliasServiceImpl implements IliasService {
+public final class SoapIliasService implements IliasService {
     @NonNull
-    private final IliasSoapService connectorService;
+    private final IliasSoapConnector connectorService;
 
     private String sessionId;
 
@@ -50,5 +52,12 @@ public final class IliasServiceImpl implements IliasService {
     @Override
     public void logout() {
         connectorService.executeSoapRequest("logout", singletonList(new SoapParameterEntry("sid", sessionId)));
+    }
+
+    public static void main(String[] args) {
+        String url = "https://www.ilias.fh-dortmund.de/ilias/login.php?client_id=ilias-fhdo&lang=de";
+        IliasSoapConnectorImpl soapService = new IliasSoapConnectorImpl(url, "ilias-fhdo");
+        // TODO testen
+        new SoapIliasService(soapService).login(new LoginCredentials("dobro001", "n8=QdVjr", LoginType.CAS, null));
     }
 }

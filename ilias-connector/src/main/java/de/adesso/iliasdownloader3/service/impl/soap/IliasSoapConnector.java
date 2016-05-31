@@ -1,4 +1,4 @@
-package de.adesso.iliasdownloader3.service;
+package de.adesso.iliasdownloader3.service.impl.soap;
 
 import de.adesso.iliasdownloader3.model.SoapParameterEntry;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @author Dominik Broj
  * @since 02.02.2016
  */
-public interface IliasSoapService {
+public interface IliasSoapConnector {
     Object executeSoapRequest(String soapMethodName, List<SoapParameterEntry> parameters);
 
     String getClientId();
