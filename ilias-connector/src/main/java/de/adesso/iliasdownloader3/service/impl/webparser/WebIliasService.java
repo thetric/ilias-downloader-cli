@@ -2,6 +2,7 @@ package de.adesso.iliasdownloader3.service.impl.webparser;
 
 import de.adesso.iliasdownloader3.service.IliasService;
 import de.adesso.iliasdownloader3.service.exception.IliasAuthenticationException;
+import de.adesso.iliasdownloader3.service.model.Course;
 import de.adesso.iliasdownloader3.service.model.LoginCredentials;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author broj
@@ -60,5 +63,10 @@ public final class WebIliasService implements IliasService {
         } catch (IOException e) {
             throw exceptionTranslator.translate(e);
         }
+    }
+
+    @Override
+    public Collection<Course> getJoinedCourses() {
+        return Collections.emptyList();
     }
 }

@@ -1,5 +1,6 @@
 package de.adesso.iliasdownloader3.service.impl.soap;
 
+import de.adesso.iliasdownloader3.service.model.Course;
 import de.adesso.iliasdownloader3.service.model.LoginCredentials;
 import de.adesso.iliasdownloader3.service.impl.soap.model.LoginType;
 import de.adesso.iliasdownloader3.service.IliasService;
@@ -8,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
@@ -53,5 +56,10 @@ public final class SoapIliasService implements IliasService {
     @Override
     public void logout() {
         connectorService.executeSoapRequest("logout", singletonList(new SoapParameterEntry("sid", sessionId)));
+    }
+
+    @Override
+    public Collection<Course> getJoinedCourses() {
+        return emptyList();
     }
 }
