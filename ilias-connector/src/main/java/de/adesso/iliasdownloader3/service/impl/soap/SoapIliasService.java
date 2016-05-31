@@ -21,10 +21,10 @@ import static java.util.Collections.singletonList;
 public final class SoapIliasService implements IliasService {
     @NonNull
     private final IliasSoapConnector connectorService;
+    @NonNull
+    private final LoginType loginType;
 
     private String sessionId;
-
-    // NOTE: es ist wichtig, in welcher _Reihenfolge_ die Parameter dem SoapObjekt hinzugefügt werden
 
     /**
      * Loggt sich am Ilias ein.
@@ -34,11 +34,13 @@ public final class SoapIliasService implements IliasService {
      */
     @Override
     public void login(@NonNull LoginCredentials loginCredentials) {
-        final String loginMethodName = loginCredentials.getLoginType().getLoginMethodName();
+        final String loginMethodName = loginType.getLoginMethodName();
 
         final Object authResponse = connectorService.executeSoapRequest(loginMethodName, mapLoginData(loginCredentials));
         sessionId = String.valueOf(authResponse);
     }
+
+    // NOTE: es ist wichtig, in welcher _Reihenfolge_ die Parameter dem SoapObjekt hinzugefügt werden
 
     private List<SoapParameterEntry> mapLoginData(LoginCredentials loginCredentials) {
         List<SoapParameterEntry> entries = new ArrayList<>();
@@ -51,12 +53,5 @@ public final class SoapIliasService implements IliasService {
     @Override
     public void logout() {
         connectorService.executeSoapRequest("logout", singletonList(new SoapParameterEntry("sid", sessionId)));
-    }
-
-    public static void main(String[] args) {
-        String url = "https://www.ilias.fh-dortmund.de/ilias/login.php?client_id=ilias-fhdo&lang=de";
-        IliasSoapConnectorImpl soapService = new IliasSoapConnectorImpl(url, "ilias-fhdo");
-        // TODO testen
-        new SoapIliasService(soapService).login(new LoginCredentials("dobro001", "n8=QdVjr", LoginType.CAS, null));
     }
 }

@@ -1,7 +1,5 @@
 package de.adesso.iliasdownloader3.service.model;
 
-import de.adesso.iliasdownloader3.service.impl.soap.model.DownloadMethod;
-import de.adesso.iliasdownloader3.service.impl.soap.model.LoginType;
 import lombok.Value;
 
 /**
@@ -13,6 +11,4 @@ import lombok.Value;
 @Value
 public final class LoginCredentials {
     private final String userName, password;
-    private final LoginType loginType;
-    private final DownloadMethod downloadMethod;
 }
