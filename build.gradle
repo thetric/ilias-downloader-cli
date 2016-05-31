@@ -24,8 +24,8 @@ subprojects {
         compile 'org.projectlombok:lombok:1.16.8'
 
         // logging libs
-        compile 'org.apache.logging.log4j:log4j-api:2.5'
-        compile 'org.apache.logging.log4j:log4j-core:2.5'
+        compile 'org.apache.logging.log4j:log4j-api:2.6'
+        compile 'org.apache.logging.log4j:log4j-core:2.6'
     }
 
     repositories {
@@ -40,7 +40,7 @@ project(":ilias-connector") {
     dependencies {
         compile 'commons-io:commons-io:2.5'
         compile 'commons-codec:commons-codec:1.10'
-        compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.0'
+        compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
         compile 'org.simpleframework:simple-xml:2.7.1'
 
         // test
