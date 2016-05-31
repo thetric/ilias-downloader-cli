@@ -1,7 +1,7 @@
 package de.adesso.azubis.iliasdownloader.v3.ui.intro;
 
 import de.adesso.azubis.iliasdownloader.v3.ui.util.FxmlLoaderHelper;
-import de.adesso.iliasdownloader2.service.IliasUtil;
+import de.adesso.iliasdownloader3.service.IliasUtil;
 import de.adesso.iliasdownloader3.service.exception.IliasException;
 import de.adesso.iliasdownloader3.service.impl.soap.model.DownloadMethod;
 import de.adesso.iliasdownloader3.service.impl.soap.model.LoginType;

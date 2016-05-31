@@ -1,6 +1,6 @@
 package de.adesso.azubis.iliasdownloader.v3.sync;
 
-import de.adesso.iliasdownloader2.service.ILIASSoapService;
+import de.adesso.iliasdownloader3.service.IliasService;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 public final class IliasCourseSyncService extends Service<Void> {
     @NonNull
-    private final ILIASSoapService soapService;
+    private final IliasService soapService;
 
     @NonNull
     private final SyncSettings syncSettings;
