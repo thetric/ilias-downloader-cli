@@ -1,15 +1,15 @@
 package de.adesso.azubis.iliasdownloader.v3.prefs;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import de.adesso.iliasdownloader3.model.DownloadMethod;
-import de.adesso.iliasdownloader3.model.LoginType;
+import de.adesso.iliasdownloader3.service.impl.soap.model.DownloadMethod;
+import de.adesso.iliasdownloader3.service.impl.soap.model.LoginType;
 import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static de.adesso.iliasdownloader3.model.DownloadMethod.WEBSERVICE;
-import static de.adesso.iliasdownloader3.model.LoginType.LDAP;
+import static de.adesso.iliasdownloader3.service.impl.soap.model.DownloadMethod.WEBSERVICE;
+import static de.adesso.iliasdownloader3.service.impl.soap.model.LoginType.LDAP;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 

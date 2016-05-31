@@ -39,7 +39,7 @@ public final class Main extends Application {
             final UserPreferences userPreferences = userPreferenceService.loadUserPreferences();
             // show main ui
         } catch (NoSuchFileException noSettingsEx) {
-            log.info("Keine Benutzereinstellungen gefunden, zeige Einrichtungsdialog", noSettingsEx.getLocalizedMessage());
+            log.info("Keine Benutzereinstellungen gefunden, zeige Einrichtungsdialog.\n Exception: {}", noSettingsEx.getLocalizedMessage());
             showIntroWizard();
         }
     }

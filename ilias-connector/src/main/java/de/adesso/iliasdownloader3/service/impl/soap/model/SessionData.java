@@ -1,4 +1,4 @@
-package de.adesso.iliasdownloader3.model;
+package de.adesso.iliasdownloader3.service.impl.soap.model;
 
 import lombok.Value;
 

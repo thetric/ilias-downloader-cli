@@ -1,5 +1,7 @@
-package de.adesso.iliasdownloader3.model;
+package de.adesso.iliasdownloader3.service.model;
 
+import de.adesso.iliasdownloader3.service.impl.soap.model.DownloadMethod;
+import de.adesso.iliasdownloader3.service.impl.soap.model.LoginType;
 import lombok.Value;
 
 /**

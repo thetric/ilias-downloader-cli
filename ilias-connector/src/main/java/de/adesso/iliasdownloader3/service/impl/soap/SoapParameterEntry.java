@@ -1,4 +1,4 @@
-package de.adesso.iliasdownloader3.model;
+package de.adesso.iliasdownloader3.service.impl.soap;
 
 import lombok.Value;
 
@@ -7,6 +7,6 @@ import lombok.Value;
  * @since 21.05.2016
  */
 @Value
-public final class SoapParameterEntry {
+final class SoapParameterEntry {
     private final String key, value;
 }

@@ -1,7 +1,6 @@
 package de.adesso.iliasdownloader3.service.impl.soap;
 
-import de.adesso.iliasdownloader3.exception.IliasException;
-import de.adesso.iliasdownloader3.model.SoapParameterEntry;
+import de.adesso.iliasdownloader3.service.exception.IliasException;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

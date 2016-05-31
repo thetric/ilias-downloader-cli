@@ -2,9 +2,9 @@ package de.adesso.azubis.iliasdownloader.v3.ui.intro;
 
 import de.adesso.azubis.iliasdownloader.v3.ui.util.FxmlLoaderHelper;
 import de.adesso.iliasdownloader2.service.IliasUtil;
-import de.adesso.iliasdownloader3.exception.IliasException;
-import de.adesso.iliasdownloader3.model.DownloadMethod;
-import de.adesso.iliasdownloader3.model.LoginType;
+import de.adesso.iliasdownloader3.service.exception.IliasException;
+import de.adesso.iliasdownloader3.service.impl.soap.model.DownloadMethod;
+import de.adesso.iliasdownloader3.service.impl.soap.model.LoginType;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -41,7 +41,7 @@ final class ServerSettingsWizardPane extends WizardPane {
     @FXML
     private Label iliasServerUrlValidationLabel;
 
-    public ServerSettingsWizardPane() throws IOException {
+    ServerSettingsWizardPane() throws IOException {
         Parent content = FxmlLoaderHelper.load(this, FXML_FILE);
         setContent(content);
         setHeaderText("Verbindungseinstellungen");
@@ -59,7 +59,7 @@ final class ServerSettingsWizardPane extends WizardPane {
             clientIdField.setText(clientId);
             iliasServerUrlValidationLabel.setText("Die Ilias Loginseite ist gültig");
         } catch (IliasException iliasEx) {
-            log.error("Ungültige Ilias Url", iliasEx.getMessage());
+            log.error("Ungültige Ilias Url: {}", iliasEx.getMessage());
             error = true;
             iliasServerUrlValidationLabel.setText("Trage bitte eine gültige URL für die Ilias Loginseite ein und drücke Enter");
         }

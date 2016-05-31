@@ -1,6 +1,6 @@
 package de.adesso.iliasdownloader3.service;
 
-import de.adesso.iliasdownloader3.model.LoginCredentials;
+import de.adesso.iliasdownloader3.service.model.LoginCredentials;
 
 /**
  * @author broj

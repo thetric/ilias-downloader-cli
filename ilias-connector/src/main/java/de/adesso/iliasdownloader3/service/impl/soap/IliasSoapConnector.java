@@ -1,7 +1,5 @@
 package de.adesso.iliasdownloader3.service.impl.soap;
 
-import de.adesso.iliasdownloader3.model.SoapParameterEntry;
-
 import java.util.List;
 
 /**

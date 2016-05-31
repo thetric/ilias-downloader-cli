@@ -1,4 +1,4 @@
-package de.adesso.iliasdownloader3.exception;
+package de.adesso.iliasdownloader3.service.exception;
 
 public class IliasException extends RuntimeException {
 
