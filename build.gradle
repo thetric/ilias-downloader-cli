@@ -38,10 +38,11 @@ project(":ilias-connector") {
     description = 'Schnittstelle zum Ilias'
 
     dependencies {
-        compile 'commons-io:commons-io:2.5'
-        compile 'commons-codec:commons-codec:1.10'
+        // soap deps
         compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
-        compile 'org.simpleframework:simple-xml:2.7.1'
+
+        // web parser deps
+        compile 'org.jsoup:jsoup:1.9.2'
 
         // test
         testCompile 'junit:junit:4.12'
