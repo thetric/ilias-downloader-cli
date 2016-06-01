@@ -39,7 +39,7 @@ import java.util.zip.GZIPInputStream;
  * Änderungen von Kevin Krummenauer: Eine Zeile in call(String soapAction, SoapEnvelope envelope, List headers, File
  * outputFile) auskommentiert, nämlich den User-agent, der auf "soap-android/2.6.0+" stand
  */
-class HttpTransportSENoUserAgent extends Transport {
+final class HttpTransportSENoUserAgent extends Transport {
 
     /**
      * Creates instance of HttpTransportSE with set url
