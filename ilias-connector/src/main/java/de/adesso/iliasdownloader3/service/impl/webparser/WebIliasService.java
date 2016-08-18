@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static de.adesso.iliasdownloader3.service.impl.webparser.CssSelectors.COURSE_SELECTOR;
+import static de.adesso.iliasdownloader3.service.impl.webparser.CssSelectors.GENERIC_ITEM_SELECTOR;
+
 /**
  * @author broj
  * @since 31.05.2016
@@ -34,8 +37,6 @@ public final class WebIliasService implements IliasService {
     private static final String LOGOUT_PAGE = ILIAS_BASE_URL + "logout.php";
     private static final String COURSES_AND_GROUPS_OVERVIEW = ILIAS_BASE_URL + "ilias.php" +
             "?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems";
-
-    private static final String ILIAS_CSS_SELECTOR_COURSE = "a[href*='_crs_'].il_ContainerItemTitle";
 
     @NonNull
     private final WebIoExceptionTranslator exceptionTranslator;
@@ -124,7 +125,7 @@ public final class WebIliasService implements IliasService {
     }
 
     private Collection<Course> getCoursesFromHtml(@NonNull Document document) {
-        Elements elements = document.select(ILIAS_CSS_SELECTOR_COURSE);
+        Elements elements = document.select(COURSE_SELECTOR.getCssSelector());
 
         return elements.stream().map(aTag -> {
             int courseId = getCourseId(aTag);
@@ -155,6 +156,8 @@ public final class WebIliasService implements IliasService {
     }
 
     private Collection<? extends CourseItem> searchContentRecursively(Course course) {
+        Document document = connectAndGetDocument(course.getUrl());
+        Elements elements = document.select(GENERIC_ITEM_SELECTOR.getCssSelector());
         return null;
     }
 }
