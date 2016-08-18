@@ -1,6 +1,8 @@
 package de.adesso.iliasdownloader3.service.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +12,8 @@ import java.util.Collection;
  * @since 31.05.2016
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public final class Course extends AbstractIliasItem {
     private final Collection<? extends CourseItem> items;
 
