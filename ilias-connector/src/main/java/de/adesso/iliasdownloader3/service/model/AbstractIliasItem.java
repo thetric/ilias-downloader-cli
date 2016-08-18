@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class AbstractIliasItem {
+public abstract class AbstractIliasItem implements IliasItem {
     private int id;
     private String name;
     private String url;
