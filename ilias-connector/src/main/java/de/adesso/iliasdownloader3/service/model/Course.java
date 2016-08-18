@@ -2,17 +2,15 @@ package de.adesso.iliasdownloader3.service.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.Collection;
 
 /**
  * @author broj
  * @since 31.05.2016
  */
-@Data
 @AllArgsConstructor
-@NoArgsConstructor
-public final class Course {
-    private int id;
-    private String name;
-    private String url;
+@Data
+public final class Course extends AbstractIliasItem {
+    private final Collection<? extends AbstractIliasItem> items;
 }
