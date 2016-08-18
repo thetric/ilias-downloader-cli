@@ -9,6 +9,7 @@ import java.util.Collection;
  * Provides access to the Ilias.
  * This interface provides some methods for basic session management (login, logout) and it can list the courses
  * (with/without their contents).
+ *
  * @author broj
  * @since 21.05.2016
  */
@@ -38,7 +39,17 @@ public interface IliasService {
      * Finds all courses without any course content.
      *
      * @return all courses of the current user
-     * @see #searchCoursesWithContent()
+     * @see #searchCoursesWithContent(Collection)
      */
     Collection<Course> getJoinedCourses();
+
+    /**
+     * Searches the selected courses with their child nodes <b>without downloading them</b>.
+     *
+     * @param selectedCourses
+     *         {@link Course}s to search for, must not be modified by this method
+     * @return new list with {@link Course}s and their child nodes
+     * @see de.adesso.iliasdownloader3.service.model.CourseItem
+     */
+    Collection<Course> searchCoursesWithContent(Collection<Course> selectedCourses);
 }

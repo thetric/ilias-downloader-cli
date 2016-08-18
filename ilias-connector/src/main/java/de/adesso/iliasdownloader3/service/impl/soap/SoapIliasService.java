@@ -1,9 +1,9 @@
 package de.adesso.iliasdownloader3.service.impl.soap;
 
+import de.adesso.iliasdownloader3.service.IliasService;
+import de.adesso.iliasdownloader3.service.impl.soap.model.LoginType;
 import de.adesso.iliasdownloader3.service.model.Course;
 import de.adesso.iliasdownloader3.service.model.LoginCredentials;
-import de.adesso.iliasdownloader3.service.impl.soap.model.LoginType;
-import de.adesso.iliasdownloader3.service.IliasService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -61,5 +61,10 @@ public final class SoapIliasService implements IliasService {
     @Override
     public Collection<Course> getJoinedCourses() {
         return emptyList();
+    }
+
+    @Override
+    public Collection<Course> searchCoursesWithContent(Collection<Course> selectedCourses) {
+        return null;
     }
 }

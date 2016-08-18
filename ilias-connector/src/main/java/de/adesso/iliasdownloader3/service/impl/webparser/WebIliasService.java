@@ -120,6 +120,11 @@ public final class WebIliasService implements IliasService {
         return courses;
     }
 
+    @Override
+    public Collection<Course> searchCoursesWithContent(Collection<Course> selectedCourses) {
+        return null;
+    }
+
     private Collection<Course> getCoursesFromHtml(Document document) {
         String courseLinkCssSelector = "a[href*='_crs_'].il_ContainerItemTitle";
         Elements elements = document.select(courseLinkCssSelector);
