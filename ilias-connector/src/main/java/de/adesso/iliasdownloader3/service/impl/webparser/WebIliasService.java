@@ -91,6 +91,9 @@ public final class WebIliasService implements IliasService {
     }
 
     private Connection connectWithSessionCookies(String iliasWebsite) {
+        if (cookies.isEmpty()) {
+            throw new NoCookiesAvailableException("No cookies found. Ensure you are already logged in");
+        }
         return Jsoup
                 .connect(iliasWebsite)
                 .cookies(cookies);
