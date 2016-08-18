@@ -40,7 +40,7 @@ public final class WebIliasService implements IliasService {
     private Map<String, String> cookies = new HashMap<>();
 
     @Override
-    public void login(LoginCredentials loginCredentials) {
+    public void login(@NonNull LoginCredentials loginCredentials) {
         Response response;
         log.info("Logging in at {}", LOGIN_PAGE);
         try {
@@ -60,7 +60,7 @@ public final class WebIliasService implements IliasService {
         cookies = response.cookies();
     }
 
-    private void ensureAuthentication(Response response) {
+    private void ensureAuthentication(@NonNull Response response) {
         // diese Prüfung ist nicht 100% wasserdicht. Das Cookie kann trotzdem gesetzt worden sein, wenn sich der Nutzer
         // zuvor erfolgreich ein- und wieder ausgeloggt hat und sich dann der Login fehlschlägt
         // es wäre vielleicht sicherer, die URL zu prüfen
@@ -90,7 +90,7 @@ public final class WebIliasService implements IliasService {
         log.info("Logout at {} succeeded", LOGOUT_PAGE);
     }
 
-    private Connection connectWithSessionCookies(String iliasWebsite) {
+    private Connection connectWithSessionCookies(@NonNull String iliasWebsite) {
         if (cookies.isEmpty()) {
             throw new NoCookiesAvailableException("No cookies found. Ensure you are already logged in");
         }
@@ -121,11 +121,11 @@ public final class WebIliasService implements IliasService {
     }
 
     @Override
-    public Collection<Course> searchCoursesWithContent(Collection<Course> selectedCourses) {
+    public Collection<Course> searchCoursesWithContent(@NonNull Collection<Course> selectedCourses) {
         return null;
     }
 
-    private Collection<Course> getCoursesFromHtml(Document document) {
+    private Collection<Course> getCoursesFromHtml(@NonNull Document document) {
         String courseLinkCssSelector = "a[href*='_crs_'].il_ContainerItemTitle";
         Elements elements = document.select(courseLinkCssSelector);
 
@@ -137,7 +137,7 @@ public final class WebIliasService implements IliasService {
         }).collect(Collectors.toList());
     }
 
-    private int getCourseId(Element aTag) {
+    private int getCourseId(@NonNull Element aTag) {
         String href = aTag.attr("href");
         // href="http://www.ilias.fh-dortmund.de/ilias/goto_ilias-fhdo_crs_\d+.html"
         String idString = href
