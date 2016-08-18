@@ -42,7 +42,7 @@ public final class WebIliasService implements IliasService {
     @Override
     public void login(LoginCredentials loginCredentials) {
         Response response;
-        log.info("Loggig in at {}", LOGIN_PAGE);
+        log.info("Logging in at {}", LOGIN_PAGE);
         try {
             response = Jsoup
                     .connect(LOGIN_PAGE)
