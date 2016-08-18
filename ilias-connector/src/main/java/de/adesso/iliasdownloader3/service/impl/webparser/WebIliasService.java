@@ -3,6 +3,7 @@ package de.adesso.iliasdownloader3.service.impl.webparser;
 import de.adesso.iliasdownloader3.service.IliasService;
 import de.adesso.iliasdownloader3.service.exception.IliasAuthenticationException;
 import de.adesso.iliasdownloader3.service.model.Course;
+import de.adesso.iliasdownloader3.service.model.CourseItem;
 import de.adesso.iliasdownloader3.service.model.LoginCredentials;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,8 @@ public final class WebIliasService implements IliasService {
     private static final String LOGOUT_PAGE = ILIAS_BASE_URL + "logout.php";
     private static final String COURSES_AND_GROUPS_OVERVIEW = ILIAS_BASE_URL + "ilias.php" +
             "?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems";
+
+    private static final String ILIAS_CSS_SELECTOR_COURSE = "a[href*='_crs_'].il_ContainerItemTitle";
 
     @NonNull
     private final WebIoExceptionTranslator exceptionTranslator;
@@ -99,20 +102,20 @@ public final class WebIliasService implements IliasService {
                 .cookies(cookies);
     }
 
-    @Override
-    public Collection<Course> getJoinedCourses() {
-        Response response;
-        Document document;
-
-        log.info("Get all courses and groups from {}", COURSES_AND_GROUPS_OVERVIEW);
+    private Document connectAndGetDocument(@NonNull String url) {
         try {
-            response = connectWithSessionCookies(COURSES_AND_GROUPS_OVERVIEW)
-                    .execute();
-            document = response.parse();
+            Response response = connectWithSessionCookies(url).execute();
+            return response.parse();
         } catch (IOException e) {
-            log.error("Could not get courses/groups from " + COURSES_AND_GROUPS_OVERVIEW, e);
+            log.error("Could not GET: " + url, e);
             throw exceptionTranslator.translate(e);
         }
+    }
+
+    @Override
+    public Collection<Course> getJoinedCourses() {
+        log.info("Get all courses and groups from {}", COURSES_AND_GROUPS_OVERVIEW);
+        Document document = connectAndGetDocument(COURSES_AND_GROUPS_OVERVIEW);
 
         log.info("Mapping course/groups to entities...");
         Collection<Course> courses = getCoursesFromHtml(document);
@@ -120,14 +123,8 @@ public final class WebIliasService implements IliasService {
         return courses;
     }
 
-    @Override
-    public Collection<Course> searchCoursesWithContent(@NonNull Collection<Course> selectedCourses) {
-        return null;
-    }
-
     private Collection<Course> getCoursesFromHtml(@NonNull Document document) {
-        String courseLinkCssSelector = "a[href*='_crs_'].il_ContainerItemTitle";
-        Elements elements = document.select(courseLinkCssSelector);
+        Elements elements = document.select(ILIAS_CSS_SELECTOR_COURSE);
 
         return elements.stream().map(aTag -> {
             int courseId = getCourseId(aTag);
@@ -141,9 +138,23 @@ public final class WebIliasService implements IliasService {
         String href = aTag.attr("href");
         // href="http://www.ilias.fh-dortmund.de/ilias/goto_ilias-fhdo_crs_\d+.html"
         String idString = href
-                .replaceFirst("https://www.ilias.fh-dortmund.de/ilias/goto_ilias-fhdo_crs_", "")
+                .replaceFirst(ILIAS_BASE_URL + "goto_ilias-fhdo_crs_", "")
                 .replace(".html", "");
         // der Rest muss ein int sein
         return Integer.parseInt(idString);
+    }
+
+    @Override
+    public Collection<Course> searchCoursesWithContent(@NonNull Collection<Course> selectedCourses) {
+        return null;
+    }
+
+    private Course findCourseChildNodes(@NonNull Course course) {
+        Collection<? extends CourseItem> childNodes = searchContentRecursively(course);
+        return new Course(course.getId(), course.getName(), course.getUrl(), childNodes);
+    }
+
+    private Collection<? extends CourseItem> searchContentRecursively(Course course) {
+        return null;
     }
 }
