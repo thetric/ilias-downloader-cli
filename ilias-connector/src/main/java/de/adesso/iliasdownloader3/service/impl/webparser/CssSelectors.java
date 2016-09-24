@@ -8,7 +8,9 @@ import lombok.Getter;
  */
 enum CssSelectors {
     COURSE_SELECTOR("a[href*='_crs_'].il_ContainerItemTitle"),
-    GENERIC_ITEM_SELECTOR("a[target='_top'].il_ContainerItemTitle");
+    ITEM_CONTAINER_SELECTOR(".il_ContainerListItem"),
+    ITEM_TITLE_SELECTOR("a.il_ContainerItemTitle"),
+    ITEM_PROPERTIES_SELECTOR(".il_ItemProperty");
 
     @Getter
     private final String cssSelector;
