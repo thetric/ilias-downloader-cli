@@ -1,6 +1,9 @@
 package de.adesso.iliasdownloader3.service.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Collection;
 
@@ -8,6 +11,9 @@ import java.util.Collection;
  * @author broj
  * @since 18.08.2016
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public final class CourseFolder extends AbstractIliasItem implements CourseItem {
     @Getter
     private final Collection<? extends CourseItem> courseItems;
