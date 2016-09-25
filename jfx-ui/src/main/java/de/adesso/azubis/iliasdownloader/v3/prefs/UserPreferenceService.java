@@ -21,5 +21,5 @@ public interface UserPreferenceService {
      */
     UserPreferences loadUserPreferences() throws IOException;
 
-    void saveUserPreferenfes(UserPreferences userPreferences) throws IOException;
+    void saveUserPreferences(UserPreferences userPreferences) throws IOException;
 }

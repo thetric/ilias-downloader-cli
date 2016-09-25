@@ -42,7 +42,7 @@ public final class UserPreferenceServiceImpl implements UserPreferenceService {
     }
 
     @Override
-    public void saveUserPreferenfes(@NonNull UserPreferences userPreferences) throws IOException {
+    public void saveUserPreferences(@NonNull UserPreferences userPreferences) throws IOException {
         final Path iliasDownloaderSettingsPath = Paths.get(settingsFilename);
         try (OutputStream outputStream = Files.newOutputStream(iliasDownloaderSettingsPath)) {
             xmlMapper.writeValue(outputStream, userPreferences);
