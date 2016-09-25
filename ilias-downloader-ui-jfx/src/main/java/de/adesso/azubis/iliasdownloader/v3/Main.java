@@ -3,7 +3,6 @@ package de.adesso.azubis.iliasdownloader.v3;
 import de.adesso.azubis.iliasdownloader.v3.prefs.UserPreferenceService;
 import de.adesso.azubis.iliasdownloader.v3.prefs.UserPreferenceServiceImpl;
 import de.adesso.azubis.iliasdownloader.v3.prefs.UserPreferences;
-import de.adesso.azubis.iliasdownloader.v3.ui.intro.IntroWizard;
 import javafx.application.Application;
 import javafx.collections.ObservableMap;
 import javafx.stage.Stage;
@@ -11,8 +10,6 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-
-import static javafx.scene.control.ButtonType.FINISH;
 
 /**
  * Startklasse der Anwendung.
@@ -40,18 +37,6 @@ public final class Main extends Application {
             // show main ui
         } catch (NoSuchFileException noSettingsEx) {
             log.info("Keine Benutzereinstellungen gefunden, zeige Einrichtungsdialog.\n Exception: {}", noSettingsEx.getLocalizedMessage());
-            showIntroWizard();
-        }
-    }
-
-    private void showIntroWizard() {
-        log.info("Erstelle Einrichtungs-Wizard");
-        try {
-            final IntroWizard introWizard = new IntroWizard();
-            introWizard.showAndWait().filter(result -> result == FINISH).ifPresent(result ->
-                    mapWizardSettingsToUserPrefs(introWizard.getSettings()));
-        } catch (IOException e) {
-            log.fatal("Fehler beim Laden der UI", e);
         }
     }
 
