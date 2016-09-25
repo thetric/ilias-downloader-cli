@@ -1,12 +1,5 @@
 .gradle/
 
 /.idea/
-/ilias-downloader-v3-jfx.iml
-/build/
 /classes/
-
-/ilias-connector/ilias-connector.iml
-/ilias-connector/build/
-
-/ilias-downloader-ui-jfx/ilias-downloader-ui-jfx.iml
-/ilias-downloader-ui-jfx/build/
+/**/build/
