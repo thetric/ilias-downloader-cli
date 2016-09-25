@@ -4,7 +4,6 @@ import de.adesso.iliasdownloader3.service.IliasService;
 import de.adesso.iliasdownloader3.service.exception.IliasAuthenticationException;
 import de.adesso.iliasdownloader3.service.model.*;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
@@ -25,39 +24,49 @@ import static java.util.stream.Collectors.toList;
  * @author broj
  * @since 31.05.2016
  */
-@RequiredArgsConstructor
 @Log4j2
-public final class WebIliasService implements IliasService {
-    private static final String ILIAS_BASE_URL = "https://www.ilias.fh-dortmund.de/ilias/";
-    // TODO externalize base URL
-    private static final String LOGIN_PAGE = ILIAS_BASE_URL + "login.php";
-    private static final String LOGOUT_PAGE = ILIAS_BASE_URL + "logout.php";
-    private static final String COURSES_AND_GROUPS_OVERVIEW = ILIAS_BASE_URL + "ilias.php" +
-            "?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems";
-
-    private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]");
-
+final class WebIliasService implements IliasService {
     @NonNull
     private final WebIoExceptionTranslator exceptionTranslator;
+    private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]");
+
+    private final String iliasBaseUrl;
+    private final String loginPage;
+    private final String logoutPage;
+    private final String courseOverview;
+    private final String clientId;
+    private final String courseLinkPrefix;
+
     @NonNull
-    private Map<String, String> cookies = new HashMap<>();
+    private Map<String, String> cookies;
+
+    WebIliasService(@NonNull WebIoExceptionTranslator exceptionTranslator, @NonNull String iliasBaseUrl, @NonNull String clientId) {
+        this.exceptionTranslator = exceptionTranslator;
+        this.iliasBaseUrl = iliasBaseUrl;
+        this.clientId = clientId;
+        loginPage = iliasBaseUrl + "login.php";
+        logoutPage = iliasBaseUrl + "logout.php";
+        courseOverview = iliasBaseUrl + "ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems";
+        courseLinkPrefix = iliasBaseUrl + "goto_" + clientId + "_crs_";
+        cookies = new HashMap<>();
+    }
 
     @Override
     public void login(@NonNull LoginCredentials loginCredentials) {
         Response response;
-        log.info("Logging in at {}", LOGIN_PAGE);
+        log.info("Logging in at {}", loginPage);
         try {
             response = Jsoup
-                    .connect(LOGIN_PAGE)
+                    .connect(loginPage)
                     .data("username", loginCredentials.getUserName())
                     .data("password", loginCredentials.getPassword())
                     .method(Connection.Method.POST)
                     .execute();
         } catch (IOException e) {
-            log.error("Login at " + LOGIN_PAGE + " failed", e);
+            log.error("Login at " + loginPage + " failed", e);
             throw exceptionTranslator.translate(e);
         }
-        log.info("Login at {} succeeded", LOGIN_PAGE);
+        log.info("Login at {} succeeded", loginPage);
 
         ensureAuthentication(response);
         cookies = response.cookies();
@@ -76,14 +85,14 @@ public final class WebIliasService implements IliasService {
 
     @Override
     public void logout() {
-        log.info("Logging out: {}", LOGOUT_PAGE);
+        log.info("Logging out: {}", logoutPage);
 
         try {
-            Response response = connectWithSessionCookies(LOGOUT_PAGE)
+            Response response = connectWithSessionCookies(logoutPage)
                     .method(Connection.Method.GET)
                     .execute();
         } catch (IOException e) {
-            log.error("Logout at " + LOGOUT_PAGE + " failed", e);
+            log.error("Logout at " + logoutPage + " failed", e);
             throw exceptionTranslator.translate(e);
         } finally {
             cookies.clear();
@@ -91,7 +100,7 @@ public final class WebIliasService implements IliasService {
             // wenn wieder der Login aufgerufen wird, hat der Client noch das "authchallenge" Cookie
             // ist der Logout noch nötig?
         }
-        log.info("Logout at {} succeeded", LOGOUT_PAGE);
+        log.info("Logout at {} succeeded", logoutPage);
     }
 
     private Connection connectWithSessionCookies(@NonNull String iliasWebsite) {
@@ -115,8 +124,8 @@ public final class WebIliasService implements IliasService {
 
     @Override
     public Collection<Course> getJoinedCourses() {
-        log.info("Get all courses and groups from {}", COURSES_AND_GROUPS_OVERVIEW);
-        Document document = connectAndGetDocument(COURSES_AND_GROUPS_OVERVIEW);
+        log.info("Get all courses and groups from {}", courseOverview);
+        Document document = connectAndGetDocument(courseOverview);
 
         log.info("Mapping course/groups to entities...");
         Collection<Course> courses = getCoursesFromHtml(document);
@@ -143,7 +152,7 @@ public final class WebIliasService implements IliasService {
         String href = aTag.attr("href");
         // href="http://www.ilias.fh-dortmund.de/ilias/goto_ilias-fhdo_crs_\d+.html"
         String idString = href
-                .replaceFirst(ILIAS_BASE_URL + "goto_ilias-fhdo_crs_", "")
+                .replaceFirst(courseLinkPrefix, "")
                 .replace(".html", "");
         // der Rest muss ein int sein
         return parseId(href, idString);
@@ -214,7 +223,7 @@ public final class WebIliasService implements IliasService {
     }
 
     private String getItemIdFromUrl(String itemUrl) {
-        return itemUrl.replaceFirst(ILIAS_BASE_URL + "goto_ilias-fhdo_", "");
+        return itemUrl.replaceFirst(iliasBaseUrl + "goto_ilias-fhdo_", "");
     }
 
     private Optional<CourseItem> createCourseItem(@NonNull String type, int itemId, @NonNull String itemName, @NonNull String itemUrl, List<String> properties) {
