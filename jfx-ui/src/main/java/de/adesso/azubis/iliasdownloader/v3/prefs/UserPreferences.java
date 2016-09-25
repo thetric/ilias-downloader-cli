@@ -49,7 +49,7 @@ public final class UserPreferences {
     private boolean autoSyncActive = false;
 
     @JacksonXmlProperty(localName = "autosyncinterval")
-    private long autoSyncIntervalInSeconds = HOURS.convert(1L, SECONDS);
+    private long autoSyncIntervalInSeconds = SECONDS.convert(1L, HOURS);
 
     @JacksonXmlProperty(localName = "syncallcourses")
     private boolean syncAll = true;
