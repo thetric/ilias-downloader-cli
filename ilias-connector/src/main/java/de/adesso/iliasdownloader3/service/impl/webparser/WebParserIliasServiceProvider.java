@@ -2,6 +2,7 @@ package de.adesso.iliasdownloader3.service.impl.webparser;
 
 import de.adesso.iliasdownloader3.service.IliasService;
 import de.adesso.iliasdownloader3.service.IliasServiceProvider;
+import lombok.NonNull;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
@@ -20,19 +21,24 @@ public final class WebParserIliasServiceProvider implements IliasServiceProvider
     private final String iliasBaseUrl;
     private final String clientId;
 
-    public WebParserIliasServiceProvider(String loginPage) throws IOException {
+    public WebParserIliasServiceProvider(@NonNull String loginPage) throws IOException {
         iliasBaseUrl = getBaseUrl(loginPage);
         clientId = getClientId(loginPage);
     }
 
     private String getBaseUrl(String loginPage) {
-        String iliasBaseUrl;
+        loginPage = loginPage.trim();
+        if (loginPage.isEmpty()) {
+            throw new IllegalArgumentException("Die angegebene URL darf nicht leer sein");
+        }
+        if (!loginPage.startsWith("http://") || !loginPage.startsWith("https://")) {
+            loginPage = "https://" + loginPage;
+        }
         int loginPageNameIndex = loginPage.indexOf(LOGIN_PAGE_NAME);
         if (loginPageNameIndex == -1) {
             throw new IllegalArgumentException("Die angegebene URL enthält kein '" + LOGIN_PAGE_NAME + "'");
         }
-        iliasBaseUrl = loginPage.substring(0, loginPageNameIndex);
-        return iliasBaseUrl;
+        return loginPage.substring(0, loginPageNameIndex);
     }
 
     private String getClientId(String loginPage) throws IOException {
