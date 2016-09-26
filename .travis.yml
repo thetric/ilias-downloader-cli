@@ -1,6 +1,15 @@
 language: java
-jdk:
-    - oraclejdk8
+
+# travis' 'oraclejdk8' is too old to compile the sources (JDK 8u31)
+# this is a workaround
+# see https://github.com/travis-ci/travis-ci/issues/3259
+sudo: false
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
+# don't upload the gradle caches
 before_cache:
     - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
     - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
