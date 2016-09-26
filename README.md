@@ -1,3 +1,5 @@
+[![Travis](https://img.shields.io/travis/thetric/ilias-downloader.svg?maxAge=2592000)]()
+
 # Ilias Downloader
 
 This is a reimplementation of the original [IliasDownloader2](https://github.com/kekru/ILIASDownloader2) by Kevin Krummenauer (kekru).
