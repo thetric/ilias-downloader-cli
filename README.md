@@ -1,4 +1,4 @@
-[![Travis](https://img.shields.io/travis/thetric/ilias-downloader.svg?maxAge=2592000)]()
+[![Travis](https://img.shields.io/travis/thetric/ilias-downloader.svg?style=flat-square&maxAge=2592000)]() [![Dependency Status](https://www.versioneye.com/user/projects/57e93ae7bd6fa600316f9478/badge.svg?style=flat-square)]()
 
 # Ilias Downloader
 
