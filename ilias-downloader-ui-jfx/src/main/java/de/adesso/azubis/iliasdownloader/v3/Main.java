@@ -51,7 +51,12 @@ public final class Main extends Application {
                      noSettingsEx.getLocalizedMessage());
 
         }
-        createIliasService(iliasServerBaseUrl, username);
+        try {
+            createIliasService(iliasServerBaseUrl, username);
+        } catch (Exception e) {
+            log.error("Fehler beim Erstellen des Ilias Connector", e);
+            DialogHelper.showExceptionDialog("Fehler beim Erstellen des Ilias Connector", e);
+        }
     }
 
     private void createIliasService(String iliasServerBaseUrl, String username) {
