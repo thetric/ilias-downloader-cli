@@ -39,7 +39,7 @@ public final class Main extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         String iliasServerBaseUrl = "";
         String username = "";
         try {
@@ -49,7 +49,10 @@ public final class Main extends Application {
         } catch (NoSuchFileException noSettingsEx) {
             log.info("Keine Benutzereinstellungen gefunden, zeige Einrichtungsdialog.\n Exception: {}",
                      noSettingsEx.getLocalizedMessage());
-
+        } catch (IOException e) {
+            String message = "Konnte die Einstellungen nicht laden.";
+            log.error(message, e);
+            DialogHelper.showExceptionDialog(message, e).ifPresent(c -> Platform.exit());
         }
         try {
             createIliasService(iliasServerBaseUrl, username);
