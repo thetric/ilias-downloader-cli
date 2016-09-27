@@ -30,6 +30,7 @@ subprojects {
 
     repositories {
         jcenter()
+        maven { url "https://jitpack.io" }
         maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases' }
     }
 }
@@ -39,7 +40,7 @@ project(":ilias-connector") {
 
     dependencies {
         // soap deps
-        compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
+        compile 'com.github.simpligility.ksoap2-android:ksoap2-android:3.6.1'
 
         // web parser deps
         compile 'org.jsoup:jsoup:1.9.2'
