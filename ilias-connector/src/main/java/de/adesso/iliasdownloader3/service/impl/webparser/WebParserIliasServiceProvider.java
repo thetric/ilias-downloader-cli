@@ -31,7 +31,7 @@ public final class WebParserIliasServiceProvider implements IliasServiceProvider
         if (loginPage.isEmpty()) {
             throw new IllegalArgumentException("Die angegebene URL darf nicht leer sein");
         }
-        if (!loginPage.startsWith("http://") || !loginPage.startsWith("https://")) {
+        if (!loginPage.startsWith("http://") && !loginPage.startsWith("https://")) {
             loginPage = "https://" + loginPage;
         }
         int loginPageNameIndex = loginPage.indexOf(LOGIN_PAGE_NAME);
