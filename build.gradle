@@ -1,8 +1,6 @@
 group 'de.adesso.devazubis.iliasdownloader.v3'
 version '0.0.1-SNAPSHOT'
 
-apply plugin: 'java'
-
 repositories {
     jcenter()
 }
@@ -10,9 +8,8 @@ repositories {
 subprojects {
     apply plugin: 'java'
 
-    compileJava.sourceCompatibility = 1.8
-    compileJava.targetCompatibility = 1.8
-    compileJava.options.encoding = 'utf-8'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     version '0.0.1-SNAPSHOT'
 
