@@ -1,5 +1,25 @@
 .gradle/
 
-/.idea/
 /classes/
 /**/build/
+
+# IntelliJ files
+/**/.idea/
+
+# Eclipse files
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.recommenders
+
+# Eclipse Core
+.project
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
