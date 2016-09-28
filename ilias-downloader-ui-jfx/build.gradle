@@ -1,0 +1,14 @@
+description = 'JavaFX UI des Ilias Downloaders'
+
+dependencies {
+    compile project(':ilias-connector:ilias-connector-domparser')
+
+    compile 'org.controlsfx:controlsfx:8.40.12'
+    compile 'de.jensd:fontawesomefx:8.9'
+
+    // xml mapping
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.3'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.3'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.8.3'
+    compile 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
+}

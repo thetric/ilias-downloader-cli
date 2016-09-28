@@ -1,0 +1,6 @@
+dependencies {
+    // web parser deps
+    compile 'org.jsoup:jsoup:1.9.2'
+
+    compile project(':ilias-connector:ilias-connector-common')
+}

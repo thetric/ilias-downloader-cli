@@ -2,7 +2,7 @@ package de.adesso.azubis.iliasdownloader.v3.ui.intro.setup;
 
 import de.adesso.azubis.iliasdownloader.v3.ui.util.DialogHelper;
 import de.adesso.iliasdownloader3.service.IliasService;
-import de.adesso.iliasdownloader3.service.impl.webparser.WebParserIliasServiceProvider;
+import de.adesso.iliasdownloader3.service.webparser.WebParserIliasServiceProvider;
 import javafx.scene.control.TextInputDialog;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;

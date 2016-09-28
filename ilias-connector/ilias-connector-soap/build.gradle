@@ -1,0 +1,6 @@
+dependencies {
+    compile project(':ilias-connector:ilias-connector-common')
+
+    // soap deps
+    compile 'com.github.simpligility.ksoap2-android:ksoap2-android:3.6.1'
+}

@@ -2,12 +2,6 @@ group 'de.adesso.devazubis.iliasdownloader.v3'
 version '0.0.1-SNAPSHOT'
 
 apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-
-compileJava.sourceCompatibility = 1.8
-compileJava.targetCompatibility = 1.8
-compileJava.options.encoding = 'utf-8'
 
 repositories {
     jcenter()
@@ -15,62 +9,26 @@ repositories {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'idea'
-    apply plugin: 'eclipse'
+
+    compileJava.sourceCompatibility = 1.8
+    compileJava.targetCompatibility = 1.8
+    compileJava.options.encoding = 'utf-8'
 
     version '0.0.1-SNAPSHOT'
 
     dependencies {
-        compile 'org.projectlombok:lombok:1.16.10'
+        compileOnly 'org.projectlombok:lombok:1.16.10'
 
         // logging libs
-        compile 'org.apache.logging.log4j:log4j-api:2.6.2'
         compile 'org.apache.logging.log4j:log4j-core:2.6.2'
+
+        // test
+        testCompile 'junit:junit:4.12'
     }
 
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
         maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases' }
-    }
-}
-
-project(":ilias-connector") {
-    description = 'Schnittstelle zum Ilias'
-
-    dependencies {
-        // soap deps
-        compile 'com.github.simpligility.ksoap2-android:ksoap2-android:3.6.1'
-
-        // web parser deps
-        compile 'org.jsoup:jsoup:1.9.2'
-
-        // test
-        testCompile 'junit:junit:4.12'
-    }
-}
-
-project(":ilias-downloader-ui-jfx") {
-    description = 'JavaFX UI des Ilias Downloaders'
-
-    dependencies {
-        compile project(":ilias-connector")
-
-        compile 'org.controlsfx:controlsfx:8.40.12'
-        compile 'de.jensd:fontawesomefx:8.9'
-
-        // xml mapping
-        compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.3'
-        compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.3'
-        compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.8.3'
-        compile 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
-    }
-}
-
-// IntelliJ config
-idea {
-    project {
-        jdkName = '1.8'
-        languageLevel = '1.8'
     }
 }
