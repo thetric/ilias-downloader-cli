@@ -3,7 +3,7 @@ rootProject.name = 'ilias-downloader-v3-jfx'
 include 'ilias-downloader-ui-jfx'
 
 include 'ilias-connector'
-include 'ilias-connector:ilias-connector-common'
+include 'ilias-connector:ilias-connector-api'
 include 'ilias-connector:ilias-connector-domparser'
 include 'ilias-connector:ilias-connector-soap'
 
