@@ -2,14 +2,14 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %level %c{1}.%M:%L   %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %highlight{%-5level} [%t] %c{1.} - %msg%n"/>
             <Filters>
                 <!-- deny warn, error, fatal -->
                 <ThresholdFilter level="warn" onMatch="DENY" onMismatch="ACCEPT"/>
             </Filters>
         </Console>
         <Console name="STDERR" target="SYSTEM_ERR">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %level %c{1}.%M:%L   %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %highlight{%-5level} [%t] %c{1.} - %msg%n"/>
             <Filters>
                 <ThresholdFilter level="warn" onMatch="ACCEPT"/>
             </Filters>
