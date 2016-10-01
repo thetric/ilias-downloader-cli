@@ -1,6 +1,7 @@
 package de.adesso.azubis.iliasdownloader.v3.prefs;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Created by Dominik Broj on 31.01.2016.
@@ -19,7 +20,7 @@ public interface UserPreferenceService {
      * @throws IOException
      *         falls ein I/O-Fehler auftritt
      */
-    UserPreferences loadUserPreferences() throws IOException;
+    Optional<UserPreferences> loadUserPreferences() throws IOException;
 
     void saveUserPreferences(UserPreferences userPreferences) throws IOException;
 }

@@ -16,7 +16,6 @@ import lombok.extern.log4j.Log4j2;
 import org.controlsfx.dialog.LoginDialog;
 
 import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.util.Optional;
 
 /**
@@ -40,26 +39,31 @@ public final class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        String iliasServerBaseUrl = "";
-        String username = "";
+        final UserPreferences userPreferences;
         try {
-            final UserPreferences userPreferences = userPreferenceService.loadUserPreferences();
-            iliasServerBaseUrl = userPreferences.getIliasServerURL();
-            username = userPreferences.getUserName();
-        } catch (NoSuchFileException noSettingsEx) {
-            log.info("Keine Benutzereinstellungen gefunden, zeige Einrichtungsdialog.\n Exception: {}",
-                     noSettingsEx.getLocalizedMessage());
+            userPreferences = userPreferenceService.loadUserPreferences()
+                                                   .orElseGet(this::getDefaultPreferences);
         } catch (IOException e) {
             String message = "Konnte die Einstellungen nicht laden.";
             log.error(message, e);
-            DialogHelper.showExceptionDialog(message, e).ifPresent(c -> Platform.exit());
+            DialogHelper.showExceptionDialog(message, e)
+                        .ifPresent(c -> Platform.exit());
+            return;
         }
         try {
-            createIliasService(iliasServerBaseUrl, username);
+            createIliasService(userPreferences.getIliasServerURL(), userPreferences.getUserName());
         } catch (Exception e) {
             log.error("Fehler beim Erstellen des Ilias Connector", e);
             DialogHelper.showExceptionDialog("Fehler beim Erstellen des Ilias Connector", e);
         }
+    }
+
+    private UserPreferences getDefaultPreferences() {
+        log.info("Keine Benutzereinstellungen gefunden. Lade Standardeinstellungen");
+        UserPreferences preferences = new UserPreferences();
+        preferences.setIliasServerURL("");
+        preferences.setUserName("");
+        return preferences;
     }
 
     private void createIliasService(String iliasServerBaseUrl, String username) {
