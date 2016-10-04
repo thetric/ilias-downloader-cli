@@ -2,6 +2,7 @@ package de.adesso.iliasdownloader3.service;
 
 import de.adesso.iliasdownloader3.service.model.Course;
 import de.adesso.iliasdownloader3.service.model.LoginCredentials;
+import io.reactivex.Observable;
 
 import java.util.Collection;
 
@@ -41,7 +42,7 @@ public interface IliasService {
      * @return all courses of the current user
      * @see #searchCoursesWithContent(Collection)
      */
-    Collection<Course> getJoinedCourses();
+    Observable<Course> getJoinedCourses();
 
     /**
      * Searches the selected courses with their child nodes <b>without downloading them</b>.
@@ -51,5 +52,5 @@ public interface IliasService {
      * @return new list with {@link Course}s and their child nodes
      * @see de.adesso.iliasdownloader3.service.model.CourseItem
      */
-    Collection<Course> searchCoursesWithContent(Collection<Course> selectedCourses);
+    Observable<Course> searchCoursesWithContent(Collection<Course> selectedCourses);
 }

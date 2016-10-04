@@ -1,9 +1,10 @@
 package de.adesso.iliasdownloader3.service.soap;
 
 import de.adesso.iliasdownloader3.service.IliasService;
-import de.adesso.iliasdownloader3.service.soap.model.LoginType;
 import de.adesso.iliasdownloader3.service.model.Course;
 import de.adesso.iliasdownloader3.service.model.LoginCredentials;
+import de.adesso.iliasdownloader3.service.soap.model.LoginType;
+import io.reactivex.Observable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
@@ -59,12 +59,12 @@ public final class SoapIliasService implements IliasService {
     }
 
     @Override
-    public Collection<Course> getJoinedCourses() {
-        return emptyList();
+    public Observable<Course> getJoinedCourses() {
+        return Observable.empty();
     }
 
     @Override
-    public Collection<Course> searchCoursesWithContent(Collection<Course> selectedCourses) {
-        return null;
+    public Observable<Course> searchCoursesWithContent(Collection<Course> selectedCourses) {
+        return Observable.empty();
     }
 }

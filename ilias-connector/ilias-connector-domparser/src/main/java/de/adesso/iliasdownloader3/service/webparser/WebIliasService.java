@@ -3,6 +3,7 @@ package de.adesso.iliasdownloader3.service.webparser;
 import de.adesso.iliasdownloader3.service.IliasService;
 import de.adesso.iliasdownloader3.service.exception.IliasAuthenticationException;
 import de.adesso.iliasdownloader3.service.model.*;
+import io.reactivex.Observable;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.jsoup.Connection;
@@ -17,7 +18,6 @@ import java.util.regex.Pattern;
 
 import static de.adesso.iliasdownloader3.service.webparser.CssSelectors.*;
 import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
 
 /**
  * @author broj
@@ -122,22 +122,16 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    public Collection<Course> getJoinedCourses() {
+    public io.reactivex.Observable<Course> getJoinedCourses() {
         log.info("Get all courses and groups from {}", courseOverview);
         Document document = connectAndGetDocument(courseOverview);
-
-        log.info("Mapping course/groups to entities...");
-        Collection<Course> courses = getCoursesFromHtml(document);
-        log.debug("Found courses: {}", courses);
-        return courses;
+        return getCoursesFromHtml(document);
     }
 
-    private Collection<Course> getCoursesFromHtml(@NonNull Document document) {
-        return document
-                .select(COURSE_SELECTOR.getCssSelector())
-                .stream()
-                .map(this::toCourse)
-                .collect(toList());
+    private Observable<Course> getCoursesFromHtml(@NonNull Document document) {
+        return Observable
+                .fromIterable(document.select(COURSE_SELECTOR.getCssSelector()))
+                .map(this::toCourse);
     }
 
     private Course toCourse(Element courseElement) {
@@ -167,10 +161,9 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    public Collection<Course> searchCoursesWithContent(@NonNull Collection<Course> selectedCourses) {
-        return selectedCourses.stream()
-                              .map(this::findCourseItems)
-                              .collect(toList());
+    public Observable<Course> searchCoursesWithContent(@NonNull Collection<Course> selectedCourses) {
+        return Observable.fromIterable(selectedCourses)
+                         .map(this::findCourseItems);
     }
 
     private Course findCourseItems(@NonNull Course course) {
@@ -180,13 +173,13 @@ final class WebIliasService implements IliasService {
     }
 
     private Collection<? extends CourseItem> searchItemsRecursively(String itemUrl) {
-        return connectAndGetDocument(itemUrl)
-                .select(ITEM_CONTAINER_SELECTOR.getCssSelector())
-                .stream()
-                .map(this::toCourseItem)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(toList());
+        return Observable.fromIterable(connectAndGetDocument(itemUrl)
+                                               .select(ITEM_CONTAINER_SELECTOR.getCssSelector()))
+                         .map(this::toCourseItem)
+                         .filter(Optional::isPresent)
+                         .map(Optional::get)
+                         .toList()
+                         .blockingGet();
     }
 
     private Optional<CourseItem> toCourseItem(Element itemContainer) {
@@ -199,13 +192,13 @@ final class WebIliasService implements IliasService {
         String type = split[0];
         int itemId = Integer.parseInt(split[1]);
 
-        List<String> properties = itemContainer.select(ITEM_PROPERTIES_SELECTOR.getCssSelector())
-                                               .stream()
-                                               .map(Element::text)
-                                               .map(this::trimNbspFromString)
-                                               .map(String::trim)
-                                               .filter(s -> !s.isEmpty())
-                                               .collect(toList());
+        List<String> properties = Observable.fromIterable(itemContainer.select(ITEM_PROPERTIES_SELECTOR.getCssSelector()))
+                                            .map(Element::text)
+                                            .map(this::trimNbspFromString)
+                                            .map(String::trim)
+                                            .filter(s -> !s.isEmpty())
+                                            .toList()
+                                            .blockingGet();
 
         return createCourseItem(type, itemId, itemName, itemUrl, properties);
     }
