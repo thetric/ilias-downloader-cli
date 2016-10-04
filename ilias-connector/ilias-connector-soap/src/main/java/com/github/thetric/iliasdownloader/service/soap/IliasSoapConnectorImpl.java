@@ -9,6 +9,7 @@ import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public final class IliasSoapConnectorImpl implements IliasSoapConnector {
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.setOutputSoapObject(createSoapObject(soapMethodName, parameters));
 
-        final HttpTransportSENoUserAgent http = new HttpTransportSENoUserAgent(iliasSoapServerUrl);
+        final HttpTransportSE http = new HttpTransportSE(iliasSoapServerUrl);
         http.setXmlVersionTag("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 
         final String soapAction = String.join("/", iliasSoapServerUrl, soapMethodName);
