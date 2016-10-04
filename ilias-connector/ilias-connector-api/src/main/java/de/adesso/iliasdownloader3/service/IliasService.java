@@ -48,7 +48,8 @@ public interface IliasService {
      * Searches the selected courses with their child nodes <b>without downloading them</b>.
      *
      * @param selectedCourses
-     *         {@link Course}s to search for, must not be modified by this method
+     *         {@link Course}s to search for. The list itself and its items <i>must not</i> be modified under any
+     *         circumstances
      * @return new list with {@link Course}s and their child nodes
      * @see de.adesso.iliasdownloader3.service.model.CourseItem
      */
