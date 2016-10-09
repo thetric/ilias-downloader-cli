@@ -29,7 +29,7 @@ public final class WebParserIliasServiceProvider implements IliasServiceProvider
     private String getBaseUrl(String loginPage) {
         loginPage = loginPage.trim();
         if (loginPage.isEmpty()) {
-            throw new IllegalArgumentException("Die angegebene URL darf nicht leer sein");
+            throw new IllegalArgumentException("Die angegebene Loginseiten URL darf nicht leer sein");
         }
         if (!loginPage.startsWith("http://") && !loginPage.startsWith("https://")) {
             loginPage = "https://" + loginPage;
