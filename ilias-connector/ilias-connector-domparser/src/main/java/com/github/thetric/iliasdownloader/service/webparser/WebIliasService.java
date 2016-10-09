@@ -150,7 +150,7 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    public io.reactivex.Observable<Course> getJoinedCourses() {
+    public Observable<Course> getJoinedCourses() {
         log.info("Get all courses and groups from {}", courseOverview);
         Document document = connectAndGetDocument(courseOverview);
         return getCoursesFromHtml(document);
@@ -201,13 +201,17 @@ final class WebIliasService implements IliasService {
     }
 
     private Collection<? extends CourseItem> searchItemsRecursively(String itemUrl) {
-        return Observable.fromIterable(connectAndGetDocument(itemUrl)
-                                               .select(CssSelectors.ITEM_CONTAINER_SELECTOR.getCssSelector()))
+        return Observable.fromIterable(getItemContainersFromUrl(itemUrl))
                          .map(this::toCourseItem)
                          .filter(Optional::isPresent)
                          .map(Optional::get)
                          .toList()
                          .blockingGet();
+    }
+
+    private Elements getItemContainersFromUrl(String itemUrl) {
+        return connectAndGetDocument(itemUrl)
+                .select(CssSelectors.ITEM_CONTAINER_SELECTOR.getCssSelector());
     }
 
     private Optional<CourseItem> toCourseItem(Element itemContainer) {
@@ -220,7 +224,7 @@ final class WebIliasService implements IliasService {
         String type = split[0];
         int itemId = Integer.parseInt(split[1]);
 
-        List<String> properties = Observable.fromIterable(itemContainer.select(CssSelectors.ITEM_PROPERTIES_SELECTOR.getCssSelector()))
+        List<String> properties = Observable.fromIterable(getItemProperties(itemContainer))
                                             .map(Element::text)
                                             .map(this::trimNbspFromString)
                                             .map(String::trim)
@@ -229,6 +233,10 @@ final class WebIliasService implements IliasService {
                                             .blockingGet();
 
         return createCourseItem(type, itemId, itemName, itemUrl, properties);
+    }
+
+    private Elements getItemProperties(Element itemContainer) {
+        return itemContainer.select(CssSelectors.ITEM_PROPERTIES_SELECTOR.getCssSelector());
     }
 
     /**
