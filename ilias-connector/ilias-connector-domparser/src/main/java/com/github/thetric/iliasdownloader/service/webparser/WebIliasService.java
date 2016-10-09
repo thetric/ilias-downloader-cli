@@ -1,6 +1,7 @@
 package com.github.thetric.iliasdownloader.service.webparser;
 
 import com.github.thetric.iliasdownloader.service.IliasService;
+import com.github.thetric.iliasdownloader.service.exception.CourseItemNotFoundException;
 import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException;
 import com.github.thetric.iliasdownloader.service.model.*;
 import io.reactivex.Observable;
@@ -25,6 +26,7 @@ import static java.lang.String.format;
  */
 @Log4j2
 final class WebIliasService implements IliasService {
+    private static final int HTTP_FOUND = 302;
     @NonNull
     private final WebIoExceptionTranslator exceptionTranslator;
     private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]");
@@ -51,6 +53,29 @@ final class WebIliasService implements IliasService {
     }
 
     public Single<byte[]> getContent(CourseFile courseFile) {
+        return Single.create(e -> {
+            try {
+                Connection.Response response = connectWithSessionCookies(courseFile.getUrl())
+                        .ignoreContentType(true)
+                        .followRedirects(false)
+                        .execute();
+                checkResponseStatus(response);
+                e.onSuccess(response.bodyAsBytes());
+            } catch (Exception ex) {
+                e.onError(ex);
+            }
+        });
+    }
+
+    private void checkResponseStatus(Connection.Response response) {
+        log.debug("response.statusCode() = {}", response.statusCode());
+        log.debug("response.statusMessage() = {}", response.statusMessage());
+        switch (response.statusCode()) {
+            case HTTP_FOUND:
+                // might the session be expired?
+                throw new CourseItemNotFoundException("Course item not found, got a redirect",
+                                                      response.url().toExternalForm());
+        }
     }
 
     @Override
