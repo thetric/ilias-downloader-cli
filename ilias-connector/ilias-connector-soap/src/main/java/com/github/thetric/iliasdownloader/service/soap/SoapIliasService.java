@@ -2,9 +2,11 @@ package com.github.thetric.iliasdownloader.service.soap;
 
 import com.github.thetric.iliasdownloader.service.IliasService;
 import com.github.thetric.iliasdownloader.service.model.Course;
+import com.github.thetric.iliasdownloader.service.model.CourseFile;
 import com.github.thetric.iliasdownloader.service.soap.model.LoginType;
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -66,5 +68,10 @@ public final class SoapIliasService implements IliasService {
     @Override
     public Observable<Course> searchCoursesWithContent(Collection<Course> selectedCourses) {
         return Observable.empty();
+    }
+
+    @Override
+    public Single<byte[]> getContent(CourseFile file) {
+        return Single.never();
     }
 }

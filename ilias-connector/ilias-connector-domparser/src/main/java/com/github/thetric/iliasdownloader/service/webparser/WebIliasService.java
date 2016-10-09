@@ -4,6 +4,7 @@ import com.github.thetric.iliasdownloader.service.IliasService;
 import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException;
 import com.github.thetric.iliasdownloader.service.model.*;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.jsoup.Connection;
@@ -47,6 +48,9 @@ final class WebIliasService implements IliasService {
         courseOverview = iliasBaseUrl + "ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems";
         courseLinkPrefix = iliasBaseUrl + "goto_" + clientId + "_crs_";
         cookies = new HashMap<>();
+    }
+
+    public Single<byte[]> getContent(CourseFile courseFile) {
     }
 
     @Override

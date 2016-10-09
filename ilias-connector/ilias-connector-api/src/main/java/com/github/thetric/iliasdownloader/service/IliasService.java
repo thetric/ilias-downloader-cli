@@ -1,9 +1,11 @@
 package com.github.thetric.iliasdownloader.service;
 
-import com.github.thetric.iliasdownloader.service.model.CourseItem;
 import com.github.thetric.iliasdownloader.service.model.Course;
+import com.github.thetric.iliasdownloader.service.model.CourseFile;
+import com.github.thetric.iliasdownloader.service.model.CourseItem;
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 import java.util.Collection;
 
@@ -55,4 +57,15 @@ public interface IliasService {
      * @see CourseItem
      */
     Observable<Course> searchCoursesWithContent(Collection<Course> selectedCourses);
+
+    /**
+     * Downloads the content of the {@link CourseFile} from the Ilias.
+     *
+     * @param file
+     *         {@link CourseFile} to download
+     * @return {@link Single} which publishes either the data as a byte array or an exception
+     * @see java.io.IOException
+     * @see com.github.thetric.iliasdownloader.service.exception.IliasException
+     */
+    Single<byte[]> getContent(CourseFile file);
 }
