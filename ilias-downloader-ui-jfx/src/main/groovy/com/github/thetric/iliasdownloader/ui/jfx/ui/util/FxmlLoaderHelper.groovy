@@ -32,7 +32,7 @@ final class FxmlLoaderHelper {
         Objects.requireNonNull(url, "url");
         FXMLLoader loader = new FXMLLoader(url);
         loader.setController(ctrl);
-        final Parent parent = loader.load();
+        final Parent parent = loader.<Parent>load();
         parent.getStylesheets().addAll(COMMON_CSS_URL);
         return parent;
     }
