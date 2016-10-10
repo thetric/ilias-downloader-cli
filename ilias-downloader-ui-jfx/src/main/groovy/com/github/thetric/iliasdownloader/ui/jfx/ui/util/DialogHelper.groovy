@@ -1,49 +1,48 @@
-package com.github.thetric.iliasdownloader.ui.jfx.ui.util;
+package com.github.thetric.iliasdownloader.ui.jfx.ui.util
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
-import lombok.extern.log4j.Log4j2;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Optional;
+import groovy.transform.CompileStatic
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
+import javafx.scene.control.TextArea
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 /**
  * @author broj
  * @since 25.09.2016
  */
-@Log4j2
-public final class DialogHelper {
+@CompileStatic
+final class DialogHelper {
+    private static final Logger log = LogManager.logger
 
     private DialogHelper() {
         // prevent instantiation
-        throw new IllegalAccessError();
+        throw new IllegalAccessError()
     }
 
-    public static Optional<ButtonType> showExceptionDialog(String message, Throwable throwable) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Ilias Downloader 3 - Fehler");
-        alert.setHeaderText(message);
-        alert.setContentText(throwable.getLocalizedMessage());
+    static Optional<ButtonType> showExceptionDialog(String message, Throwable throwable) {
+        def alert = new Alert(Alert.AlertType.ERROR)
+        alert.title = 'Ilias Downloader 3 - Fehler'
+        alert.headerText = message
+        alert.contentText = throwable.localizedMessage
 
-        TextArea exceptionLogTextArea = new TextArea(getPrintableString(throwable));
-        exceptionLogTextArea.setStyle("-fx-font-family: Hack, Consolas, 'Courier New', monospace;");
-        alert.getDialogPane().setExpandableContent(exceptionLogTextArea);
+        TextArea exceptionLogTextArea = new TextArea(getPrintableString(throwable))
+        exceptionLogTextArea.style = '-fx-font-family: Hack, Consolas, "Courier New", monospace'
+        alert.dialogPane.expandableContent = exceptionLogTextArea
 
-        return alert.showAndWait();
+        return alert.showAndWait()
     }
 
     private static String getPrintableString(Throwable throwable) {
-        try(StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw)) {
-            throwable.printStackTrace(pw);
-            return sw.toString();
-        } catch (IOException e) {
-            // can't happen
-            log.error("Could not close the StringWriter", e);
+        new StringWriter().withPrintWriter {
+            try {
+                throwable.printStackTrace it
+                return it.toString()
+            } catch (IOException e) {
+                // can't happen
+                log.error('Could not close the StringWriter', e)
+                return '<Fehler beim Erzeugen des Exception Stacktraces>'
+            }
         }
-        return "<Fehler beim Erzeugen des Exception Stacktraces<";
     }
 }

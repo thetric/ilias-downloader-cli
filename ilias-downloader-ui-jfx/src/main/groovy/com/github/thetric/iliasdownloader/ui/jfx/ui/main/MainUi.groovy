@@ -1,20 +1,18 @@
-package com.github.thetric.iliasdownloader.ui.jfx.ui.main;
+package com.github.thetric.iliasdownloader.ui.jfx.ui.main
 
-import com.github.thetric.iliasdownloader.ui.jfx.ui.util.FxmlLoaderHelper;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.application.Application;
-import javafx.fxml.FXML;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-import org.controlsfx.control.ToggleSwitch;
+import com.github.thetric.iliasdownloader.ui.jfx.ui.util.FxmlLoaderHelper
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView
+import groovy.transform.CompileStatic
+import javafx.fxml.FXML
+import javafx.scene.Scene
+import javafx.scene.control.*
+import javafx.scene.image.Image
+import javafx.scene.layout.BorderPane
+import javafx.stage.Stage
+import org.controlsfx.control.ToggleSwitch
 
-import java.io.IOException;
-
-import static de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon.*;
+import static de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon.*
 
 /**
  * Created by Dominik Broj on 05.02.2016.
@@ -22,7 +20,8 @@ import static de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon.*;
  * @author Dominik Broj
  * @since 05.02.2016
  */
-public final class MainUi extends Application {
+@CompileStatic
+final class MainUi {
     private final Stage stage;
     private final BorderPane rootPane;
 
@@ -43,7 +42,7 @@ public final class MainUi extends Application {
     @FXML
     private TreeTableColumn<?, ?> syncTreeTableView;
 
-    public MainUi() throws IOException {
+    MainUi() throws IOException {
         rootPane = (BorderPane) FxmlLoaderHelper.load(this, "/fxml/mainWindow.fxml");
 
         initGraphics();
@@ -58,10 +57,6 @@ public final class MainUi extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-        launch(MainUi.class);
-    }
-
     private static void setIcon(Labeled labeled, MaterialDesignIcon mdIcon) {
         final MaterialDesignIconView icon = new MaterialDesignIconView(mdIcon);
         labeled.setGraphic(icon);
@@ -73,13 +68,13 @@ public final class MainUi extends Application {
     }
 
     private void setEventHandlers() {
-        aboutAppItem.setOnAction(e -> {
+        aboutAppItem.setOnAction({
             try {
                 new AboutAppDialog().show();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-        });
+        })
     }
 
     private void initGraphics() {
@@ -95,12 +90,7 @@ public final class MainUi extends Application {
         setIcon(feedbackItem, BUG);
     }
 
-    public void close() {
+    void close() {
         stage.close();
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-
     }
 }
