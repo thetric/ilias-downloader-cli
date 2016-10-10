@@ -1,9 +1,6 @@
-package com.github.thetric.iliasdownloader.ui.jfx.sync;
+package com.github.thetric.iliasdownloader.ui.jfx.sync
 
-import lombok.Value;
-
-import java.util.Set;
-
+import lombok.Value
 /**
  * Created by Dominik Broj on 02.02.2016.
  *
@@ -11,7 +8,7 @@ import java.util.Set;
  * @since 02.02.2016
  */
 @Value
-public final class SyncSettings {
+final class SyncSettings {
     private final String baseDir;
     private final boolean syncOnly;
     private final Set<Long> ignoredFileIds;

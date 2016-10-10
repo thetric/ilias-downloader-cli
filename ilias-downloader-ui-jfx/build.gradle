@@ -1,7 +1,10 @@
 description = 'JavaFX UI des Ilias Downloaders'
+apply plugin: 'groovy'
 
 dependencies {
     compile project(':ilias-connector:ilias-connector-domparser')
+
+    compile 'org.codehaus.groovy:groovy-all:2.4.7'
 
     compile 'org.controlsfx:controlsfx:8.40.12'
     compile 'de.jensd:fontawesomefx:8.9'

@@ -1,11 +1,11 @@
-package com.github.thetric.iliasdownloader.ui.jfx.sync;
+package com.github.thetric.iliasdownloader.ui.jfx.sync
 
-import com.github.thetric.iliasdownloader.service.IliasService;
-import com.github.thetric.iliasdownloader.service.model.LoginCredentials;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
+import com.github.thetric.iliasdownloader.service.IliasService
+import com.github.thetric.iliasdownloader.service.model.LoginCredentials
+import javafx.concurrent.Service
+import javafx.concurrent.Task
+import lombok.AllArgsConstructor
+import lombok.NonNull
 
 /**
  * Service für den Ilias Login.
@@ -14,7 +14,7 @@ import lombok.NonNull;
  * @since 01.02.2016
  */
 @AllArgsConstructor
-public final class IliasLoginService extends Service<Void> {
+final class IliasLoginService extends Service<Void> {
     @NonNull
     private final IliasService iliasSoapService;
     @NonNull

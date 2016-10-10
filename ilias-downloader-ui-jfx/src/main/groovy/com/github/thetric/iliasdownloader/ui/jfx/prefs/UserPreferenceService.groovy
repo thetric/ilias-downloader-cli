@@ -1,15 +1,11 @@
-package com.github.thetric.iliasdownloader.ui.jfx.prefs;
-
-import java.io.IOException;
-import java.util.Optional;
-
+package com.github.thetric.iliasdownloader.ui.jfx.prefs
 /**
  * Created by Dominik Broj on 31.01.2016.
  *
  * @author Dominik Broj
  * @since 31.01.2016
  */
-public interface UserPreferenceService {
+interface UserPreferenceService {
     /**
      * Falls die Nutzereinstellungen vorhanden sind, werden diese geladen. Andernfalls wird eine {@link
      * java.nio.file.NoSuchFileException} geworfen.
