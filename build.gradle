@@ -17,7 +17,7 @@ subprojects {
         compileOnly 'org.projectlombok:lombok:1.16.10'
 
         // logging libs
-        compile 'org.apache.logging.log4j:log4j-core:2.6.2'
+        compile 'org.apache.logging.log4j:log4j-core:2.7'
 
         // test
         testCompile 'junit:junit:4.12'
