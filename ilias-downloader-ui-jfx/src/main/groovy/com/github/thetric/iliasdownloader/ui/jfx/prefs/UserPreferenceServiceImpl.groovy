@@ -12,6 +12,7 @@ import java.nio.file.Paths
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS
 import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT
+
 /**
  * Created by Dominik Broj on 31.01.2016.
  *
@@ -37,9 +38,7 @@ final class UserPreferenceServiceImpl implements UserPreferenceService {
     Optional<UserPreferences> loadUserPreferences() throws IOException {
         def settingsPath = Paths.get settingsFilename
         try {
-            return (settingsPath.withInputStream() {
-                return Optional.of(xmlMapper.readValue(it, UserPreferences.class))
-            }) as Optional<UserPreferences>
+            return Optional.of(xmlMapper.readValue(settingsPath.bytes, UserPreferences))
         } catch (NoSuchFileException ex) {
             log.warn("Konnte Datei unter ${settingsPath.toAbsolutePath()} nicht finden", ex)
             return Optional.empty()
