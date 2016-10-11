@@ -5,10 +5,9 @@ repositories {
     jcenter()
 }
 
-apply plugin: 'maven'
-
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'maven'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
