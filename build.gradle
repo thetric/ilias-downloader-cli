@@ -5,9 +5,7 @@ repositories {
     jcenter()
 }
 
-allprojects {
-    apply plugin: 'maven'
-}
+apply plugin: 'maven'
 
 subprojects {
     apply plugin: 'java'
