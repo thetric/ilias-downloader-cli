@@ -7,7 +7,7 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.7'
 
     compile 'org.controlsfx:controlsfx:8.40.12'
-    compile 'de.jensd:fontawesomefx:8.9'
+    compile 'de.jensd:fontawesomefx-materialdesignfont:1.6.50'
 
     // xml mapping
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.3'
