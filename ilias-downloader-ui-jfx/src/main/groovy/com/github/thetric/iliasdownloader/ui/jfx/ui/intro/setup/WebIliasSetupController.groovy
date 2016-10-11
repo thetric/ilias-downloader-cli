@@ -6,40 +6,42 @@ import com.github.thetric.iliasdownloader.ui.jfx.ui.util.DialogHelper
 import groovy.transform.CompileStatic
 import javafx.scene.control.TextInputDialog
 import lombok.NonNull
-import lombok.extern.log4j.Log4j2
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
+
 /**
  * @author broj
  * @since 25.09.2016
  */
 @CompileStatic
 final class WebIliasSetupController {
+    private static final Logger log = LogManager.logger
 
     Optional<IliasService> getIliasService(@NonNull String loginPage) {
-        if (loginPage.isEmpty()) {
-            Optional<String> loginOptional = getLoginPage();
-            if (loginOptional.isPresent()) {
-                loginPage = loginOptional.get();
+        if (loginPage.empty) {
+            Optional<String> loginOptional = getLoginPage()
+            if (loginOptional.present) {
+                loginPage = loginOptional.get()
             } else {
                 // user has canceled
-                return Optional.empty();
+                return Optional.empty()
             }
         }
 
         try {
-            WebParserIliasServiceProvider serviceProvider = new WebParserIliasServiceProvider(loginPage);
-            return Optional.of(serviceProvider.newInstance());
+            WebParserIliasServiceProvider serviceProvider = new WebParserIliasServiceProvider(loginPage)
+            return Optional.of(serviceProvider.newInstance())
         } catch (Exception e) {
-            log.error("Konnte den Ilias Service Provider nicht erstellen", e);
-            DialogHelper.showExceptionDialog("Fehler beim Erstellen des Ilias Service Providers", e);
+            log.error('Konnte den Ilias Service Provider nicht erstellen', e)
+            DialogHelper.showExceptionDialog('Fehler beim Erstellen des Ilias Service Providers', e)
         }
-        return getIliasService("");
+        return getIliasService('')
     }
 
     private static Optional<String> getLoginPage() {
-        TextInputDialog inputDialog = new TextInputDialog();
-        inputDialog.setHeaderText("Ilias Login Seite eingeben");
-        inputDialog.setTitle("Ilias Downloader 3 - Einrichtung");
-        return inputDialog.showAndWait();
+        def inputDialog = new TextInputDialog()
+        inputDialog.headerText = 'Ilias Login Seite eingeben'
+        inputDialog.title = 'Ilias Downloader 3 - Einrichtung'
+        return inputDialog.showAndWait()
     }
-
 }
