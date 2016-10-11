@@ -3,6 +3,7 @@ package com.github.thetric.iliasdownloader.ui.jfx.ui.intro.setup
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.DialogHelper
+import groovy.transform.CompileStatic
 import javafx.scene.control.TextInputDialog
 import lombok.NonNull
 import lombok.extern.log4j.Log4j2
@@ -10,7 +11,7 @@ import lombok.extern.log4j.Log4j2
  * @author broj
  * @since 25.09.2016
  */
-@Log4j2
+@CompileStatic
 final class WebIliasSetupController {
 
     Optional<IliasService> getIliasService(@NonNull String loginPage) {

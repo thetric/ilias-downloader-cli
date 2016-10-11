@@ -1,12 +1,15 @@
 package com.github.thetric.iliasdownloader.ui.jfx.prefs
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import groovy.transform.CompileStatic
+
 /**
  * Created by Dominik Broj on 31.01.2016.
  *
  * @author Dominik Broj
  * @since 31.01.2016
  */
+@CompileStatic
 final class UserPreferences {
     @JacksonXmlProperty(localName = 'server')
     String iliasServerURL = ''
