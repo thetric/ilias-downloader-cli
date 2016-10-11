@@ -3,7 +3,7 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 
 dependencies {
-    compile project(':ilias-connector:ilias-connector-domparser')
+    compile project(':connector:connector-domparser')
 
     compile 'org.codehaus.groovy:groovy-all:2.4.7'
 
