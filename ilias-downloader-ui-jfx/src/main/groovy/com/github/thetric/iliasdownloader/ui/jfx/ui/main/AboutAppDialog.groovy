@@ -2,16 +2,22 @@ package com.github.thetric.iliasdownloader.ui.jfx.ui.main
 
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.FxmlLoaderHelper
 import groovy.transform.CompileStatic
+import javafx.application.HostServices
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
+import javafx.concurrent.Worker
 import javafx.fxml.FXML
-import javafx.scene.Parent
 import javafx.scene.control.ButtonType
 import javafx.scene.control.Dialog
-import javafx.scene.control.DialogPane
-import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
+import org.w3c.dom.Document
+import org.w3c.dom.Node
+import org.w3c.dom.NodeList
+import org.w3c.dom.events.EventTarget
+import org.w3c.dom.html.HTMLAnchorElement
 
+import static javafx.concurrent.Worker.State.SUCCEEDED
 import static javafx.scene.control.ButtonType.CLOSE
-
 /**
  * Created by Dominik Broj on 05.02.2016.
  *
@@ -21,22 +27,42 @@ import static javafx.scene.control.ButtonType.CLOSE
 @CompileStatic
 final class AboutAppDialog extends Dialog<ButtonType> {
     @FXML
-    private WebView aboutAppWebView;
+    private WebView aboutAppWebView
 
-    AboutAppDialog() throws IOException {
-        setTitle("Über diese Anwendung");
-        setHeaderText("Über Ilias Downloader 3");
-        final DialogPane dialogPane = getDialogPane();
-        dialogPane.getButtonTypes().setAll(CLOSE);
+    AboutAppDialog(HostServices hostServices) throws IOException {
+        title = 'Über diese Anwendung'
+        headerText = 'Über Ilias Downloader 3'
+        getDialogPane().buttonTypes.all = CLOSE
 
-        final Parent rootPane = FxmlLoaderHelper.load(this, "/fxml/aboutApp.fxml");
+        FxmlLoaderHelper.load(this, '/fxml/aboutApp.fxml')
 
-        final String aboutApp = AboutAppDialog.class.getResource("/html/aboutApp.html").toExternalForm();
-        final WebEngine engine = aboutAppWebView.getEngine();
-        engine.setUserStyleSheetLocation(getClass().getResource("/html/bootstrap-3.3.6.min.css").toString());
-        engine.load(aboutApp);
+        def aboutApp = AboutAppDialog.getResource('/html/aboutApp.html').toExternalForm()
+        def engine = aboutAppWebView.engine
+        engine.loadWorker.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue == SUCCEEDED) {
+                    setupOpenAllLinksInSystemBrowser engine.document, hostServices
+                }
+            }
+        })
+        engine.load aboutApp
 
-        dialogPane.setContent(aboutAppWebView);
+        getDialogPane().content = aboutAppWebView
+    }
 
+    def setupOpenAllLinksInSystemBrowser(Document document, HostServices hostServices) {
+        NodeList nodeList = document.getElementsByTagName('a')
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i)
+            EventTarget eventTarget = (EventTarget) node
+            eventTarget.addEventListener('click', {
+                it.preventDefault()
+                EventTarget target = it.currentTarget
+                HTMLAnchorElement anchorElement = target as HTMLAnchorElement
+                String url = anchorElement.href
+                hostServices.showDocument url
+            }, false)
+        }
     }
 }

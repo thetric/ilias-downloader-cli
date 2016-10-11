@@ -36,7 +36,7 @@ final class Main extends Application {
     }
 
     static void main(String[] args) {
-        launch(Main.class, args)
+        launch(Main, args)
     }
 
     /**
@@ -54,7 +54,7 @@ final class Main extends Application {
         def userPreferences
         try {
             userPreferences = userPreferenceService.loadUserPreferences()
-                                                   .orElseGet({ getDefaultPreferences() })
+                                                   .orElse(defaultPreferences)
         } catch (IOException e) {
             def message = 'Konnte die Einstellungen nicht laden.'
             log.error(message, e)
@@ -65,12 +65,13 @@ final class Main extends Application {
         try {
             createIliasService(userPreferences.iliasServerURL, userPreferences.userName)
         } catch (Exception e) {
-            log.error('Fehler beim Erstellen des Ilias Connector', e)
-            DialogHelper.showExceptionDialog('Fehler beim Erstellen des Ilias Connector', e)
+            def ioErrMsg = 'Fehler beim Erstellen des Ilias Connector'
+            log.error(ioErrMsg, e)
+            DialogHelper.showExceptionDialog(ioErrMsg, e)
         }
     }
 
-    private static UserPreferences getDefaultPreferences() {
+    private UserPreferences getDefaultPreferences() {
         log.info('Keine Benutzereinstellungen gefunden. Lade Standardeinstellungen')
         def preferences = new UserPreferences()
         preferences.iliasServerURL = ''
@@ -90,7 +91,7 @@ final class Main extends Application {
      *         user name for the Ilias login, must not be {@code null} (empty string is permitted to trigger the setup
      *         dialog)
      */
-    private static void createIliasService(@NonNull String iliasServerBaseUrl, @NonNull String username) {
+    private void createIliasService(@NonNull String iliasServerBaseUrl, @NonNull String username) {
         new WebIliasSetupController()
                 .getIliasService(iliasServerBaseUrl)
                 .ifPresent({ showLogin(it, username) })
@@ -106,7 +107,7 @@ final class Main extends Application {
      *         user name for the Ilias login, must not be {@code null} (empty string is permitted to trigger the setup
      *         dialog)
      */
-    private static void showLogin(@NonNull IliasService iliasService, @NonNull String username) {
+    private void showLogin(@NonNull IliasService iliasService, @NonNull String username) {
         new LoginDialog(new Pair<>(username, ''), {
             def credentials = fromPair(it as Pair<String, String>)
             iliasService.login(credentials)
@@ -122,7 +123,7 @@ final class Main extends Application {
      *         {@link Pair} from the login authenticator callback from {@link LoginDialog#LoginDialog(Pair, Callback)}
      * @return {@link LoginCredentials} with the given user name/password
      */
-    private static LoginCredentials fromPair(Pair<String, String> usernamePasswordPair) {
+    private LoginCredentials fromPair(Pair<String, String> usernamePasswordPair) {
         return new LoginCredentials(usernamePasswordPair.key,
                 usernamePasswordPair.value)
     }
@@ -132,10 +133,10 @@ final class Main extends Application {
      * application shuts down. It is the responsibility of the called classes to properly handle any occurring
      * exceptions.
      */
-    private static void showMainUi() {
+    private void showMainUi() {
         log.info('Öffne Main UI')
         try {
-            new MainUi()
+            new MainUi(hostServices)
         } catch (IOException e) {
             log.error('Could not create the main ui', e)
             DialogHelper.showExceptionDialog('Fehler beim Laden der Main UI', e)
