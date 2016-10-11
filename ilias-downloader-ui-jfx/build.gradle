@@ -9,9 +9,5 @@ dependencies {
     compile 'org.controlsfx:controlsfx:8.40.12'
     compile 'de.jensd:fontawesomefx-materialdesignfont:1.6.50'
 
-    // xml mapping
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.3'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.3'
-    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.8.3'
-    compile 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
+    compile 'org.yaml:snakeyaml:1.17'
 }

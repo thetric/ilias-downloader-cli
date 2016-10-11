@@ -28,7 +28,7 @@ import org.controlsfx.dialog.LoginDialog
 @CompileStatic
 final class Main extends Application {
     private static final Logger log = LogManager.logger
-    private static final String ILIAS_DOWNLOADER_SETTINGS = 'iliasdownloader.xml'
+    private static final String ILIAS_DOWNLOADER_SETTINGS = 'iliasdownloader.yml'
     private final UserPreferenceService userPreferenceService
 
     Main() {

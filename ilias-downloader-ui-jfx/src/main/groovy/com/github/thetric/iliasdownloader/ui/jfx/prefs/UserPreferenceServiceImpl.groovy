@@ -1,17 +1,14 @@
 package com.github.thetric.iliasdownloader.ui.jfx.prefs
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import groovy.transform.CompileStatic
 import lombok.NonNull
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import org.yaml.snakeyaml.Yaml
 
+import java.nio.charset.StandardCharsets
 import java.nio.file.NoSuchFileException
 import java.nio.file.Paths
-
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
-import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS
-import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT
 
 /**
  * Created by Dominik Broj on 31.01.2016.
@@ -22,23 +19,21 @@ import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT
 @CompileStatic
 final class UserPreferenceServiceImpl implements UserPreferenceService {
     private static final Logger log = LogManager.logger
-    private final XmlMapper xmlMapper
     private final String settingsFilename
+    private final Yaml yaml
 
     UserPreferenceServiceImpl(@NonNull String userSettingsFilename) {
         this.settingsFilename = userSettingsFilename
-
-        xmlMapper = new XmlMapper()
-        xmlMapper.enable INDENT_OUTPUT
-        xmlMapper.disable FAIL_ON_EMPTY_BEANS
-        xmlMapper.disable FAIL_ON_UNKNOWN_PROPERTIES
+        yaml = new Yaml()
     }
 
     @Override
     Optional<UserPreferences> loadUserPreferences() throws IOException {
-        def settingsPath = Paths.get settingsFilename
+        def settingsPath = Paths.get(settingsFilename)
         try {
-            return Optional.of(xmlMapper.readValue(settingsPath.bytes, UserPreferences))
+            settingsPath.withInputStream {
+                return Optional.of(yaml.loadAs(it, UserPreferences))
+            } as Optional<UserPreferences>
         } catch (NoSuchFileException ex) {
             log.warn("Konnte Datei unter ${settingsPath.toAbsolutePath()} nicht finden", ex)
             return Optional.empty()
@@ -47,8 +42,8 @@ final class UserPreferenceServiceImpl implements UserPreferenceService {
 
     @Override
     void saveUserPreferences(@NonNull UserPreferences userPreferences) throws IOException {
-        Paths.get settingsFilename withOutputStream {
-            xmlMapper.writeValue(it, userPreferences)
+        Paths.get settingsFilename withWriter StandardCharsets.UTF_8.name(), {
+            yaml.dump userPreferences, it
         }
     }
 }

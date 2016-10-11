@@ -1,8 +1,6 @@
 package com.github.thetric.iliasdownloader.ui.jfx.prefs
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import groovy.transform.CompileStatic
-
 /**
  * Created by Dominik Broj on 31.01.2016.
  *
@@ -11,21 +9,13 @@ import groovy.transform.CompileStatic
  */
 @CompileStatic
 final class UserPreferences {
-    @JacksonXmlProperty(localName = 'server')
-    String iliasServerURL = ''
+    String iliasServerURL
 
-    @JacksonXmlProperty(localName = 'userlogin')
-    String userName = ''
+    String userName
 
-    @JacksonXmlProperty(localName = 'basedir')
-    String baseDirectory = 'ilias'
+    String downloadFolder
 
-    @JacksonXmlProperty(localName = 'maxsize')
-    long maxFileSize = Long.MAX_VALUE
+    long maxFileSize
 
-    @JacksonXmlProperty(localName = 'activecourses')
-    Set<Long> activeCourses = new HashSet<>()
-
-    @JacksonXmlProperty(localName = 'blockedfiles')
-    Set<Long> blockedFiles = new HashSet<>()
+    Set<Long> activeCourses
 }
