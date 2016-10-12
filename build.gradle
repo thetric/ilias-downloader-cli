@@ -5,8 +5,18 @@ repositories {
     jcenter()
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M2'
+    }
+}
+
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'org.junit.platform.gradle.plugin'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -20,7 +30,8 @@ subprojects {
         compile 'org.apache.logging.log4j:log4j-core:2.7'
 
         // test
-        testCompile 'junit:junit:4.12'
+        testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M2'
+        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M2'
     }
 
     repositories {
