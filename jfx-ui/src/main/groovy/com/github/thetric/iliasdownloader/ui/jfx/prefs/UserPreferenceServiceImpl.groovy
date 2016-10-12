@@ -1,9 +1,8 @@
 package com.github.thetric.iliasdownloader.ui.jfx.prefs
 
 import groovy.transform.CompileStatic
+import groovy.util.logging.Log4j2
 import lombok.NonNull
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import org.yaml.snakeyaml.Yaml
 
 import java.nio.charset.StandardCharsets
@@ -17,8 +16,8 @@ import java.nio.file.Paths
  * @since 31.01.2016
  */
 @CompileStatic
+@Log4j2
 final class UserPreferenceServiceImpl implements UserPreferenceService {
-    private static final Logger log = LogManager.logger
     private final String settingsFilename
     private final Yaml yaml
 

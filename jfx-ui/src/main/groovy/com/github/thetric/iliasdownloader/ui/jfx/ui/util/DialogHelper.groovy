@@ -1,19 +1,18 @@
 package com.github.thetric.iliasdownloader.ui.jfx.ui.util
 
 import groovy.transform.CompileStatic
+import groovy.util.logging.Log4j2
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import javafx.scene.control.TextArea
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 
 /**
  * @author broj
  * @since 25.09.2016
  */
 @CompileStatic
+@Log4j2
 final class DialogHelper {
-    private static final Logger log = LogManager.logger
 
     private DialogHelper() {
         // prevent instantiation

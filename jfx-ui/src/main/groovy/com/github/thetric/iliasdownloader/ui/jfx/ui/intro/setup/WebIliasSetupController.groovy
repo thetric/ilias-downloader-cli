@@ -4,18 +4,16 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.DialogHelper
 import groovy.transform.CompileStatic
+import groovy.util.logging.Log4j2
 import javafx.scene.control.TextInputDialog
 import lombok.NonNull
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
-
 /**
  * @author broj
  * @since 25.09.2016
  */
 @CompileStatic
+@Log4j2
 final class WebIliasSetupController {
-    private static final Logger log = LogManager.logger
 
     Optional<IliasService> getIliasService(@NonNull String loginPage) {
         if (loginPage.empty) {

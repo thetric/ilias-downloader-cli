@@ -9,14 +9,13 @@ import com.github.thetric.iliasdownloader.ui.jfx.ui.intro.setup.WebIliasSetupCon
 import com.github.thetric.iliasdownloader.ui.jfx.ui.main.MainUi
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.DialogHelper
 import groovy.transform.CompileStatic
+import groovy.util.logging.Log4j2
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.stage.Stage
 import javafx.util.Callback
 import javafx.util.Pair
 import lombok.NonNull
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import org.controlsfx.dialog.LoginDialog
 
 /**
@@ -26,8 +25,8 @@ import org.controlsfx.dialog.LoginDialog
  * @since 30/01/2016
  */
 @CompileStatic
+@Log4j2
 final class Main extends Application {
-    private static final Logger log = LogManager.logger
     private static final String ILIAS_DOWNLOADER_SETTINGS = 'iliasdownloader.yml'
     private final UserPreferenceService userPreferenceService
 
