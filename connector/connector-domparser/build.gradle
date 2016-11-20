@@ -1,6 +1,6 @@
 dependencies {
     // web parser deps
-    compile 'org.jsoup:jsoup:1.9.2'
+    compile 'org.jsoup:jsoup:1.10.1'
 
     compile project(':connector:connector-api')
 }
