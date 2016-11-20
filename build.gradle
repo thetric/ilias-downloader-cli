@@ -41,4 +41,8 @@ subprojects {
         maven { url "https://jitpack.io" }
         maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases' }
     }
+
+    tasks.withType(GroovyCompile) {
+        groovyOptions.optimizationOptions.indy = true
+    }
 }
