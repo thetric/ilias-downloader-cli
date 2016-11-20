@@ -6,7 +6,7 @@ dependencies {
     compile project(':connector:connector-domparser')
 
     compile 'org.controlsfx:controlsfx:8.40.12'
-    compile 'de.jensd:fontawesomefx-materialdesignfont:1.6.50'
+    compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22'
 
     compile 'org.yaml:snakeyaml:1.17'
 }
