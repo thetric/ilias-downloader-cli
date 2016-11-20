@@ -16,7 +16,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="de.adesso.azubis.iliasdownloader.v3" level="debug" additivity="false">
+        <Logger name="com.github.thetric.iliasdownloader.ui" level="debug" additivity="false">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="STDERR"/>
         </Logger>
