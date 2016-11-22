@@ -9,7 +9,6 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.reactivex.Observable
 import io.reactivex.Single
-import lombok.NonNull
 
 import static java.util.Collections.singletonList
 
@@ -20,9 +19,7 @@ import static java.util.Collections.singletonList
 @Log4j2
 @CompileStatic
 final class SoapIliasService implements IliasService {
-    @NonNull
     private final IliasSoapConnector connectorService
-    @NonNull
     private final LoginType loginType
 
     private String sessionId
@@ -39,7 +36,7 @@ final class SoapIliasService implements IliasService {
      *         Logindaten
      */
     @Override
-    void login(@NonNull LoginCredentials loginCredentials) {
+    void login(LoginCredentials loginCredentials) {
         final String loginMethodName = loginType.getLoginMethodName()
 
         final Object authResponse = connectorService.executeSoapRequest(loginMethodName, mapLoginData(loginCredentials))

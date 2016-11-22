@@ -3,15 +3,13 @@ package com.github.thetric.iliasdownloader.service.model
 import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import lombok.AllArgsConstructor
-import lombok.NoArgsConstructor
+import groovy.transform.TupleConstructor
 
 /**
  * @author broj
  * @since 18.08.2016
  */
-@AllArgsConstructor
-@NoArgsConstructor
+@TupleConstructor
 @ToString(includeNames = true)
 @EqualsAndHashCode
 @CompileStatic

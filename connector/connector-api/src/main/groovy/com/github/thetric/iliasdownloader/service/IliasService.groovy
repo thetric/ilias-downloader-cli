@@ -18,7 +18,6 @@ import io.reactivex.Single
  */
 @CompileStatic
 interface IliasService {
-
     // Session management
 
     /**

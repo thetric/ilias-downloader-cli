@@ -3,16 +3,19 @@ package com.github.thetric.iliasdownloader.ui.jfx.ui.util
 import groovy.transform.CompileStatic
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
-import lombok.experimental.UtilityClass
+
 /**
  * Hilfsklasse, um FXML mit dem Standard-CSS und Font Awesome zu laden.
  *
  * @author Dominik Broj
  */
-@UtilityClass
 @CompileStatic
 final class FxmlLoaderHelper {
-    private static final String COMMON_CSS_URL = "css/common.css";
+    private static final String COMMON_CSS_URL = "css/common.css"
+
+    private FxmlLoaderHelper() {
+
+    }
 
     /**
      * Lädt das FXML mit dem Standard-CSS und Font Awesome.

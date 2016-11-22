@@ -6,7 +6,7 @@ import com.github.thetric.iliasdownloader.ui.jfx.ui.util.DialogHelper
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import javafx.scene.control.TextInputDialog
-import lombok.NonNull
+
 /**
  * @author broj
  * @since 25.09.2016
@@ -15,8 +15,8 @@ import lombok.NonNull
 @Log4j2
 final class WebIliasSetupController {
 
-    Optional<IliasService> getIliasService(@NonNull String loginPage) {
-        if (loginPage.empty) {
+    Optional<IliasService> getIliasService(String loginPage) {
+        if (loginPage == null || loginPage.empty) {
             Optional<String> loginOptional = getLoginPage()
             if (loginOptional.present) {
                 loginPage = loginOptional.get()

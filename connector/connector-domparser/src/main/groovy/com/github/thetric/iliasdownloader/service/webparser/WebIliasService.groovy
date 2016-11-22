@@ -8,7 +8,6 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.reactivex.Observable
 import io.reactivex.Single
-import lombok.NonNull
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -25,7 +24,6 @@ import java.util.regex.Pattern
 @CompileStatic
 final class WebIliasService implements IliasService {
     private static final int HTTP_FOUND = 302
-    @NonNull
     private final WebIoExceptionTranslator exceptionTranslator
     private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]")
 
@@ -36,12 +34,9 @@ final class WebIliasService implements IliasService {
     private final String clientId
     private final String courseLinkPrefix
 
-    @NonNull
     private Map<String, String> cookies
 
-    WebIliasService(
-            @NonNull WebIoExceptionTranslator exceptionTranslator,
-            @NonNull String iliasBaseUrl, @NonNull String clientId) {
+    WebIliasService(WebIoExceptionTranslator exceptionTranslator, String iliasBaseUrl, String clientId) {
         this.exceptionTranslator = exceptionTranslator
         this.iliasBaseUrl = iliasBaseUrl
         this.clientId = clientId
@@ -79,16 +74,15 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    void login(@NonNull LoginCredentials loginCredentials) {
+    void login(LoginCredentials loginCredentials) {
         Connection.Response response
         log.info('Logging in at {}', loginPage)
         try {
-            response = Jsoup
-                    .connect(loginPage)
-                    .data('username', loginCredentials.getUserName())
-                    .data('password', loginCredentials.getPassword())
-                    .method(Connection.Method.POST)
-                    .execute()
+            response = Jsoup.connect(loginPage)
+                            .data('username', loginCredentials.getUserName())
+                            .data('password', loginCredentials.getPassword())
+                            .method(Connection.Method.POST)
+                            .execute()
         } catch (IOException e) {
             log.error("Login at $loginPage failed", e)
             throw exceptionTranslator.translate(e)
@@ -99,7 +93,7 @@ final class WebIliasService implements IliasService {
         cookies = response.cookies()
     }
 
-    private void ensureAuthentication(@NonNull Connection.Response response) {
+    private void ensureAuthentication(Connection.Response response) {
         // diese Prüfung ist nicht 100% wasserdicht. Das Cookie kann trotzdem gesetzt worden sein, wenn sich der Nutzer
         // zuvor erfolgreich ein- und wieder ausgeloggt hat und sich dann der Login fehlschlägt
         // es wäre vielleicht sicherer, die URL zu prüfen
@@ -130,16 +124,15 @@ final class WebIliasService implements IliasService {
         log.info('Logout at {} succeeded', logoutPage)
     }
 
-    private Connection connectWithSessionCookies(@NonNull String iliasWebsite) {
+    private Connection connectWithSessionCookies(String iliasWebsite) {
         if (cookies.isEmpty()) {
             throw new NoCookiesAvailableException('No cookies found. Ensure you are already logged in')
         }
-        return Jsoup
-                .connect(iliasWebsite)
-                .cookies(cookies)
+        return Jsoup.connect(iliasWebsite)
+                    .cookies(cookies)
     }
 
-    private Document connectAndGetDocument(@NonNull String url) {
+    private Document connectAndGetDocument(String url) {
         try {
             Connection.Response response = connectWithSessionCookies(url).execute()
             return response.parse()
@@ -156,10 +149,9 @@ final class WebIliasService implements IliasService {
         return getCoursesFromHtml(document)
     }
 
-    private Observable<Course> getCoursesFromHtml(@NonNull Document document) {
-        return Observable
-                .fromIterable(document.select(CssSelectors.COURSE_SELECTOR.cssSelector))
-                .map({ toCourse(it) })
+    private Observable<Course> getCoursesFromHtml(Document document) {
+        return Observable.fromIterable(document.select(CssSelectors.COURSE_SELECTOR.cssSelector))
+                         .map({ toCourse(it) })
     }
 
     private Course toCourse(Element courseElement) {
@@ -169,12 +161,11 @@ final class WebIliasService implements IliasService {
         return new Course(courseId, courseName, courseUrl)
     }
 
-    private int getCourseId(@NonNull Element aTag) {
+    private int getCourseId(Element aTag) {
         String href = aTag.attr('href')
         // href="http://www.ilias.fh-dortmund.de/ilias/goto_ilias-fhdo_crs_\d+.html"
-        String idString = href
-                .replaceFirst(courseLinkPrefix, "")
-                .replace(".html", "")
+        String idString = href.replaceFirst(courseLinkPrefix, "")
+                              .replace(".html", "")
         // der Rest muss ein int sein
         return parseId(href, idString)
     }
@@ -189,12 +180,12 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    Observable<Course> searchCoursesWithContent(@NonNull Collection<Course> selectedCourses) {
+    Observable<Course> searchCoursesWithContent(Collection<Course> selectedCourses) {
         return Observable.fromIterable(selectedCourses)
                          .map({ findCourseItems(it) })
     }
 
-    private Course findCourseItems(@NonNull Course course) {
+    private Course findCourseItems(Course course) {
         log.debug('Find all children for {}', course.name)
         Collection<? extends CourseItem> childNodes = searchItemsRecursively(course.url)
         return new Course(course.id, course.name, course.url, childNodes)
@@ -209,8 +200,7 @@ final class WebIliasService implements IliasService {
     }
 
     private Elements getItemContainersFromUrl(String itemUrl) {
-        return connectAndGetDocument(itemUrl)
-                .select(CssSelectors.ITEM_CONTAINER_SELECTOR.getCssSelector())
+        return connectAndGetDocument(itemUrl).select(CssSelectors.ITEM_CONTAINER_SELECTOR.getCssSelector())
     }
 
     private CourseItem toCourseItem(Element itemContainer) {
@@ -254,8 +244,8 @@ final class WebIliasService implements IliasService {
     }
 
     private CourseItem createCourseItem(
-            @NonNull String type, int itemId,
-            @NonNull String itemName, @NonNull String itemUrl, List<String> properties) {
+            String type, int itemId,
+            String itemName, String itemUrl, List<String> properties) {
         switch (type) {
             case "fold":
                 Collection<? extends CourseItem> courseItems = searchItemsRecursively(itemUrl)

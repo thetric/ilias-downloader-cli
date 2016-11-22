@@ -15,9 +15,10 @@ import javafx.application.Platform
 import javafx.stage.Stage
 import javafx.util.Callback
 import javafx.util.Pair
-import lombok.NonNull
 import org.controlsfx.dialog.LoginDialog
 
+import java.nio.file.NoSuchFileException
+import java.nio.file.Paths
 /**
  * Entry point for the JavaFX GUI.
  *
@@ -29,6 +30,7 @@ import org.controlsfx.dialog.LoginDialog
 final class Main extends Application {
     private static final String ILIAS_DOWNLOADER_SETTINGS = 'iliasdownloader.yml'
     private final UserPreferenceService userPreferenceService
+    private UserPreferences userPreferences
 
     Main() {
         this.userPreferenceService = new UserPreferenceServiceImpl(ILIAS_DOWNLOADER_SETTINGS)
@@ -50,10 +52,8 @@ final class Main extends Application {
      */
     @Override
     void start(Stage ignored) {
-        def userPreferences
         try {
-            userPreferences = userPreferenceService.loadUserPreferences()
-                                                   .orElse(defaultPreferences)
+            userPreferences = loadUserPreferencesOrUseDefault()
         } catch (IOException e) {
             def message = 'Konnte die Einstellungen nicht laden.'
             log.error(message, e)
@@ -67,6 +67,33 @@ final class Main extends Application {
             def ioErrMsg = 'Fehler beim Erstellen des Ilias Connector'
             log.error(ioErrMsg, e)
             DialogHelper.showExceptionDialog(ioErrMsg, e)
+        }
+    }
+
+    private UserPreferences loadUserPreferencesOrUseDefault() {
+        try {
+            return userPreferenceService.loadUserPreferences()
+        } catch (NoSuchFileException ex) {
+            def loadPath = Paths.get(ILIAS_DOWNLOADER_SETTINGS)
+            log.warn("Konnte Datei unter ${loadPath.toAbsolutePath()} nicht finden", ex)
+            return getDefaultPreferences()
+        }
+    }
+
+    @Override
+    void stop() {
+        if (userPreferences != null) {
+            log.info 'Speichere Benutzereinstellungen'
+            try {
+                userPreferenceService.saveUserPreferences(userPreferences)
+                log.info 'Nutzereinstellungen gespeichert'
+                Platform.exit()
+            } catch (Exception e) {
+                def saveErrMsg = 'Fehler beim Speichern der Nutzereinstellungen'
+                log.error(saveErrMsg, e)
+                DialogHelper.showExceptionDialog(saveErrMsg, e)
+                            .ifPresent({ Platform.exit() });
+            }
         }
     }
 
@@ -90,7 +117,7 @@ final class Main extends Application {
      *         user name for the Ilias login, must not be {@code null} (empty string is permitted to trigger the setup
      *         dialog)
      */
-    private void createIliasService(@NonNull String iliasServerBaseUrl, @NonNull String username) {
+    private void createIliasService(String iliasServerBaseUrl, String username) {
         new WebIliasSetupController()
                 .getIliasService(iliasServerBaseUrl)
                 .ifPresent({ showLogin(it, username) })
@@ -106,7 +133,7 @@ final class Main extends Application {
      *         user name for the Ilias login, must not be {@code null} (empty string is permitted to trigger the setup
      *         dialog)
      */
-    private void showLogin(@NonNull IliasService iliasService, @NonNull String username) {
+    private void showLogin(IliasService iliasService, String username) {
         new LoginDialog(new Pair<>(username, ''), {
             def credentials = fromPair(it as Pair<String, String>)
             iliasService.login(credentials)

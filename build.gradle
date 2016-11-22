@@ -26,8 +26,6 @@ subprojects {
     dependencies {
         compile 'org.codehaus.groovy:groovy-all:2.4.7'
 
-        compileOnly 'org.projectlombok:lombok:1.16.10'
-
         // logging libs
         compile 'org.apache.logging.log4j:log4j-core:2.7'
 

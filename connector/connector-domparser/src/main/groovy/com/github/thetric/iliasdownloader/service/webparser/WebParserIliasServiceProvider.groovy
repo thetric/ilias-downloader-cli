@@ -3,7 +3,6 @@ package com.github.thetric.iliasdownloader.service.webparser
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.IliasServiceProvider
 import groovy.transform.CompileStatic
-import lombok.NonNull
 import org.jsoup.Jsoup
 
 import static org.jsoup.Connection.Response
@@ -20,7 +19,7 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
     private final String iliasBaseUrl
     private final String clientId
 
-    WebParserIliasServiceProvider(@NonNull String loginPage) throws IOException {
+    WebParserIliasServiceProvider(String loginPage) throws IOException {
         iliasBaseUrl = getBaseUrl(loginPage)
         clientId = getClientId(loginPage)
     }
