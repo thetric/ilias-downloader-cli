@@ -253,7 +253,7 @@ final class WebIliasService implements IliasService {
             case "file":
                 log.warn("itemId {}, name {}, url {}", itemId, itemName, itemUrl)
                 String fileType = properties.get(0)
-                return new CourseFile(itemId, "$itemName.$fileType", itemUrl)
+                return new CourseFile(itemId, "$itemName.$fileType", itemUrl, null)
             default:
                 log.warn("Unknown type: {}, URL: {}", type, itemUrl)
                 return null
