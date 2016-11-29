@@ -134,6 +134,7 @@ final class Main extends Application {
         new LoginDialog(new Pair<>(username, ''), {
             def credentials = fromPair(it as Pair<String, String>)
             iliasService.login(credentials)
+            userPreferences.userName = credentials.userName
             return null
         }).showAndWait().ifPresent({ showMainUi() })
     }
