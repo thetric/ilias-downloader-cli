@@ -194,7 +194,8 @@ final class WebIliasService implements IliasService {
     private Collection<? extends CourseItem> searchItemsRecursively(String itemUrl) {
         return Observable.fromIterable(getItemContainersFromUrl(itemUrl))
                          .map({ toCourseItem(it) })
-                         .filter({ Objects.nonNull(it) })
+                         .filter({ it.present })
+                         .map({ it.get() })
                          .toList()
                          .blockingGet()
     }
@@ -203,7 +204,7 @@ final class WebIliasService implements IliasService {
         return connectAndGetDocument(itemUrl).select(CssSelectors.ITEM_CONTAINER_SELECTOR.getCssSelector())
     }
 
-    private CourseItem toCourseItem(Element itemContainer) {
+    private Optional<CourseItem> toCourseItem(Element itemContainer) {
         Elements itemTitle = itemContainer.select(CssSelectors.ITEM_TITLE_SELECTOR.getCssSelector())
         String itemName = itemTitle.text()
         String itemUrl = itemTitle.attr("href")
@@ -221,7 +222,7 @@ final class WebIliasService implements IliasService {
                                             .toList()
                                             .blockingGet()
 
-        return createCourseItem(type, itemId, itemName, itemUrl, properties)
+        return Optional.ofNullable(createCourseItem(type, itemId, itemName, itemUrl, properties))
     }
 
     private Elements getItemProperties(Element itemContainer) {
