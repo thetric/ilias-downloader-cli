@@ -20,7 +20,7 @@ interface UserPreferenceService {
      * @throws IOException
      *         falls ein I/O-Fehler auftritt
      */
-    Optional<UserPreferences> loadUserPreferences() throws IOException;
+    UserPreferences loadUserPreferences() throws IOException;
 
     void saveUserPreferences(UserPreferences userPreferences) throws IOException;
 }

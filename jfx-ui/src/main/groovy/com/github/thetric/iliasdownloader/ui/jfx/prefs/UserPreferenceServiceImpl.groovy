@@ -2,11 +2,12 @@ package com.github.thetric.iliasdownloader.ui.jfx.prefs
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
-import lombok.NonNull
 import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.introspector.Property
+import org.yaml.snakeyaml.representer.Representer
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.NoSuchFileException
+import java.nio.file.Path
 import java.nio.file.Paths
 
 /**
@@ -18,31 +19,30 @@ import java.nio.file.Paths
 @CompileStatic
 @Log4j2
 final class UserPreferenceServiceImpl implements UserPreferenceService {
-    private final String settingsFilename
     private final Yaml yaml
+    final Path settingsFile
 
-    UserPreferenceServiceImpl(@NonNull String userSettingsFilename) {
-        this.settingsFilename = userSettingsFilename
-        yaml = new Yaml()
+    UserPreferenceServiceImpl(String userSettingsFilename) {
+        this.settingsFile = Paths.get(userSettingsFilename)
+        yaml = new Yaml(new NonMetaClassRepresenter())
+    }
+
+    UserPreferences loadUserPreferences() throws IOException {
+        return settingsFile.withInputStream {
+            return yaml.loadAs(it, UserPreferences.class)
+        } as UserPreferences
     }
 
     @Override
-    Optional<UserPreferences> loadUserPreferences() throws IOException {
-        def settingsPath = Paths.get(settingsFilename)
-        try {
-            settingsPath.withInputStream {
-                return Optional.of(yaml.loadAs(it, UserPreferences))
-            } as Optional<UserPreferences>
-        } catch (NoSuchFileException ex) {
-            log.warn("Konnte Datei unter ${settingsPath.toAbsolutePath()} nicht finden", ex)
-            return Optional.empty()
+    void saveUserPreferences(UserPreferences userPreferences) throws IOException {
+        settingsFile.withWriter StandardCharsets.UTF_8.name(), {
+            yaml.dump userPreferences, it
         }
     }
 
-    @Override
-    void saveUserPreferences(@NonNull UserPreferences userPreferences) throws IOException {
-        Paths.get settingsFilename withWriter StandardCharsets.UTF_8.name(), {
-            yaml.dump userPreferences, it
+    class NonMetaClassRepresenter extends Representer {
+        protected Set<Property> getProperties(Class<? extends Object> type) {
+            super.getProperties(type).findAll { it.name != 'metaClass' }
         }
     }
 }
