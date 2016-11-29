@@ -24,13 +24,7 @@
                     <MenuItem fx:id="connectSettingsItem" mnemonicParsing="false" text="Verbindungseinstellungen"/>
                     <MenuItem fx:id="downloadSettingsItem" mnemonicParsing="false" text="Download-Einstellungen"/>
                     <SeparatorMenuItem mnemonicParsing="false"/>
-                    <Menu fx:id="helpItem" mnemonicParsing="false" text="Hilfe">
-                        <MenuItem fx:id="aboutAppItem" mnemonicParsing="false" text="Über Ilias Downloader 3"/>
-                        <MenuItem fx:id="feedbackItem" mnemonicParsing="false"
-                                  text="Problem melden, Feedback geben..."/>
-                        <MenuItem fx:id="goToWebsiteItem" mnemonicParsing="false" text="Website"/>
-                        <MenuItem fx:id="goToAndroidAppItem" mnemonicParsing="false" text="Android App"/>
-                    </Menu>
+                    <MenuItem fx:id="aboutAppItem" mnemonicParsing="false" text="Über Ilias Downloader 3"/>
                 </items>
             </MenuButton>
         </ToolBar>

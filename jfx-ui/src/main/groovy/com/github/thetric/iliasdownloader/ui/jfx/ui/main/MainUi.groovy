@@ -39,7 +39,7 @@ final class MainUi {
     @FXML
     private MenuItem connectSettingsItem, downloadSettingsItem, helpItem
     @FXML
-    private MenuItem aboutAppItem, feedbackItem, goToWebsiteItem, goToAndroidAppItem
+    private MenuItem aboutAppItem
     @FXML
     private TreeTableColumn<?, ?> syncTreeTableView
 
@@ -51,8 +51,10 @@ final class MainUi {
 
         final Scene scene = new Scene(rootPane)
         stage = new Stage()
-        stage.icons.setAll(new Image('/icons/app-icon-64x64.png'),
-                new Image('/icons/app-icon-32x32.png'), new Image('/icons/app-icon-16x16.png'))
+        stage.icons.setAll(
+                new Image('/icons/app-icon-64x64.png'),
+                new Image('/icons/app-icon-32x32.png'),
+                new Image('/icons/app-icon-16x16.png'))
         stage.scene = scene
         stage.title = 'Ilias Downloader 3'
         stage.show()
@@ -60,22 +62,22 @@ final class MainUi {
 
     private static void setIcon(Labeled labeled, MaterialDesignIcon mdIcon) {
         final MaterialDesignIconView icon = new MaterialDesignIconView(mdIcon)
-        labeled.setGraphic(icon)
+        labeled.graphic = icon
     }
 
     private static void setIcon(MenuItem menuItem, MaterialDesignIcon mdIcon) {
         final MaterialDesignIconView icon = new MaterialDesignIconView(mdIcon)
-        menuItem.setGraphic(icon)
+        menuItem.graphic = icon
     }
 
     private void setEventHandlers(HostServices hostServices) {
-        aboutAppItem.setOnAction({
+        aboutAppItem.onAction = {
             try {
                 new AboutAppDialog(hostServices).show()
             } catch (IOException e1) {
                 e1.printStackTrace()
             }
-        })
+        }
     }
 
     private void initGraphics() {
@@ -84,11 +86,7 @@ final class MainUi {
 
         setIcon(connectSettingsItem, SERVER_SECURITY)
         setIcon(downloadSettingsItem, SETTINGS)
-        setIcon(helpItem, HELP)
         setIcon(aboutAppItem, INFORMATION)
-        setIcon(goToWebsiteItem, OPEN_IN_APP)
-        setIcon(goToAndroidAppItem, ANDROID)
-        setIcon(feedbackItem, BUG)
     }
 
     def close() {
