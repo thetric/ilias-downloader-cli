@@ -19,6 +19,7 @@ import org.controlsfx.dialog.LoginDialog
 
 import java.nio.file.NoSuchFileException
 import java.nio.file.Paths
+
 /**
  * Entry point for the JavaFX GUI.
  *
@@ -76,7 +77,7 @@ final class Main extends Application {
         } catch (NoSuchFileException ex) {
             def loadPath = Paths.get(ILIAS_DOWNLOADER_SETTINGS)
             log.warn("Konnte Datei unter ${loadPath.toAbsolutePath()} nicht finden", ex)
-            return getDefaultPreferences()
+            return defaultPreferences
         }
     }
 
@@ -92,17 +93,14 @@ final class Main extends Application {
                 def saveErrMsg = 'Fehler beim Speichern der Nutzereinstellungen'
                 log.error(saveErrMsg, e)
                 DialogHelper.showExceptionDialog(saveErrMsg, e)
-                            .ifPresent({ Platform.exit() });
+                            .ifPresent({ Platform.exit() })
             }
         }
     }
 
     private UserPreferences getDefaultPreferences() {
         log.info('Keine Benutzereinstellungen gefunden. Lade Standardeinstellungen')
-        def preferences = new UserPreferences()
-        preferences.iliasServerURL = ''
-        preferences.userName = ''
-        return preferences
+        return new UserPreferences(iliasServerURL: '', userName: '')
     }
 
     /**
@@ -118,9 +116,8 @@ final class Main extends Application {
      *         dialog)
      */
     private void createIliasService(String iliasServerBaseUrl, String username) {
-        new WebIliasSetupController()
-                .getIliasService(iliasServerBaseUrl)
-                .ifPresent({ showLogin(it, username) })
+        new WebIliasSetupController().getIliasService(iliasServerBaseUrl)
+                                     .ifPresent({ showLogin(it, username) })
     }
 
     /**
@@ -138,20 +135,18 @@ final class Main extends Application {
             def credentials = fromPair(it as Pair<String, String>)
             iliasService.login(credentials)
             return null
-        }).showAndWait()
-          .ifPresent({ showMainUi() })
+        }).showAndWait().ifPresent({ showMainUi() })
     }
 
     /**
      * Creates {@link LoginCredentials} from a {@link Pair}. The key is the user name, the value the password.
      *
      * @param usernamePasswordPair
-     *         {@link Pair} from the login authenticator callback from {@link LoginDialog#LoginDialog(Pair, Callback)}
+     * {@link Pair} from the login authenticator callback from {@link LoginDialog#LoginDialog(Pair, Callback)}
      * @return {@link LoginCredentials} with the given user name/password
      */
     private LoginCredentials fromPair(Pair<String, String> usernamePasswordPair) {
-        return new LoginCredentials(usernamePasswordPair.key,
-                usernamePasswordPair.value)
+        return new LoginCredentials(usernamePasswordPair.key, usernamePasswordPair.value)
     }
 
     /**

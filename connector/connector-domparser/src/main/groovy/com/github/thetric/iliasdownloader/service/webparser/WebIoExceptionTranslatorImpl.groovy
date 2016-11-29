@@ -10,7 +10,7 @@ import groovy.transform.CompileStatic;
 @CompileStatic
 final class WebIoExceptionTranslatorImpl implements WebIoExceptionTranslator {
     @Override
-     IliasException translate(Exception e) {
+    IliasException translate(Exception e) {
         // TODO weiter ausbauen
         return new IliasException(e);
     }

@@ -11,6 +11,6 @@ import groovy.transform.Immutable
  */
 @Immutable
 @CompileStatic
- final class LoginCredentials {
+final class LoginCredentials {
     String userName, password
 }

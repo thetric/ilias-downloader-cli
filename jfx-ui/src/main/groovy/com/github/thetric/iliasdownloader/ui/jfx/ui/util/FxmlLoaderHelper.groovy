@@ -11,7 +11,7 @@ import javafx.scene.Parent
  */
 @CompileStatic
 final class FxmlLoaderHelper {
-    private static final String COMMON_CSS_URL = "css/common.css"
+    private static final String COMMON_CSS_URL = 'css/common.css'
 
     private FxmlLoaderHelper() {
 
@@ -31,13 +31,13 @@ final class FxmlLoaderHelper {
      * @see FxmlLoaderHelper#load(Object, String, String, Parent)
      */
     static Parent load(Object ctrl, String fxml) throws IOException {
-        URL url = FxmlLoaderHelper.class.getResource(fxml);
-        Objects.requireNonNull(url, "url");
-        FXMLLoader loader = new FXMLLoader(url);
-        loader.setController(ctrl);
-        final Parent parent = loader.<Parent>load();
-        parent.getStylesheets().addAll(COMMON_CSS_URL);
-        return parent;
+        URL url = FxmlLoaderHelper.class.getResource(fxml)
+        Objects.requireNonNull(url, 'url')
+        FXMLLoader loader = new FXMLLoader(url)
+        loader.controller = ctrl
+        final Parent parent = loader.<Parent> load()
+        parent.stylesheets.addAll(COMMON_CSS_URL)
+        return parent
     }
 
     /**
@@ -56,16 +56,16 @@ final class FxmlLoaderHelper {
      * @see FxmlLoaderHelper#load(Object, String, String, Parent)
      */
     static Parent load(Object ctrl, String fxml, String css) throws IOException {
-        Parent rootPane = load(ctrl, fxml);
-        String styleSheet = FxmlLoaderHelper.class.getResource(css).toExternalForm();
-        rootPane.getStylesheets().addAll(styleSheet);
-        return rootPane;
+        Parent rootPane = load(ctrl, fxml)
+        String styleSheet = FxmlLoaderHelper.class.getResource(css).toExternalForm()
+        rootPane.stylesheets.addAll(styleSheet)
+        return rootPane
     }
 
     static Parent load(Object ctrl, String fxml, String css, Parent parent) throws IOException {
-        final Parent load = load(ctrl, fxml, css);
-        parent.getStylesheets().addAll(COMMON_CSS_URL);
-        return load;
+        final Parent load = load(ctrl, fxml, css)
+        parent.stylesheets.addAll(COMMON_CSS_URL)
+        return load
     }
 }
 

@@ -18,6 +18,7 @@ import org.w3c.dom.html.HTMLAnchorElement
 
 import static javafx.concurrent.Worker.State.SUCCEEDED
 import static javafx.scene.control.ButtonType.CLOSE
+
 /**
  * Created by Dominik Broj on 05.02.2016.
  *

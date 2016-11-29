@@ -1,6 +1,8 @@
 package com.github.thetric.iliasdownloader.ui.jfx.prefs
 
+import groovy.transform.Canonical
 import groovy.transform.CompileStatic
+
 /**
  * Created by Dominik Broj on 31.01.2016.
  *
@@ -8,6 +10,7 @@ import groovy.transform.CompileStatic
  * @since 31.01.2016
  */
 @CompileStatic
+@Canonical
 final class UserPreferences {
     String iliasServerURL
 

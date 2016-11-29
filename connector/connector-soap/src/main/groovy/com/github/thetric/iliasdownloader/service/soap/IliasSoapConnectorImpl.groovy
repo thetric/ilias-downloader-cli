@@ -3,7 +3,6 @@ package com.github.thetric.iliasdownloader.service.soap
 import com.github.thetric.iliasdownloader.service.exception.IliasException
 import groovy.transform.CompileStatic
 import groovy.transform.Immutable
-import lombok.NonNull
 import org.ksoap2.SoapEnvelope
 import org.ksoap2.serialization.PropertyInfo
 import org.ksoap2.serialization.SoapObject
@@ -22,9 +21,7 @@ import org.xmlpull.v1.XmlPullParserException
 final class IliasSoapConnectorImpl implements IliasSoapConnector {
     private static final String ILIAS_SOAP_XML_NAMESPACE = "http://schemas.xmlsoap.org/soap/envelope/"
 
-    @NonNull
     private final String iliasSoapServerUrl
-    @NonNull
     final String clientId
 
     @Override

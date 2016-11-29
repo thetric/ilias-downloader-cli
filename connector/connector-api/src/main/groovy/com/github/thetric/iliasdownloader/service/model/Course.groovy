@@ -8,23 +8,16 @@ import groovy.transform.ToString
  * @author broj
  * @since 31.05.2016
  */
+
 @EqualsAndHashCode
 @ToString(includeNames = true)
 @CompileStatic
 final class Course extends AbstractIliasItem {
+    Collection<? extends CourseItem> items
 
-    private final Collection<? extends CourseItem> items
-
-     Course(int id, String name, String url, Collection<? extends CourseItem> items) {
+    Course(int id, String name, String url, Collection<? extends CourseItem> items = new ArrayList<>()) {
         super(id, name, url)
         this.items = items
     }
-
-     Course(int id, String name, String url) {
-        this(id, name, url, new ArrayList<>())
-    }
-
-    Collection<? extends CourseItem> getItems() {
-        return items
-    }
 }
+
