@@ -20,9 +20,9 @@ final class IliasLogoutService extends Service<Void> {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                iliasSoapService.logout();
-                return null;
+                iliasSoapService.logout()
+                return null
             }
-        };
+        }
     }
 }

@@ -18,6 +18,6 @@ final class IliasCourseSyncService extends Service<Void> {
 
     @Override
     protected Task<Void> createTask() {
-        return null;
+        return null
     }
 }

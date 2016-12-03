@@ -10,7 +10,7 @@ import groovy.transform.CompileStatic
  */
 @CompileStatic
 interface IliasSoapConnector {
-    Object executeSoapRequest(String soapMethodName, List<SoapParameterEntry> parameters);
+    Object executeSoapRequest(String soapMethodName, List<SoapParameterEntry> parameters)
 
-    String getClientId();
+    String getClientId()
 }

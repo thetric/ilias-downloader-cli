@@ -22,9 +22,9 @@ final class IliasLoginService extends Service<Void> {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                iliasSoapService.login(loginCredentials);
-                return null;
+                iliasSoapService.login(loginCredentials)
+                return null
             }
-        };
+        }
     }
 }

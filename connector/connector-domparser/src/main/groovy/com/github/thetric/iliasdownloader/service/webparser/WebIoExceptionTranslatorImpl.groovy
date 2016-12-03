@@ -1,7 +1,7 @@
-package com.github.thetric.iliasdownloader.service.webparser;
+package com.github.thetric.iliasdownloader.service.webparser
 
 import com.github.thetric.iliasdownloader.service.exception.IliasException
-import groovy.transform.CompileStatic;
+import groovy.transform.CompileStatic
 
 /**
  * @author broj
@@ -12,6 +12,6 @@ final class WebIoExceptionTranslatorImpl implements WebIoExceptionTranslator {
     @Override
     IliasException translate(Exception e) {
         // TODO weiter ausbauen
-        return new IliasException(e);
+        return new IliasException(e)
     }
 }
