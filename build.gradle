@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M2'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M3'
     }
 }
 
@@ -30,8 +30,8 @@ subprojects {
         compile 'org.apache.logging.log4j:log4j-core:2.7'
 
         // test
-        testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M2'
-        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M2'
+        testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M3'
+        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M3'
     }
 
     repositories {
