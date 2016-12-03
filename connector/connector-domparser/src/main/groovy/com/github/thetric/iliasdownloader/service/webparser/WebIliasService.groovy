@@ -87,10 +87,10 @@ final class WebIliasService implements IliasService {
             log.error("Login at $loginPage failed", e)
             throw exceptionTranslator.translate(e)
         }
-        log.info('Login at {} succeeded', loginPage)
-
         ensureAuthentication(response)
         cookies = response.cookies()
+
+        log.info('Login at {} succeeded', loginPage)
     }
 
     private void ensureAuthentication(Connection.Response response) {
