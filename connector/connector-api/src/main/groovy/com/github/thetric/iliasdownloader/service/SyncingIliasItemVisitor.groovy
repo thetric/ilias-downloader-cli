@@ -1,7 +1,6 @@
 package com.github.thetric.iliasdownloader.service
 
 import com.github.thetric.iliasdownloader.service.model.*
-import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
@@ -20,7 +19,6 @@ import java.time.ZoneId
  * @since 20.11.2016
  */
 @Log4j2
-@CompileStatic
 @TupleConstructor
 final class SyncingIliasItemVisitor {
     private static final ZoneId SYSTEM_ZONE = ZoneId.systemDefault()
