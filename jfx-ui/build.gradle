@@ -10,3 +10,16 @@ dependencies {
 
     compile 'org.yaml:snakeyaml:1.17'
 }
+
+jar {
+    baseName = 'ilias-downloader-jfx'
+
+    def mainClassName = 'com.github.thetric.iliasdownloader.ui.jfx.Main'
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
