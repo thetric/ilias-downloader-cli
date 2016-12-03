@@ -1,6 +1,5 @@
 package com.github.thetric.iliasdownloader.ui.jfx.ui.intro.setup
 
-import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.DialogHelper
 import groovy.transform.CompileStatic
@@ -15,7 +14,7 @@ import javafx.scene.control.TextInputDialog
 @Log4j2
 final class WebIliasSetupController {
 
-    Optional<IliasService> getIliasService(String loginPage) {
+    Optional<ConnectionSetupData> getIliasService(String loginPage) {
         if (loginPage == null || loginPage.empty) {
             Optional<String> loginOptional = getLoginPage()
             if (loginOptional.present) {
@@ -28,7 +27,8 @@ final class WebIliasSetupController {
 
         try {
             WebParserIliasServiceProvider serviceProvider = new WebParserIliasServiceProvider(loginPage)
-            return Optional.of(serviceProvider.newInstance())
+            def iliasService = serviceProvider.newInstance()
+            return Optional.of(new ConnectionSetupData(iliasService, loginPage))
         } catch (Exception e) {
             log.error('Konnte den Ilias Service Provider nicht erstellen', e)
             DialogHelper.showExceptionDialog('Fehler beim Erstellen des Ilias Service Providers', e)

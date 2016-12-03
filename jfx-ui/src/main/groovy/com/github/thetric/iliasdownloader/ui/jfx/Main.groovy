@@ -60,7 +60,7 @@ final class Main extends Application {
             def message = 'Konnte die Einstellungen nicht laden.'
             log.error(message, e)
             DialogHelper.showExceptionDialog(message, e)
-                        .ifPresent({ Platform.exit() })
+                    .ifPresent({ Platform.exit() })
             return
         }
         try {
@@ -99,7 +99,7 @@ final class Main extends Application {
         }
     }
 
-    private UserPreferences getDefaultPreferences() {
+    private static UserPreferences getDefaultPreferences() {
         log.info('Keine Benutzereinstellungen gefunden. Lade Standardeinstellungen')
         return new UserPreferences(iliasServerURL: '', userName: '')
     }
@@ -117,8 +117,12 @@ final class Main extends Application {
      *         dialog)
      */
     private void createIliasService(String iliasServerBaseUrl, String username) {
-        new WebIliasSetupController().getIliasService(iliasServerBaseUrl)
-                                     .ifPresent({ showLogin(it, username) })
+        new WebIliasSetupController()
+                .getIliasService(iliasServerBaseUrl)
+                .ifPresent({
+            userPreferences.iliasServerURL = it.loginUrl
+            showLogin(it.iliasService, username)
+        })
     }
 
     /**
@@ -147,7 +151,7 @@ final class Main extends Application {
      * {@link Pair} from the login authenticator callback from {@link LoginDialog#LoginDialog(Pair, Callback)}
      * @return {@link LoginCredentials} with the given user name/password
      */
-    private LoginCredentials fromPair(Pair<String, String> usernamePasswordPair) {
+    private static LoginCredentials fromPair(Pair<String, String> usernamePasswordPair) {
         return new LoginCredentials(usernamePasswordPair.key, usernamePasswordPair.value)
     }
 
