@@ -1,5 +1,6 @@
 package com.github.thetric.iliasdownloader.ui.jfx.ui.main
 
+import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.FxmlLoaderHelper
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView
@@ -43,7 +44,7 @@ final class MainUi {
     @FXML
     private TreeTableColumn<?, ?> syncTreeTableView
 
-    MainUi(HostServices hostServices) throws IOException {
+    MainUi(HostServices hostServices, IliasService iliasService) throws IOException {
         rootPane = (BorderPane) FxmlLoaderHelper.load(this, '/fxml/mainWindow.fxml')
 
         initGraphics()

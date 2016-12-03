@@ -137,7 +137,7 @@ final class Main extends Application {
             iliasService.login(credentials)
             userPreferences.userName = credentials.userName
             return null
-        }).showAndWait().ifPresent({ showMainUi() })
+        }).showAndWait().ifPresent({ showMainUi(iliasService) })
     }
 
     /**
@@ -156,10 +156,10 @@ final class Main extends Application {
      * application shuts down. It is the responsibility of the called classes to properly handle any occurring
      * exceptions.
      */
-    private void showMainUi() {
+    private void showMainUi(IliasService iliasService) {
         log.info('Öffne Main UI')
         try {
-            new MainUi(hostServices)
+            new MainUi(hostServices, iliasService)
         } catch (IOException e) {
             log.error('Could not create the main ui', e)
             DialogHelper.showExceptionDialog('Fehler beim Laden der Main UI', e)
