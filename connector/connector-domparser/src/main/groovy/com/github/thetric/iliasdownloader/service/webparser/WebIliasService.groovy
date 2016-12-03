@@ -62,7 +62,7 @@ final class WebIliasService implements IliasService {
         }
     }
 
-    private void checkResponseStatus(Connection.Response response) {
+    private static void checkResponseStatus(Connection.Response response) {
         log.debug('response.statusCode() = {}', response.statusCode())
         log.debug('response.statusMessage() = {}', response.statusMessage())
         switch (response.statusCode()) {
@@ -93,7 +93,7 @@ final class WebIliasService implements IliasService {
         log.info('Login at {} succeeded', loginPage)
     }
 
-    private void ensureAuthentication(Connection.Response response) {
+    private static void ensureAuthentication(Connection.Response response) {
         // diese Prüfung ist nicht 100% wasserdicht. Das Cookie kann trotzdem gesetzt worden sein, wenn sich der Nutzer
         // zuvor erfolgreich ein- und wieder ausgeloggt hat und sich dann der Login fehlschlägt
         // es wäre vielleicht sicherer, die URL zu prüfen
@@ -170,7 +170,7 @@ final class WebIliasService implements IliasService {
         return parseId(href, idString)
     }
 
-    private int parseId(String href, String probableIdString) {
+    private static int parseId(String href, String probableIdString) {
         try {
             return Integer.parseInt(probableIdString)
         } catch (NumberFormatException e) {
@@ -225,7 +225,7 @@ final class WebIliasService implements IliasService {
         return Optional.ofNullable(createCourseItem(type, itemId, itemName, itemUrl, properties))
     }
 
-    private Elements getItemProperties(Element itemContainer) {
+    private static Elements getItemProperties(Element itemContainer) {
         return itemContainer.select(CssSelectors.ITEM_PROPERTIES_SELECTOR.getCssSelector())
     }
 
@@ -236,7 +236,7 @@ final class WebIliasService implements IliasService {
      *         String to trim
      * @return a new String without "no backspace" characters
      */
-    private String trimNbspFromString(String s) {
+    private static String trimNbspFromString(String s) {
         return s.replace('\u00a0', '')
     }
 
@@ -252,7 +252,7 @@ final class WebIliasService implements IliasService {
                 Collection<? extends CourseItem> courseItems = searchItemsRecursively(itemUrl)
                 return new CourseFolder(itemId, itemName, itemUrl, courseItems)
             case "file":
-                log.warn("itemId {}, name {}, url {}", itemId, itemName, itemUrl)
+                log.debug("itemId {}, name {}, url {}", itemId, itemName, itemUrl)
                 String fileType = properties.get(0)
                 return new CourseFile(itemId, "$itemName.$fileType", itemUrl, null)
             default:

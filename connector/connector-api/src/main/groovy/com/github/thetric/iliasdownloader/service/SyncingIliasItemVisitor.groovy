@@ -28,7 +28,7 @@ final class SyncingIliasItemVisitor {
     // TODO strategy for handling exceptions: simple java.util.function.Supplier or complexer class?
 
     @PackageScope
-    Path resolvePathAndCreateMissingDirs(Path root, IliasItem iliasItem) {
+    static Path resolvePathAndCreateMissingDirs(Path root, IliasItem iliasItem) {
         def coursePath = root.resolve(sanitizeFileName(iliasItem.name))
         Files.createDirectories coursePath
     }
@@ -39,12 +39,12 @@ final class SyncingIliasItemVisitor {
      * @param fileName
      * @return file name without invalid NTFS characters
      */
-    String sanitizeFileName(String fileName) {
+    static String sanitizeFileName(String fileName) {
         fileName.replaceAll($/[\\/:*?"<>|]/$, '')
     }
 
     void visit(Course course) {
-        log.info("Visiting course ${course}")
+        log.info("Visiting course '${course.name}' (id: ${course.id}")
         def coursePath = resolvePathAndCreateMissingDirs(basePath, course)
         course.items.each { visit(coursePath, it) }
     }
@@ -54,7 +54,7 @@ final class SyncingIliasItemVisitor {
     }
 
     void visit(Path basePath, CourseFolder folder) {
-        log.info("Visiting folder ${folder}")
+        log.info("Visiting folder '${folder.name}'")
         def folderPath = resolvePathAndCreateMissingDirs(basePath, folder)
         folder.courseItems.each { visit(folderPath, it) }
     }
@@ -68,7 +68,7 @@ final class SyncingIliasItemVisitor {
     }
 
     @PackageScope
-    boolean needsToSync(Path path, CourseFile file) {
+    static boolean needsToSync(Path path, CourseFile file) {
         if (Files.notExists(path)) {
             return true
         } else {
