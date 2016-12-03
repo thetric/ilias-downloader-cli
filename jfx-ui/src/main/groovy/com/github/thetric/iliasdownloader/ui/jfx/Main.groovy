@@ -8,6 +8,7 @@ import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferences
 import com.github.thetric.iliasdownloader.ui.jfx.ui.intro.setup.WebIliasSetupController
 import com.github.thetric.iliasdownloader.ui.jfx.ui.main.MainUi
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.DialogHelper
+import com.github.thetric.iliasdownloader.ui.jfx.ui.util.PreValidatingDialog
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import javafx.application.Application
@@ -131,7 +132,7 @@ final class Main extends Application {
      *         dialog)
      */
     private void showLogin(IliasService iliasService, String username) {
-        new LoginDialog(new Pair<>(username, ''), {
+        new PreValidatingDialog(new Pair<>(username, ''), {
             def credentials = fromPair(it as Pair<String, String>)
             iliasService.login(credentials)
             userPreferences.userName = credentials.userName
