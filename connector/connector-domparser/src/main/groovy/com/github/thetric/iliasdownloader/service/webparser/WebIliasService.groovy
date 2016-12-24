@@ -64,8 +64,7 @@ final class WebIliasService implements IliasService {
     }
 
     private static void checkResponseStatus(Connection.Response response) {
-        log.debug('response.statusCode() = {}', response.statusCode())
-        log.debug('response.statusMessage() = {}', response.statusMessage())
+        log.debug('response: {} ({})', response.statusCode(), response.statusMessage())
         switch (response.statusCode()) {
             case HTTP_FOUND:
                 // might the session be expired?
