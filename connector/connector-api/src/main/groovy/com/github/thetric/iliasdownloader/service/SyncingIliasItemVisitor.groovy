@@ -60,9 +60,10 @@ final class SyncingIliasItemVisitor {
     }
 
     void visit(Path basePath, CourseFile file) {
-        log.info("Download file $file")
+        log.info("Visiting file ${file.name}")
         def filePath = basePath.resolve(sanitizeFileName(file.name))
         if (needsToSync(filePath, file)) {
+            log.info("Downloading file $file")
             syncAndSaveFile(filePath, file)
         }
     }
