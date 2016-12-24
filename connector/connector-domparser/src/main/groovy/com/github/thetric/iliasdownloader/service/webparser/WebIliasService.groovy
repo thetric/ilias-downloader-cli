@@ -25,6 +25,7 @@ import java.util.regex.Pattern
 final class WebIliasService implements IliasService {
     private static final int HTTP_FOUND = 302
     private final WebIoExceptionTranslator exceptionTranslator
+    private static final int CONNECTION_TIMEOUT = 7_000
     private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]")
 
     private final String iliasBaseUrl
@@ -130,6 +131,7 @@ final class WebIliasService implements IliasService {
         }
         return Jsoup.connect(iliasWebsite)
                     .cookies(cookies)
+                    .timeout(CONNECTION_TIMEOUT)
     }
 
     private Document connectAndGetDocument(String url) {
