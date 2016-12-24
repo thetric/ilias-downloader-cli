@@ -8,6 +8,7 @@ import io.reactivex.functions.Consumer
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.attribute.FileTime
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -74,8 +75,7 @@ final class SyncingIliasItemVisitor {
             return true
         } else {
             def lastModifiedTime = Files.getLastModifiedTime(path)
-            def modDateTime = LocalDateTime.ofInstant(lastModifiedTime.toInstant(), SYSTEM_ZONE)
-            return modDateTime != file.modified
+            return lastModifiedTime != toFileTime(file.modified)
         }
     }
 
@@ -85,7 +85,14 @@ final class SyncingIliasItemVisitor {
             @Override
             void accept(byte[] bytes) {
                 Files.newOutputStream(path).withObjectOutputStream { it.write(bytes) }
+                Files.setLastModifiedTime(path, toFileTime(file.modified))
             }
         })
+    }
+
+    @PackageScope
+    static FileTime toFileTime(LocalDateTime dateTime) {
+        Objects.requireNonNull(dateTime, 'dateTime')
+        FileTime.from(dateTime.toInstant(SYSTEM_ZONE.rules.getOffset(dateTime)))
     }
 }
