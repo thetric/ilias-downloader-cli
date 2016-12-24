@@ -9,7 +9,7 @@ import groovy.transform.ToString
  * @since 18.08.2016
  */
 @EqualsAndHashCode
-@ToString(includeNames = true)
+@ToString(includeNames = true, includeSuperProperties = true)
 @CompileStatic
 final class CourseFolder extends AbstractIliasItem implements CourseItem {
     final Collection<? extends CourseItem> courseItems

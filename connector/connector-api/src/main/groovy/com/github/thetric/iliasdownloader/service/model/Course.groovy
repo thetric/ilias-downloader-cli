@@ -10,7 +10,7 @@ import groovy.transform.ToString
  */
 
 @EqualsAndHashCode
-@ToString(includeNames = true)
+@ToString(includeNames = true, includeSuperProperties = true)
 @CompileStatic
 final class Course extends AbstractIliasItem {
     Collection<? extends CourseItem> items
