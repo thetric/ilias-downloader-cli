@@ -14,7 +14,11 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
+
+import static java.time.format.DateTimeFormatter.ofPattern
 
 /**
  * @author broj
@@ -27,6 +31,9 @@ final class WebIliasService implements IliasService {
     private final WebIoExceptionTranslator exceptionTranslator
     private static final int CONNECTION_TIMEOUT = 7_000
     private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]")
+    // for German date time format: 23. Sep 2016, 17:34
+    private static final DateTimeFormatter lastModifiedFormatter = ofPattern('dd. MMM yyyy, HH:mm', Locale.GERMAN)
+    private final RelativeDateTimeParser relativeDateTimeParser = new GermanRelativeDateTimeParser()
 
     private final String iliasBaseUrl
     private final String loginPage
@@ -255,10 +262,24 @@ final class WebIliasService implements IliasService {
             case "file":
                 log.debug("itemId {}, name {}, url {}", itemId, itemName, itemUrl)
                 String fileType = properties.get(0)
-                return new CourseFile(itemId, "$itemName.$fileType", itemUrl, null)
+                if (properties.size() < 3) {
+                    throw new IllegalArgumentException("No last modified timestamp present! Item with " +
+                            "ID $itemId (URL: $itemUrl) has only following properties: $properties")
+                }
+                LocalDateTime lastModified = parseDateString(properties.get(2))
+                return new CourseFile(itemId, "$itemName.$fileType", itemUrl, lastModified)
             default:
                 log.warn("Unknown type: {}, URL: {}", type, itemUrl)
                 return null
+        }
+    }
+
+    private LocalDateTime parseDateString(String lastModifiedDateTimeString) {
+        if (relativeDateTimeParser.isRelativeDateTime(lastModifiedDateTimeString)) {
+            log.debug('{} is a relative date', lastModifiedDateTimeString)
+            return relativeDateTimeParser.parse(lastModifiedDateTimeString)
+        } else {
+            return LocalDateTime.parse(lastModifiedDateTimeString, lastModifiedFormatter)
         }
     }
 }
