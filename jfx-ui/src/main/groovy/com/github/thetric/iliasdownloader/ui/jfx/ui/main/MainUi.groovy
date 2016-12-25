@@ -3,6 +3,7 @@ package com.github.thetric.iliasdownloader.ui.jfx.ui.main
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.SyncingIliasItemVisitor
 import com.github.thetric.iliasdownloader.service.model.Course
+import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.FxmlLoaderHelper
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView
@@ -14,6 +15,7 @@ import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.Scene
 import javafx.scene.control.*
+import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
@@ -49,14 +51,19 @@ final class MainUi {
     private MenuItem connectSettingsItem, downloadSettingsItem, helpItem
     @FXML
     private MenuItem aboutAppItem
+
     @FXML
-    private TreeTableColumn<?, ?> syncTreeTableView
+    private TableView<CourseFile> itemTable
+    @FXML
+    private TableColumn<CourseFile, String> itemNameCol, itemSizeCol;
 
     MainUi(HostServices hostServices, IliasService iliasService) throws IOException {
         rootPane = (BorderPane) FxmlLoaderHelper.load(this, '/fxml/mainWindow.fxml')
 
         initGraphics()
         setEventHandlers(hostServices, iliasService)
+
+        itemNameCol.cellValueFactory = new PropertyValueFactory('name')
 
         final Scene scene = new Scene(rootPane)
         stage = new Stage()
