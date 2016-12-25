@@ -72,4 +72,9 @@ final class SoapIliasService implements IliasService {
     Single<byte[]> getContent(CourseFile file) {
         return Single.never()
     }
+
+    @Override
+    Single<InputStream> getContentAsStream(CourseFile file) {
+        Single.never()
+    }
 }

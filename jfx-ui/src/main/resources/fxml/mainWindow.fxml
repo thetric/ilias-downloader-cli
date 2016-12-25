@@ -6,9 +6,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import org.controlsfx.control.ToggleSwitch?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity"
-            prefHeight="625.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0"
+            prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
     <top>
         <ToolBar fx:id="toolBar">
             <Button fx:id="syncButton" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
@@ -30,14 +29,13 @@
         </ToolBar>
     </top>
     <center>
-        <TreeTableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                       BorderPane.alignment="CENTER">
+        <TableView fx:id="itemTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <columns>
-                <TreeTableColumn prefWidth="400.0" text="Name"/>
-                <TreeTableColumn fx:id="syncTreeTableView" prefWidth="330.0" text="Ordner"/>
-                <TreeTableColumn prefWidth="100.0" text="Größe (MiB)"/>
-                <TreeTableColumn minWidth="180.0" prefWidth="-1.0" text="Änderungszeitpunkt"/>
+                <TableColumn fx:id="itemNameCol" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="850.0"
+                             text="Name"/>
+                <TableColumn fx:id="itemSizeCol" maxWidth="1.7976931348623157E308" minWidth="-Infinity"
+                             prefWidth="150.0" text="Größe"/>
             </columns>
-        </TreeTableView>
+        </TableView>
     </center>
 </BorderPane>

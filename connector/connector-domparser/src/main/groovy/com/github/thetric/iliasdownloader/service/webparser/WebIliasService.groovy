@@ -1,14 +1,20 @@
 package com.github.thetric.iliasdownloader.service.webparser
 
 import com.github.thetric.iliasdownloader.service.IliasService
-import com.github.thetric.iliasdownloader.service.exception.CourseItemNotFoundException
 import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.service.model.*
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.jsoup.Connection
+import org.apache.http.client.config.CookieSpecs
+import org.apache.http.client.config.RequestConfig
+import org.apache.http.client.fluent.Executor
+import org.apache.http.client.fluent.Form
+import org.apache.http.client.fluent.Request
+import org.apache.http.impl.client.BasicCookieStore
+import org.apache.http.impl.client.CloseableHttpClient
+import org.apache.http.impl.client.HttpClients
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -27,10 +33,10 @@ import static java.time.format.DateTimeFormatter.ofPattern
 @Log4j2
 @CompileStatic
 final class WebIliasService implements IliasService {
-    private static final int HTTP_FOUND = 302
     private final WebIoExceptionTranslator exceptionTranslator
-    private static final int CONNECTION_TIMEOUT = 7_000
+
     private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]")
+
     // for German date time format: 23. Sep 2016, 17:34
     private static final DateTimeFormatter lastModifiedFormatter = ofPattern('dd. MMM yyyy, HH:mm', Locale.GERMAN)
     private final RelativeDateTimeParser relativeDateTimeParser = new GermanRelativeDateTimeParser()
@@ -42,7 +48,9 @@ final class WebIliasService implements IliasService {
     private final String clientId
     private final String courseLinkPrefix
 
-    private Map<String, String> cookies
+    // per default Groovy imports java.net.* where a CookieStore interface already exists
+    // so we must use the full qualified import ;(
+    private final org.apache.http.client.CookieStore cookieStore
 
     WebIliasService(WebIoExceptionTranslator exceptionTranslator, String iliasBaseUrl, String clientId) {
         this.exceptionTranslator = exceptionTranslator
@@ -52,63 +60,55 @@ final class WebIliasService implements IliasService {
         logoutPage = "${iliasBaseUrl}logout.php"
         courseOverview = "${iliasBaseUrl}ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems"
         courseLinkPrefix = "${iliasBaseUrl}goto_${clientId}_crs_"
-        cookies = new HashMap<>()
+
+        cookieStore = new BasicCookieStore()
     }
 
+    @Override
     Single<byte[]> getContent(CourseFile courseFile) {
+        return Single.never()
+    }
+
+    @Override
+    Single<InputStream> getContentAsStream(CourseFile courseFile) {
         return Single.create {
             try {
-                Connection.Response response = connectWithSessionCookies(courseFile.getUrl())
-                        .ignoreContentType(true)
-                        .followRedirects(false)
-                        .execute()
-                checkResponseStatus(response)
-                it.onSuccess(response.bodyAsBytes())
+                def content = connectWithSessionCookies().execute(Request.Get(courseFile.url))
+                                                         .returnContent()
+                return it.onSuccess(content.asStream())
             } catch (Exception ex) {
                 it.onError(ex)
             }
         }
     }
 
-    private static void checkResponseStatus(Connection.Response response) {
-        log.debug('response: {} ({})', response.statusCode(), response.statusMessage())
-        switch (response.statusCode()) {
-            case HTTP_FOUND:
-                // might the session be expired?
-                throw new CourseItemNotFoundException('Course item not found, got a redirect',
-                        response.url().toExternalForm())
-        }
-    }
-
     @Override
     void login(LoginCredentials loginCredentials) {
-        Connection.Response response
         log.info('Logging in at {}', loginPage)
         try {
-            response = Jsoup.connect(loginPage)
-                            .data('username', loginCredentials.getUserName())
-                            .data('password', loginCredentials.getPassword())
-                            .method(Connection.Method.POST)
-                            .execute()
+            connectWithSessionCookies().execute(Request.Post(loginPage)
+                                                       .bodyForm(Form.form()
+                                                                     .add('username', loginCredentials.userName)
+                                                                     .add('password', loginCredentials.password)
+                                                                     .build()))
+                                       .discardContent()
+            if (!hasLoginCookie()) {
+                cookieStore.clear()
+                throw new IliasAuthenticationException('Ungültiger Login')
+            }
         } catch (IOException e) {
             log.error("Login at $loginPage failed", e)
+            cookieStore.clear()
             throw exceptionTranslator.translate(e)
         }
-        ensureAuthentication(response)
-        cookies = response.cookies()
-
         log.info('Login at {} succeeded', loginPage)
     }
 
-    private static void ensureAuthentication(Connection.Response response) {
-        // diese Prüfung ist nicht 100% wasserdicht. Das Cookie kann trotzdem gesetzt worden sein, wenn sich der Nutzer
-        // zuvor erfolgreich ein- und wieder ausgeloggt hat und sich dann der Login fehlschlägt
-        // es wäre vielleicht sicherer, die URL zu prüfen
-        boolean isAuthenticated = response.cookies().containsKey('authchallenge')
-        if (!isAuthenticated) {
-            // bessere Fehlermeldung?
-            throw new IliasAuthenticationException('Login fehlgeschlagen')
-        }
+    private boolean hasLoginCookie() {
+        return cookieStore.getCookies()
+                          .stream()
+                          .map({ it.name })
+                          .anyMatch({ it == 'authchallenge' })
     }
 
     @Override
@@ -116,34 +116,34 @@ final class WebIliasService implements IliasService {
         log.info('Logging out: {}', logoutPage)
 
         try {
-            connectWithSessionCookies(logoutPage)
-                    .method(Connection.Method.GET)
-                    .execute()
+            connectWithSessionCookies().execute(Request.Get(logoutPage))
+                                       .discardContent()
         } catch (IOException e) {
             log.error("Logout at $logoutPage failed", e)
             throw exceptionTranslator.translate(e)
         } finally {
-            cookies.clear()
-            // hat den Effekt, dass das Cookie "ilClientId" gelöscht wird
-            // wenn wieder der Login aufgerufen wird, hat der Client noch das "authchallenge" Cookie
-            // ist der Logout noch nötig?
+            cookieStore.clear()
         }
         log.info('Logout at {} succeeded', logoutPage)
     }
 
-    private Connection connectWithSessionCookies(String iliasWebsite) {
-        if (cookies.isEmpty()) {
-            throw new NoCookiesAvailableException('No cookies found. Ensure you are already logged in')
-        }
-        return Jsoup.connect(iliasWebsite)
-                    .cookies(cookies)
-                    .timeout(CONNECTION_TIMEOUT)
+    private Executor connectWithSessionCookies() {
+        RequestConfig globalConfig = RequestConfig.custom()
+                                                  .setCookieSpec(CookieSpecs.DEFAULT)
+                                                  .build()
+        CloseableHttpClient httpClient = HttpClients.custom()
+                                                    .setDefaultRequestConfig(globalConfig)
+                                                    .build()
+        return Executor.newInstance(httpClient)
+                       .use(cookieStore)
     }
 
     private Document connectAndGetDocument(String url) {
         try {
-            Connection.Response response = connectWithSessionCookies(url).execute()
-            return response.parse()
+            def content = connectWithSessionCookies().execute(Request.Get(url))
+                                                     .returnContent()
+            def html = content.asString()
+            return Jsoup.parse(html)
         } catch (IOException e) {
             log.error("Could not GET: $url", e)
             throw exceptionTranslator.translate(e)
