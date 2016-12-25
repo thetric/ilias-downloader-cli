@@ -2,7 +2,6 @@ package com.github.thetric.iliasdownloader.service
 
 import com.github.thetric.iliasdownloader.service.model.*
 import groovy.transform.PackageScope
-import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
 import io.reactivex.functions.Consumer
 
@@ -11,22 +10,20 @@ import java.nio.file.Path
 import java.nio.file.attribute.FileTime
 import java.time.LocalDateTime
 import java.time.ZoneId
-
 /**
  * Implements the <a href="https://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a> for
  * {@link com.github.thetric.iliasdownloader.service.model.IliasItem}s.
- *
- * @author thetric
- * @since 20.11.2016
  */
 @Log4j2
-@TupleConstructor
-final class SyncingIliasItemVisitor {
+class SyncingIliasItemVisitor {
     private static final ZoneId SYSTEM_ZONE = ZoneId.systemDefault()
     private Path basePath
     private IliasService iliasService
 
-    // TODO strategy for handling exceptions: simple java.util.function.Supplier or complexer class?
+    SyncingIliasItemVisitor(Path basePath, IliasService iliasService) {
+        this.basePath = basePath
+        this.iliasService = iliasService
+    }
 
     @PackageScope
     static Path resolvePathAndCreateMissingDirs(Path root, IliasItem iliasItem) {
@@ -79,7 +76,6 @@ final class SyncingIliasItemVisitor {
         }
     }
 
-    @PackageScope
     void syncAndSaveFile(Path path, CourseFile file) {
         iliasService.getContentAsStream(file)
                     .subscribe(new Consumer<InputStream>() {

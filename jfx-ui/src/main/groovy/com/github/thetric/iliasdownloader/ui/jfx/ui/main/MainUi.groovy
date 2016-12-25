@@ -7,20 +7,24 @@ import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.FxmlLoaderHelper
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView
+import groovy.transform.Canonical
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.reactivex.functions.Consumer
 import javafx.application.HostServices
 import javafx.application.Platform
+import javafx.beans.property.ReadOnlyStringWrapper
+import javafx.beans.value.ObservableValue
 import javafx.fxml.FXML
 import javafx.scene.Scene
 import javafx.scene.control.*
-import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
+import javafx.util.Callback
 import org.controlsfx.control.ToggleSwitch
 
+import java.nio.file.Path
 import java.nio.file.Paths
 
 import static de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon.*
@@ -53,9 +57,15 @@ final class MainUi {
     private MenuItem aboutAppItem
 
     @FXML
-    private TableView<CourseFile> itemTable
+    private TableView<ItemTableModel> itemTable
     @FXML
-    private TableColumn<CourseFile, String> itemNameCol, itemSizeCol;
+    private TableColumn<ItemTableModel, String> itemNameCol, itemSizeCol
+
+    @Canonical
+    private static final class ItemTableModel {
+        CourseFile courseFile
+        Path path
+    }
 
     MainUi(HostServices hostServices, IliasService iliasService) throws IOException {
         rootPane = (BorderPane) FxmlLoaderHelper.load(this, '/fxml/mainWindow.fxml')
@@ -63,7 +73,11 @@ final class MainUi {
         initGraphics()
         setEventHandlers(hostServices, iliasService)
 
-        itemNameCol.cellValueFactory = new PropertyValueFactory('name')
+        itemNameCol.cellValueFactory = new Callback<TableColumn.CellDataFeatures<ItemTableModel, String>, ObservableValue<String>>() {
+            ObservableValue<String> call(TableColumn.CellDataFeatures<ItemTableModel, String> p) {
+                new ReadOnlyStringWrapper(p.value.courseFile.name)
+            }
+        }
 
         final Scene scene = new Scene(rootPane)
         stage = new Stage()
@@ -96,12 +110,13 @@ final class MainUi {
         }
         syncButton.onAction = {
             syncButton.disable = true
+            itemTable.items.clear()
             Thread.start {
                 log.info 'running sync'
                 try {
                     def courses = iliasService.joinedCourses.toList().blockingGet()
                     def basePath = Paths.get '/tmp/test'
-                    def itemVisitor = new SyncingIliasItemVisitor(basePath: basePath, iliasService: iliasService)
+                    def itemVisitor = new ItemTableUpdater(basePath, iliasService, this)
                     iliasService.searchCoursesWithContent(courses).subscribe(new Consumer<Course>() {
                         @Override
                         void accept(Course course) {
@@ -120,6 +135,23 @@ final class MainUi {
                 }
                 log.info 'sync finished'
             }
+        }
+    }
+
+    private static final class ItemTableUpdater extends SyncingIliasItemVisitor {
+        private MainUi mainUi
+
+        ItemTableUpdater(Path basePath, IliasService iliasService, MainUi mainUi) {
+            super(basePath, iliasService)
+            this.mainUi = mainUi
+        }
+
+        @Override
+        void syncAndSaveFile(Path path, CourseFile file) {
+            Platform.runLater({
+                mainUi.itemTable.items << new ItemTableModel(file, path)
+            })
+            super.syncAndSaveFile(path, file)
         }
     }
 
