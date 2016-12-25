@@ -79,6 +79,16 @@ final class MainUi {
             }
         }
 
+        itemTable.rowFactory = {
+            def row = new TableRow<ItemTableModel>()
+            row.onMouseClicked = {
+                if (it.clickCount == 2 && !row.empty) {
+                    hostServices.showDocument(row.item.path.toUri().toURL().toExternalForm())
+                }
+            }
+            return row
+        }
+
         final Scene scene = new Scene(rootPane)
         stage = new Stage()
         stage.icons.setAll(
