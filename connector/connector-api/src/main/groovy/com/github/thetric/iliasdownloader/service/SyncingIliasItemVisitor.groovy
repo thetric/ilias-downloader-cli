@@ -81,10 +81,11 @@ final class SyncingIliasItemVisitor {
 
     @PackageScope
     void syncAndSaveFile(Path path, CourseFile file) {
-        iliasService.getContent(file).subscribe(new Consumer<byte[]>() {
+        iliasService.getContentAsStream(file)
+                    .subscribe(new Consumer<InputStream>() {
             @Override
-            void accept(byte[] bytes) {
-                Files.newOutputStream(path).withObjectOutputStream { it.write(bytes) }
+            void accept(InputStream inputStream) throws Exception {
+                Files.copy(inputStream, path)
                 Files.setLastModifiedTime(path, toFileTime(file.modified))
             }
         })
