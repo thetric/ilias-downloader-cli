@@ -3,9 +3,10 @@ package com.github.thetric.iliasdownloader.ui.jfx.ui.util
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import javafx.scene.control.Alert
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.ButtonType
+import javafx.scene.control.Label
 import javafx.scene.control.TextArea
-
 /**
  * @author broj
  * @since 25.09.2016
@@ -43,5 +44,13 @@ final class DialogHelper {
                 return '<Fehler beim Erzeugen des Exception Stacktraces>'
             }
         }
+    }
+
+    static Alert showBigDialog(AlertType alertType, String message) {
+        def alert = new Alert(alertType)
+        def messageLabel = new Label(message)
+        messageLabel.wrapText = true
+        alert.dialogPane.content = messageLabel
+        return alert
     }
 }

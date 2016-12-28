@@ -4,6 +4,7 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.SyncingIliasItemVisitor
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
+import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferences
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.FxmlLoaderHelper
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView
@@ -61,13 +62,16 @@ final class MainUi {
     @FXML
     private TableColumn<ItemTableModel, String> itemNameCol, itemSizeCol
 
+    private final UserPreferences userPreferences
+
     @Canonical
     private static final class ItemTableModel {
         CourseFile courseFile
         Path path
     }
 
-    MainUi(HostServices hostServices, IliasService iliasService) throws IOException {
+    MainUi(HostServices hostServices, IliasService iliasService, UserPreferences userPreferences) throws IOException {
+        this.userPreferences = userPreferences
         rootPane = (BorderPane) FxmlLoaderHelper.load(this, '/fxml/mainWindow.fxml')
 
         initGraphics()
@@ -125,7 +129,7 @@ final class MainUi {
                 log.info 'running sync'
                 try {
                     def courses = iliasService.joinedCourses.toList().blockingGet()
-                    def basePath = Paths.get '/tmp/test'
+                    def basePath = Paths.get userPreferences.downloadFolder
                     def itemVisitor = new ItemTableUpdater(basePath, iliasService, this)
                     iliasService.searchCoursesWithContent(courses).subscribe(new Consumer<Course>() {
                         @Override
