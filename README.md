@@ -2,12 +2,29 @@
 
 # Ilias Downloader
 
-This is a reimplementation of the original [IliasDownloader2](https://github.com/kekru/ILIASDownloader2) by Kevin Krummenauer (kekru).
+The Ilias Downloader enables you to easily download the files from your Ilias account.
+The primary target is to provide a simple yet beautiful JavaFX UI.
 
-## Differences from the original version
-- This version aims to have a clearer code base.
-- It features a new UI built with [JavaFX](https://en.wikipedia.org/wiki/JavaFX).
 
 ## Getting started
-In order to start the application you need at least an installed JRE 8 Update 60.
+
+### Building from source
+As the application has not hit an `1.0` release I won't publish executable JARs.
+So if you are curious about the app you have to built it yourself.
+
+
+In order to build the application you need the latest Java Development Kit (JDK 8) installed.
+It might be possible to build it with earlier versions but I do _not_ recommended it.
 If you have not installed Java or an older version you can get it [here](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+
+To actually build the app execute the following command in a terminal app:
+
+```sh
+# on Linux/Mac
+./gradlew build
+
+# on Windows
+gradlew build
+```
+
+This will download all necessary tools and libraries and create an executable jar at `jfx-ui/build/libs`.
