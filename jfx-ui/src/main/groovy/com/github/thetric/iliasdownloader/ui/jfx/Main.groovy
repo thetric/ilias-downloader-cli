@@ -5,28 +5,22 @@ import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferenceService
 import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferenceServiceImpl
 import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferences
+import com.github.thetric.iliasdownloader.ui.jfx.ui.intro.setup.SettingsValidator
 import com.github.thetric.iliasdownloader.ui.jfx.ui.intro.setup.WebIliasSetupController
 import com.github.thetric.iliasdownloader.ui.jfx.ui.main.MainUi
-import com.github.thetric.iliasdownloader.ui.jfx.ui.settings.SyncFolderChooserController
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.DialogHelper
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.PreValidatingDialog
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import javafx.application.Application
 import javafx.application.Platform
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
 import javafx.stage.Stage
 import javafx.util.Callback
 import javafx.util.Pair
 import org.controlsfx.dialog.LoginDialog
 
-import java.nio.file.Files
 import java.nio.file.NoSuchFileException
 import java.nio.file.Paths
-
-import static com.github.thetric.iliasdownloader.ui.jfx.ui.util.DialogHelper.showBigDialog
-import static javafx.scene.control.Alert.AlertType.*
 
 /**
  * Entry point for the JavaFX GUI.
@@ -148,7 +142,10 @@ final class Main extends Application {
             iliasService.login(credentials)
             userPreferences.userName = credentials.userName
             return null
-        }).showAndWait().ifPresent({ showConfig(iliasService) })
+        }).showAndWait()
+          .ifPresent({
+            new SettingsValidator().validateSettings(userPreferences, { showMainUi(iliasService) })
+        })
     }
 
     /**
@@ -160,45 +157,6 @@ final class Main extends Application {
      */
     private static LoginCredentials fromPair(Pair<String, String> usernamePasswordPair) {
         return new LoginCredentials(usernamePasswordPair.key, usernamePasswordPair.value)
-    }
-
-    private void showConfig(IliasService iliasService) {
-        if (!userPreferences.downloadFolder) {
-            new Alert(INFORMATION, 'Lege bitte den Speicherordner für den Sync fest', ButtonType.NEXT)
-                    .showAndWait()
-                    .ifPresent({ showSyncFolderDialog({ showMainUi(iliasService) }) })
-        } else {
-            def downloadFolder = Paths.get(userPreferences.downloadFolder)
-            if (!Files.exists(downloadFolder)) {
-                showBigDialog(WARNING, "Der Speicherordner ${downloadFolder.toAbsolutePath()} " +
-                        "kann nicht gefunden. Wähle bitte einen anderen Ordner aus.")
-                        .showAndWait()
-                        .ifPresent({ showSyncFolderDialog({ showMainUi(iliasService) }) })
-            } else if (!Files.isWritable(downloadFolder)) {
-                showBigDialog(WARNING, "Der Speicherordner ${downloadFolder.toAbsolutePath()} " +
-                        "kann nicht zum Schreiben geöffnet werden. Wähle bitte einen anderen Ordner aus.")
-                        .showAndWait()
-                        .ifPresent({ showSyncFolderDialog({ showMainUi(iliasService) }) })
-            } else {
-                showMainUi(iliasService)
-            }
-        }
-    }
-
-    private void showSyncFolderDialog(Runnable afterFolderChosenCallback) {
-        new SyncFolderChooserController().getPath().ifPresent({
-            if (!Files.isWritable(it)) {
-                def alert = showBigDialog(ERROR, "Für den angegebenen Ordner ${it.toAbsolutePath()} fehlen " +
-                        "Schreibrechte. Bitte prüfe die Ordnerrechte oder wähle einen anderen Ordner aus")
-                alert.buttonTypes.addAll(ButtonType.OK, ButtonType.CANCEL)
-                alert.showAndWait()
-                     .filter({ it == ButtonType.OK })
-                     .ifPresent({ showSyncFolderDialog(afterFolderChosenCallback) })
-            } else {
-                userPreferences.downloadFolder = it
-                afterFolderChosenCallback.run()
-            }
-        })
     }
 
     /**
