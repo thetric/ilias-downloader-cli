@@ -24,7 +24,7 @@ subprojects {
     version '0.0.1-SNAPSHOT'
 
     dependencies {
-        compile 'org.codehaus.groovy:groovy-all:2.4.7'
+        compile 'org.codehaus.groovy:groovy-all:2.4.8'
 
         // logging libs
         compile 'org.apache.logging.log4j:log4j-core:2.7'
