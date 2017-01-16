@@ -17,14 +17,22 @@ final class GermanRelativeDateTimeParser implements RelativeDateTimeParser {
     LocalDateTime parse(String dateTimeString) {
         Objects.requireNonNull(dateTimeString)
 
-        if (dateTimeString.startsWith('Gestern')) {
-            def timeString = dateTimeString.replace('Gestern, ', '')
-            def modifiedTime = LocalTime.parse(timeString, timeFormatter)
-            return LocalDateTime.now()
-                    .withHour(modifiedTime.hour)
-                    .withMinute(modifiedTime.minute)
+        if (dateTimeString.startsWith('Heute')) {
+            LocalDateTime today = LocalDateTime.now()
+            return parseRelativeDateTime(dateTimeString, 'Heute', today)
         }
-        return null
+        if (dateTimeString.startsWith('Gestern')) {
+            LocalDateTime yesterday = LocalDateTime.now().minusDays(1L)
+            return parseRelativeDateTime(dateTimeString, 'Gestern', yesterday)
+        }
+        throw new IllegalArgumentException("Cannot parse date time: $dateTimeString")
+    }
+
+    private LocalDateTime parseRelativeDateTime(String dateTimeString, String prefix, LocalDateTime baseDay) {
+        def timeString = dateTimeString.replace("$prefix, ", '')
+        def modifiedTime = LocalTime.parse(timeString, timeFormatter)
+        return baseDay.withHour(modifiedTime.hour)
+                      .withMinute(modifiedTime.minute)
     }
 
     @Override
