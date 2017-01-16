@@ -10,6 +10,7 @@ import io.reactivex.functions.Consumer
 
 import java.nio.file.Path
 import java.util.function.Function
+
 /**
  * @author broj
  * @since 16.01.2017
@@ -17,31 +18,26 @@ import java.util.function.Function
 @Log4j2
 @TupleConstructor
 final class IliasCliController {
-    private final Path basePath
-    private final ConsoleService consoleService
-    private final Function<String, IliasService> iliasProvider
-
-    IliasCliController(Path basePath, ConsoleService consoleService, Function<String, IliasService> iliasProvider) {
-        this.basePath = basePath
-        this.consoleService = consoleService
-        this.iliasProvider = iliasProvider
-    }
+    Path basePath
+    ConsoleService consoleService
+    Function<String, IliasService> iliasProvider
+    ResourceBundle resourceBundle
 
     def start() {
         IliasService iliasService = createIliasService()
         log.info('Connected!')
         login(iliasService)
-        log.info('Login succeeded')
+        log.info(resourceBundle.getString('login.successful'))
 
         println ''
         println 'Available courses:'
         Collection<Course> joinedCourses = iliasService.joinedCourses
 
-        log.info('Starting sync')
+        log.info(resourceBundle.getString('sync.started'))
         def itemVisitor = new SyncingIliasItemVisitor(basePath, iliasService)
         iliasService.searchCoursesWithContent(joinedCourses)
                     .subscribe({ itemVisitor.visit(it) } as Consumer)
-        log.info('Sync finished')
+        log.info(resourceBundle.getString('sync.finished'))
     }
 
     private IliasService createIliasService() {
@@ -62,8 +58,10 @@ final class IliasCliController {
     private login(IliasService iliasService) {
         log.info('Prompting for credentials')
 
-        def username = consoleService.readLine('ilias.credentials.username', 'Username: ')
-        def password = consoleService.readPassword('ilias.credentials.password', 'Password: ')
+        String usernamePrompt = "${resourceBundle.getString('login.credentials.username')}: "
+        def username = consoleService.readLine('ilias.credentials.username', usernamePrompt)
+        String passwordPrompt = "${resourceBundle.getString('login.credentials.password')}: "
+        def password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
 
         iliasService.login(new LoginCredentials(username, password))
     }
