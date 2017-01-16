@@ -7,6 +7,7 @@ import io.reactivex.functions.Consumer
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.FileTime
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -81,7 +82,7 @@ class SyncingIliasItemVisitor {
                     .subscribe(new Consumer<InputStream>() {
             @Override
             void accept(InputStream inputStream) throws Exception {
-                Files.copy(inputStream, path)
+                Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING)
                 Files.setLastModifiedTime(path, toFileTime(file.modified))
             }
         })
