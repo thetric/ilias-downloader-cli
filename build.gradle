@@ -1,4 +1,4 @@
-group 'de.adesso.devazubis.iliasdownloader.v3'
+group 'com.github.thetric.iliasdownloader'
 version '0.0.1-SNAPSHOT'
 
 repositories {
