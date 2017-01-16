@@ -4,7 +4,7 @@ apply plugin: 'maven'
 
 dependencies {
     compile project(':connector:connector-domparser')
-    compile project(':ui-common')
+    compile project(':ui:common')
 
     compile 'org.controlsfx:controlsfx:8.40.12'
     compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22'
