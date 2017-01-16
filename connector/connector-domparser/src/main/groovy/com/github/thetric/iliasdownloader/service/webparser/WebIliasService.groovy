@@ -6,7 +6,6 @@ import com.github.thetric.iliasdownloader.service.model.*
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.apache.http.client.config.CookieSpecs
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.fluent.Executor
@@ -66,21 +65,10 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    Single<byte[]> getContent(CourseFile courseFile) {
-        return Single.never()
-    }
-
-    @Override
-    Single<InputStream> getContentAsStream(CourseFile courseFile) {
-        return Single.create {
-            try {
-                def content = connectWithSessionCookies().execute(Request.Get(courseFile.url))
-                                                         .returnContent()
-                return it.onSuccess(content.asStream())
-            } catch (Exception ex) {
-                it.onError(ex)
-            }
-        }
+    InputStream getContentAsStream(CourseFile courseFile) {
+        return connectWithSessionCookies().execute(Request.Get(courseFile.url))
+                                          .returnContent()
+                                          .asStream()
     }
 
     @Override

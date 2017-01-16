@@ -8,7 +8,6 @@ import com.github.thetric.iliasdownloader.service.soap.model.LoginType
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.reactivex.Observable
-import io.reactivex.Single
 
 import static java.util.Collections.emptyList
 import static java.util.Collections.singletonList
@@ -70,12 +69,7 @@ final class SoapIliasService implements IliasService {
     }
 
     @Override
-    Single<byte[]> getContent(CourseFile file) {
-        return Single.never()
-    }
-
-    @Override
-    Single<InputStream> getContentAsStream(CourseFile file) {
-        Single.never()
+    InputStream getContentAsStream(CourseFile file) {
+        null
     }
 }

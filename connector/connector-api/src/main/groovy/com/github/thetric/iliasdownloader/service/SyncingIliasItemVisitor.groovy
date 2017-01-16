@@ -3,7 +3,6 @@ package com.github.thetric.iliasdownloader.service
 import com.github.thetric.iliasdownloader.service.model.*
 import groovy.transform.PackageScope
 import groovy.util.logging.Log4j2
-import io.reactivex.functions.Consumer
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -11,6 +10,7 @@ import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.FileTime
 import java.time.LocalDateTime
 import java.time.ZoneId
+
 /**
  * Implements the <a href="https://en.wikipedia.org/wiki/Visitor_pattern">Visitor pattern</a> for
  * {@link com.github.thetric.iliasdownloader.service.model.IliasItem}s.
@@ -78,14 +78,9 @@ class SyncingIliasItemVisitor {
     }
 
     void syncAndSaveFile(Path path, CourseFile file) {
-        iliasService.getContentAsStream(file)
-                    .subscribe(new Consumer<InputStream>() {
-            @Override
-            void accept(InputStream inputStream) throws Exception {
-                Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING)
-                Files.setLastModifiedTime(path, toFileTime(file.modified))
-            }
-        })
+        InputStream inputStream = iliasService.getContentAsStream(file)
+        Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING)
+        Files.setLastModifiedTime(path, toFileTime(file.modified))
     }
 
     @PackageScope

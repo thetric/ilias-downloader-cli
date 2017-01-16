@@ -66,17 +66,5 @@ interface IliasService {
      * @see java.io.IOException
      * @see com.github.thetric.iliasdownloader.service.exception.IliasException
      */
-    @Deprecated
-    Single<byte[]> getContent(CourseFile file)
-
-    /**
-     * Downloads the content of the {@link CourseFile} from the Ilias.
-     *
-     * @param file
-     * {@link CourseFile} to download
-     * @return {@link Single} which publishes either the data as a byte array or an exception
-     * @see java.io.IOException
-     * @see com.github.thetric.iliasdownloader.service.exception.IliasException
-     */
-    Single<InputStream> getContentAsStream(CourseFile file)
+    InputStream getContentAsStream(CourseFile file)
 }
