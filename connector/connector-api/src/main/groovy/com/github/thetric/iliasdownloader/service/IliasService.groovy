@@ -44,7 +44,7 @@ interface IliasService {
      * @return all courses of the current user
      * @see #searchCoursesWithContent(Collection)
      */
-    Observable<Course> getJoinedCourses()
+    Collection<Course> getJoinedCourses()
 
     /**
      * Searches the selected courses with their child nodes <b>without downloading them</b>.

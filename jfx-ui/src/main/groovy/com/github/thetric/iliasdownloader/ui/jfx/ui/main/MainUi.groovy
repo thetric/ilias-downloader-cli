@@ -128,7 +128,7 @@ final class MainUi {
             Thread.start {
                 log.info 'running sync'
                 try {
-                    def courses = iliasService.joinedCourses.toList().blockingGet()
+                    def courses = iliasService.joinedCourses
                     def basePath = Paths.get userPreferences.downloadFolder
                     def itemVisitor = new ItemTableUpdater(basePath, iliasService, this)
                     iliasService.searchCoursesWithContent(courses).subscribe(new Consumer<Course>() {

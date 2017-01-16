@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 
 import static java.time.format.DateTimeFormatter.ofPattern
+import static java.util.stream.Collectors.toList
 
 /**
  * @author broj
@@ -151,15 +152,17 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    Observable<Course> getJoinedCourses() {
+    Collection<Course> getJoinedCourses() {
         log.info('Get all courses and groups from {}', courseOverview)
         Document document = connectAndGetDocument(courseOverview)
         return getCoursesFromHtml(document)
     }
 
-    private Observable<Course> getCoursesFromHtml(Document document) {
-        return Observable.fromIterable(document.select(CssSelectors.COURSE_SELECTOR.cssSelector))
-                         .map({ toCourse(it) })
+    private Collection<Course> getCoursesFromHtml(Document document) {
+        return document.select(CssSelectors.COURSE_SELECTOR.cssSelector)
+                       .stream()
+                       .map({ toCourse(it) })
+                       .collect(toList())
     }
 
     private Course toCourse(Element courseElement) {
@@ -183,7 +186,7 @@ final class WebIliasService implements IliasService {
             return Integer.parseInt(probableIdString)
         } catch (NumberFormatException e) {
             throw new IliasItemIdStringParsingException(
-                    "Failed to parse '$probableIdString', original string was '$href'", e)
+                "Failed to parse '$probableIdString', original string was '$href'", e)
         }
     }
 
@@ -253,8 +256,8 @@ final class WebIliasService implements IliasService {
     }
 
     private CourseItem createCourseItem(
-            String type, int itemId,
-            String itemName, String itemUrl, List<String> properties) {
+        String type, int itemId,
+        String itemName, String itemUrl, List<String> properties) {
         switch (type) {
             case "fold":
                 Collection<? extends CourseItem> courseItems = searchItemsRecursively(itemUrl)
@@ -264,7 +267,7 @@ final class WebIliasService implements IliasService {
                 String fileType = properties.get(0)
                 if (properties.size() < 3) {
                     throw new IllegalArgumentException("No last modified timestamp present! Item with " +
-                            "ID $itemId (URL: $itemUrl) has only following properties: $properties")
+                                                           "ID $itemId (URL: $itemUrl) has only following properties: $properties")
                 }
                 LocalDateTime lastModified = parseDateString(properties.get(2))
                 return new CourseFile(itemId, "$itemName.$fileType", itemUrl, lastModified)

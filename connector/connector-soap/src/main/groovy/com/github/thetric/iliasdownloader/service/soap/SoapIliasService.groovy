@@ -10,6 +10,7 @@ import groovy.util.logging.Log4j2
 import io.reactivex.Observable
 import io.reactivex.Single
 
+import static java.util.Collections.emptyList
 import static java.util.Collections.singletonList
 
 /**
@@ -59,8 +60,8 @@ final class SoapIliasService implements IliasService {
     }
 
     @Override
-    Observable<Course> getJoinedCourses() {
-        return Observable.empty()
+    Collection<Course> getJoinedCourses() {
+        return emptyList()
     }
 
     @Override
