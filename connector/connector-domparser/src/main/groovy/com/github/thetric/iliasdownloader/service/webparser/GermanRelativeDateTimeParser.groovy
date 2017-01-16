@@ -33,6 +33,8 @@ final class GermanRelativeDateTimeParser implements RelativeDateTimeParser {
         def modifiedTime = LocalTime.parse(timeString, timeFormatter)
         return baseDay.withHour(modifiedTime.hour)
                       .withMinute(modifiedTime.minute)
+                      .withSecond(0)
+                      .withNano(0)
     }
 
     @Override
