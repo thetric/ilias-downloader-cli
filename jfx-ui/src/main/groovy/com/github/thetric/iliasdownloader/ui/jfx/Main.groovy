@@ -2,9 +2,9 @@ package com.github.thetric.iliasdownloader.ui.jfx
 
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
-import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferenceService
-import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferenceServiceImpl
-import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferences
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceServiceImpl
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import com.github.thetric.iliasdownloader.ui.jfx.ui.intro.setup.SettingsValidator
 import com.github.thetric.iliasdownloader.ui.jfx.ui.intro.setup.WebIliasSetupController
 import com.github.thetric.iliasdownloader.ui.jfx.ui.main.MainUi

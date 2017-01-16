@@ -4,7 +4,7 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.SyncingIliasItemVisitor
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
-import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferences
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import com.github.thetric.iliasdownloader.ui.jfx.ui.util.FxmlLoaderHelper
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView

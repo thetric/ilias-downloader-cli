@@ -1,6 +1,6 @@
 package com.github.thetric.iliasdownloader.ui.jfx.ui.intro.setup
 
-import com.github.thetric.iliasdownloader.ui.jfx.prefs.UserPreferences
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import com.github.thetric.iliasdownloader.ui.jfx.ui.settings.SyncFolderChooserController
 import groovy.transform.CompileStatic
 import javafx.scene.control.Alert

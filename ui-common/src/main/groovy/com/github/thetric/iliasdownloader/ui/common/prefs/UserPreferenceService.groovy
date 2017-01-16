@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.ui.jfx.prefs
+package com.github.thetric.iliasdownloader.ui.common.prefs
 
 import groovy.transform.CompileStatic
 

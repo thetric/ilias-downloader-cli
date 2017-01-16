@@ -1,5 +1,6 @@
 rootProject.name = 'ilias-downloader'
 
+include 'ui-common'
 include 'jfx-ui'
 include 'cli'
 
