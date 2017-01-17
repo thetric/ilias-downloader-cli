@@ -31,7 +31,7 @@ import java.nio.file.Paths
 @CompileStatic
 @Log4j2
 final class Main extends Application {
-    private static final String ILIAS_DOWNLOADER_SETTINGS = 'iliasdownloader.yml'
+    private static final String ILIAS_DOWNLOADER_SETTINGS = 'ilias-downloader.yml'
     private final UserPreferenceService userPreferenceService
     private UserPreferences userPreferences
 
