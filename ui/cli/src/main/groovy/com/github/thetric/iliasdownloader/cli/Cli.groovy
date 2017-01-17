@@ -2,6 +2,8 @@ package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceServiceImpl
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
 
@@ -9,8 +11,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.function.Function
 
-import static org.apache.logging.log4j.Level.DEBUG
-
+import static org.apache.logging.log4j.Level.TRACE
 /**
  * @author broj
  * @since 14.01.2017
@@ -28,7 +29,7 @@ final class Cli {
             ResourceBundle resourceBundle = ResourceBundle.getBundle('ilias-cli')
             new Cli(resourceBundle).parseAndHandleOpts args
         } catch (InvalidUsageException ue) {
-            log.catching(DEBUG, ue)
+            log.catching(TRACE, ue)
             System.exit(1)
         } catch (Throwable t) {
             log.catching(t)
@@ -62,7 +63,9 @@ final class Cli {
         Path syncDir = Paths.get('C:\\Users\\broj\\Google Drive\\Ilias\\5. Semester')
         final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
         Function<String, IliasService> webIliasServiceProvider = { new WebParserIliasServiceProvider(it).newInstance() }
+        UserPreferenceService preferenceService = new UserPreferenceServiceImpl('.ilias-downloader.yml')
 
-        new IliasCliController(syncDir, consoleService, webIliasServiceProvider, resourceBundle).start()
+        new IliasCliController(syncDir, webIliasServiceProvider, resourceBundle, preferenceService, consoleService).
+            start()
     }
 }

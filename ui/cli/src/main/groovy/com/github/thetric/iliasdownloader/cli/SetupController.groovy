@@ -1,0 +1,70 @@
+package com.github.thetric.iliasdownloader.cli
+
+import com.github.thetric.iliasdownloader.service.IliasService
+import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
+import com.github.thetric.iliasdownloader.service.model.LoginCredentials
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
+import groovy.transform.TupleConstructor
+import groovy.util.logging.Log4j2
+import org.apache.logging.log4j.Level
+
+import java.util.function.Function
+/**
+ * @author broj
+ * @since 16.01.2017
+ */
+@Log4j2
+@TupleConstructor
+class SetupController {
+    Function<String, IliasService> iliasProvider
+    ResourceBundle resourceBundle
+    UserPreferenceService preferenceService
+    ConsoleService consoleService
+
+    private UserPreferences prefs = new UserPreferences()
+
+    def startSetup() {
+        IliasService iliasService = createIliasService()
+        log.info('Connected!')
+        login(iliasService)
+        log.info(resourceBundle.getString('login.successful'))
+
+        return iliasService
+    }
+
+    private IliasService createIliasService() {
+        while (true) {
+            String serverUrl = promptForServerUrl()
+            try {
+                IliasService iliasService = iliasProvider.apply(serverUrl)
+                prefs.iliasServerURL = serverUrl
+                return iliasService
+            } catch (Exception e) {
+                log.catching(e)
+            }
+        }
+    }
+
+    private promptForServerUrl() {
+        return consoleService.readLine('ilias.server.url', 'Ilias Server URL')
+    }
+
+    private login(IliasService iliasService) {
+        log.info('Prompting for credentials')
+
+        try {
+            String usernamePrompt = "${resourceBundle.getString('login.credentials.username')}: "
+            def username = consoleService.readLine('ilias.credentials.username', usernamePrompt)
+            String passwordPrompt = "${resourceBundle.getString('login.credentials.password')}: "
+            def password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
+
+            iliasService.login(new LoginCredentials(username, password))
+            prefs.userName = username
+            preferenceService.saveUserPreferences(prefs)
+        } catch (IliasAuthenticationException authEx) {
+            log.catching(Level.DEBUG, authEx)
+            log.error(resourceBundle.getString('login.error'))
+        }
+    }
+}

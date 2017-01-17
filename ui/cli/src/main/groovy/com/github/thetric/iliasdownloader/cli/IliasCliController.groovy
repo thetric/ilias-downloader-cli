@@ -3,11 +3,13 @@ package com.github.thetric.iliasdownloader.cli
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.SyncingIliasItemVisitor
 import com.github.thetric.iliasdownloader.service.model.Course
-import com.github.thetric.iliasdownloader.service.model.LoginCredentials
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
 import io.reactivex.functions.Consumer
+import org.apache.logging.log4j.Level
 
+import java.nio.file.NoSuchFileException
 import java.nio.file.Path
 import java.util.function.Function
 
@@ -19,15 +21,22 @@ import java.util.function.Function
 @TupleConstructor
 final class IliasCliController {
     Path basePath
-    ConsoleService consoleService
+
     Function<String, IliasService> iliasProvider
     ResourceBundle resourceBundle
+    UserPreferenceService preferenceService
+    ConsoleService consoleService
 
     def start() {
-        IliasService iliasService = createIliasService()
-        log.info('Connected!')
-        login(iliasService)
-        log.info(resourceBundle.getString('login.successful'))
+        def iliasService = null
+        try {
+            log.debug('check for existing config in {}', basePath.toAbsolutePath())
+            iliasService = new ExistingConfigCliController(iliasProvider, resourceBundle, preferenceService, consoleService).start()
+        } catch (NoSuchFileException settingsNotFoundEx) {
+            log.debug('no config found in {}', basePath.toAbsolutePath())
+            log.catching(Level.DEBUG, settingsNotFoundEx)
+            iliasService = new SetupController(iliasProvider, resourceBundle, preferenceService, consoleService).startSetup()
+        }
 
         println ''
         println 'Available courses:'
@@ -38,31 +47,5 @@ final class IliasCliController {
         iliasService.searchCoursesWithContent(joinedCourses)
                     .subscribe({ itemVisitor.visit(it) } as Consumer)
         log.info(resourceBundle.getString('sync.finished'))
-    }
-
-    private IliasService createIliasService() {
-        while (true) {
-            String serverUrl = promptForServerUrl()
-            try {
-                return iliasProvider.apply(serverUrl)
-            } catch (Exception e) {
-                log.catching(e)
-            }
-        }
-    }
-
-    private promptForServerUrl() {
-        return consoleService.readLine('ilias.server.url', 'Ilias Server URL')
-    }
-
-    private login(IliasService iliasService) {
-        log.info('Prompting for credentials')
-
-        String usernamePrompt = "${resourceBundle.getString('login.credentials.username')}: "
-        def username = consoleService.readLine('ilias.credentials.username', usernamePrompt)
-        String passwordPrompt = "${resourceBundle.getString('login.credentials.password')}: "
-        def password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
-
-        iliasService.login(new LoginCredentials(username, password))
     }
 }
