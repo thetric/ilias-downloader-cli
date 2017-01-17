@@ -51,7 +51,7 @@ final class IliasCliController {
         log.info(resourceBundle.getString('sync.started'))
         def itemVisitor = new SyncingIliasItemVisitor(basePath, iliasService)
         iliasService.searchCoursesWithContent(joinedCourses)
-                    .subscribe({ itemVisitor.visit(it) } as Consumer)
+                    .subscribe({ itemVisitor.visit(it) } as Consumer<Course>)
         log.info(resourceBundle.getString('sync.finished'))
     }
 }
