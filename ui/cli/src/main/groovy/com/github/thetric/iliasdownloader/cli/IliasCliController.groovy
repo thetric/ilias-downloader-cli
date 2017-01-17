@@ -46,6 +46,7 @@ final class IliasCliController {
         println ''
         println 'Available courses:'
         Collection<Course> joinedCourses = iliasService.joinedCourses
+        joinedCourses.each { println it.name }
 
         log.info(resourceBundle.getString('sync.started'))
         def itemVisitor = new SyncingIliasItemVisitor(basePath, iliasService)
