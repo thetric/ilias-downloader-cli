@@ -14,7 +14,7 @@ final class SystemEnvironmentAwareConsoleService implements ConsoleService {
         def property = System.getProperty(systemProp)
         if (property) return property
 
-        print prompt
+        print "$prompt: "
         def scanner = new Scanner(System.in)
         return scanner.nextLine()
     }
