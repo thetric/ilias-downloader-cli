@@ -28,14 +28,19 @@ final class IliasCliController {
     ConsoleService consoleService
 
     def start() {
-        def iliasService = null
+        def iliasService
         try {
-            log.debug('check for existing config in {}', basePath.toAbsolutePath())
-            iliasService = new ExistingConfigCliController(iliasProvider, resourceBundle, preferenceService, consoleService).start()
+            log.info('check for existing config in {}', basePath.toAbsolutePath())
+            iliasService = new ExistingConfigCliController(
+                iliasProvider,
+                resourceBundle,
+                preferenceService,
+                consoleService).start()
         } catch (NoSuchFileException settingsNotFoundEx) {
-            log.debug('no config found in {}', basePath.toAbsolutePath())
+            log.warn('no config found in {}', basePath.toAbsolutePath())
             log.catching(Level.DEBUG, settingsNotFoundEx)
-            iliasService = new SetupController(iliasProvider, resourceBundle, preferenceService, consoleService).startSetup()
+            iliasService = new SetupController(iliasProvider, resourceBundle, preferenceService, consoleService).
+                startSetup()
         }
 
         println ''
