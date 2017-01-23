@@ -8,5 +8,4 @@ include 'ui:cli'
 include 'connector'
 include 'connector:connector-api'
 include 'connector:connector-domparser'
-include 'connector:connector-soap'
 

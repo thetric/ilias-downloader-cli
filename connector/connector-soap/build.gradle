@@ -1,6 +1,0 @@
-dependencies {
-    compile project(':connector:connector-api')
-
-    // soap deps
-    compile 'com.github.kekru.ksoap2-android:ksoap2-j2se:v3.6.2-useragentfix'
-}
