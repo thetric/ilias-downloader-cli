@@ -3,5 +3,5 @@ dependencies {
 
     // web parser deps
     compile 'org.jsoup:jsoup:1.10.2'
-    compile 'org.apache.httpcomponents:fluent-hc:4.5.2'
+    compile 'org.apache.httpcomponents:fluent-hc:4.5.3'
 }
