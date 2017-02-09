@@ -2,6 +2,10 @@ package com.github.thetric.iliasdownloader.service.webparser
 
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.IliasServiceProvider
+import com.github.thetric.iliasdownloader.service.webparser.impl.FluentHcExecutorProviderImpl
+import com.github.thetric.iliasdownloader.service.webparser.impl.NoCookiesAvailableException
+import com.github.thetric.iliasdownloader.service.webparser.impl.WebIliasService
+import com.github.thetric.iliasdownloader.service.webparser.impl.WebIoExceptionTranslatorImpl
 import groovy.transform.CompileStatic
 import org.jsoup.Jsoup
 

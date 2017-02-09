@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.service.webparser
+package com.github.thetric.iliasdownloader.service.webparser.impl
 
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException

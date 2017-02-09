@@ -1,14 +1,12 @@
-package com.github.thetric.iliasdownloader.service.webparser
+package com.github.thetric.iliasdownloader.service.webparser.impl
 
 import groovy.transform.CompileStatic
-import groovy.transform.PackageScope
 import org.apache.http.client.config.CookieSpecs
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.fluent.Executor
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClients
 
-@PackageScope
 @CompileStatic
 final class FluentHcExecutorProviderImpl implements FluentHcExecutorProvider {
     @Override
