@@ -5,7 +5,6 @@ import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseItem
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import groovy.transform.CompileStatic
-import io.reactivex.Observable
 import io.reactivex.Single
 
 /**
@@ -42,20 +41,18 @@ interface IliasService {
      * Finds all courses without any course content.
      *
      * @return all courses of the current user
-     * @see #searchCoursesWithContent(Collection)
+     * @see #getCourseItems(com.github.thetric.iliasdownloader.service.model.Course)
      */
     Collection<Course> getJoinedCourses()
 
     /**
      * Searches the selected courses with their child nodes <b>without downloading them</b>.
      *
-     * @param selectedCourses
-     * {@link Course}s to search for. The list itself and its items <i>must not</i> be modified under any
-     *         circumstances
-     * @return new list with {@link Course}s and their child nodes
+     * @param course {@link Course} to search for. The course must not be modified
+     * @return new list with {@link CourseItem}s and their child nodes
      * @see CourseItem
      */
-    Observable<Course> searchCoursesWithContent(Collection<Course> selectedCourses)
+    Collection<? extends CourseItem> getCourseItems(Course course)
 
     /**
      * Downloads the content of the {@link CourseFile} from the Ilias.

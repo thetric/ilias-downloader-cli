@@ -4,13 +4,13 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
+import com.github.thetric.iliasdownloader.service.model.CourseItem
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncService
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorProvider
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
-import io.reactivex.Observable
 import org.apache.http.client.fluent.Executor
 import org.apache.http.client.fluent.Form
 import org.apache.http.client.fluent.Request
@@ -117,8 +117,8 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    Observable<Course> searchCoursesWithContent(Collection<Course> selectedCourses) {
-        return courseSyncService.searchCoursesWithContent(selectedCourses, connectWithSessionCookies())
+    Collection<? extends CourseItem> getCourseItems(Course course) {
+        return courseSyncService.searchAllItems(course, connectWithSessionCookies())
     }
 
 }

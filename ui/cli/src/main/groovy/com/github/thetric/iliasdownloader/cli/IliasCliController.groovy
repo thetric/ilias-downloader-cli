@@ -6,7 +6,6 @@ import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
-import io.reactivex.functions.Consumer
 import org.apache.logging.log4j.Level
 
 import java.nio.file.NoSuchFileException
@@ -50,8 +49,9 @@ final class IliasCliController {
 
         log.info(resourceBundle.getString('sync.started'))
         def itemVisitor = new SyncingIliasItemVisitor(basePath, iliasService)
-        iliasService.searchCoursesWithContent(joinedCourses)
-                    .subscribe({ itemVisitor.visit(it) } as Consumer<Course>)
+        for (Course course : joinedCourses) {
+            itemVisitor.visit(course, iliasService.getCourseItems(course))
+        }
         log.info(resourceBundle.getString('sync.finished'))
     }
 }

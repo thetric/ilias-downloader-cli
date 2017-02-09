@@ -5,9 +5,9 @@ import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.CourseItem
 import com.github.thetric.iliasdownloader.service.webparser.impl.IliasItemIdStringParsingException
+import com.github.thetric.iliasdownloader.service.webparser.impl.course.datetime.RelativeDateTimeParser
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserService
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
-import com.github.thetric.iliasdownloader.service.webparser.impl.course.datetime.RelativeDateTimeParser
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.reactivex.Observable
@@ -98,15 +98,13 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     @Override
-    Observable<Course> searchCoursesWithContent(Collection<Course> selectedCourses, Executor httpRequestExecutor) {
-        return Observable.fromIterable(selectedCourses)
-                         .map({ findCourseItems(it, httpRequestExecutor) })
+    Collection<? extends CourseItem> searchAllItems(Course course, Executor httpRequestExecutor) {
+        return findCourseItems(course, httpRequestExecutor)
     }
 
-    private Course findCourseItems(Course course, Executor httpRequestExecutor) {
+    private Collection<? extends CourseItem> findCourseItems(Course course, Executor httpRequestExecutor) {
         log.debug('Find all children for {}', course.name)
-        Collection<? extends CourseItem> childNodes = searchItemsRecursively(course.url, httpRequestExecutor)
-        return new Course(course.id, course.name, course.url, childNodes)
+        return searchItemsRecursively(course.url, httpRequestExecutor)
     }
 
     private Collection<? extends CourseItem> searchItemsRecursively(String itemUrl, Executor httpRequestExecutor) {

@@ -42,10 +42,10 @@ class SyncingIliasItemVisitor {
         fileName.replaceAll($/[\\/:*?"<>|]/$, '')
     }
 
-    void visit(Course course) {
+    void visit(Course course, Collection<? extends CourseItem> courseItems) {
         log.info("Visiting course '${course.name}' (id: ${course.id}")
         def coursePath = resolvePathAndCreateMissingDirs(basePath, course)
-        course.items.each { visit(coursePath, it) }
+        courseItems.each { visit(coursePath, it) }
     }
 
     void visit(Path basePath, CourseItem courseItem) {
