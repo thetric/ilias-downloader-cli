@@ -13,11 +13,8 @@ import groovy.transform.ToString
 @ToString(includeNames = true, includeSuperProperties = true)
 @CompileStatic
 final class Course extends AbstractIliasItem {
-    Collection<? extends CourseItem> items
-
-    Course(int id, String name, String url, Collection<? extends CourseItem> items = new ArrayList<>()) {
+    Course(int id, String name, String url) {
         super(id, name, url)
-        this.items = items
     }
 }
 
