@@ -2,6 +2,7 @@ package com.github.thetric.iliasdownloader.ui.common.prefs;
 
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -16,5 +17,5 @@ public final class UserPreferences {
 
     private long maxFileSize;
 
-    private Set<Long> activeCourses;
+    private Set<Long> activeCourses = new HashSet<>();
 }
