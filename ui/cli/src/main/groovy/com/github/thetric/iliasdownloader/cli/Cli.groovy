@@ -60,7 +60,7 @@ final class Cli {
     }
 
     def handleOptsReal(OptionAccessor options) {
-        Path syncDir = Paths.get('C:\\Users\\broj\\Google Drive\\Ilias\\5. Semester')
+        Path syncDir = Paths.get(options.d as String)
         final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
         Function<String, IliasService> webIliasServiceProvider = { new WebParserIliasServiceProvider(it).newInstance() }
         UserPreferenceService preferenceService = new UserPreferenceServiceImpl('.ilias-downloader.yml')
