@@ -6,14 +6,10 @@ import com.github.thetric.iliasdownloader.service.model.*
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.reactivex.Observable
-import org.apache.http.client.config.CookieSpecs
-import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.fluent.Executor
 import org.apache.http.client.fluent.Form
 import org.apache.http.client.fluent.Request
 import org.apache.http.impl.client.BasicCookieStore
-import org.apache.http.impl.client.CloseableHttpClient
-import org.apache.http.impl.client.HttpClients
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -33,6 +29,7 @@ import static java.time.format.DateTimeFormatter.ofPattern
 @CompileStatic
 final class WebIliasService implements IliasService {
     private final WebIoExceptionTranslator exceptionTranslator
+    private final FluentHcExecutorProvider fluentHcExecutorProvider
 
     private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]")
 
@@ -51,7 +48,7 @@ final class WebIliasService implements IliasService {
     // so we must use the full qualified import ;(
     private final org.apache.http.client.CookieStore cookieStore
 
-    WebIliasService(WebIoExceptionTranslator exceptionTranslator, String iliasBaseUrl, String clientId) {
+    WebIliasService(WebIoExceptionTranslator exceptionTranslator, String iliasBaseUrl, String clientId, FluentHcExecutorProvider fluentHcExecutorProvider) {
         this.exceptionTranslator = exceptionTranslator
         this.iliasBaseUrl = iliasBaseUrl
         this.clientId = clientId
@@ -60,6 +57,7 @@ final class WebIliasService implements IliasService {
         courseOverview = "${iliasBaseUrl}ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems"
         courseLinkPrefix = "${iliasBaseUrl}goto_${clientId}_crs_"
 
+        this.fluentHcExecutorProvider = fluentHcExecutorProvider
         cookieStore = new BasicCookieStore()
     }
 
@@ -114,14 +112,7 @@ final class WebIliasService implements IliasService {
     }
 
     private Executor connectWithSessionCookies() {
-        RequestConfig globalConfig = RequestConfig.custom()
-                                                  .setCookieSpec(CookieSpecs.DEFAULT)
-                                                  .build()
-        CloseableHttpClient httpClient = HttpClients.custom()
-                                                    .setDefaultRequestConfig(globalConfig)
-                                                    .build()
-        return Executor.newInstance(httpClient)
-                       .use(cookieStore)
+        return fluentHcExecutorProvider.createFluentHcExecutor(cookieStore)
     }
 
     private Document connectAndGetDocument(String url) {

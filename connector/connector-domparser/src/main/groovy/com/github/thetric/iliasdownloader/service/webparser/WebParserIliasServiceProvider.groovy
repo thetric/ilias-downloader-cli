@@ -49,12 +49,16 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
         }
         return Optional.ofNullable(id).orElseThrow({
             new NoCookiesAvailableException(
-                    "Konnte das Cookie '${WebParserIliasServiceProvider.ILIAS_CLIENT_ID_COOKIE_NAME}' nicht in der Response von der Seite $loginPage finden")
+                "Konnte das Cookie '${WebParserIliasServiceProvider.ILIAS_CLIENT_ID_COOKIE_NAME}' nicht in der Response von der Seite $loginPage finden")
         })
     }
 
     @Override
     IliasService newInstance() {
-        return new WebIliasService(new WebIoExceptionTranslatorImpl(), iliasBaseUrl, clientId)
+        return new WebIliasService(
+            new WebIoExceptionTranslatorImpl(),
+            iliasBaseUrl,
+            clientId,
+            new FluentHcExecutorProviderImpl())
     }
 }
