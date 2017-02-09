@@ -14,8 +14,6 @@ public final class UserPreferences {
 
     private String userName;
 
-    private String downloadFolder;
-
     private long maxFileSize;
 
     private Set<Long> activeCourses;
