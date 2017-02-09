@@ -6,7 +6,6 @@ import org.yaml.snakeyaml.Yaml
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
-import java.nio.file.Paths
 
 /**
  * Created by Dominik Broj on 31.01.2016.
@@ -20,8 +19,8 @@ final class UserPreferenceServiceImpl implements UserPreferenceService {
     private final Yaml yaml
     final Path settingsFile
 
-    UserPreferenceServiceImpl(String userSettingsFilename) {
-        this.settingsFile = Paths.get(userSettingsFilename)
+    UserPreferenceServiceImpl(Path settingsPath) {
+        this.settingsFile = settingsPath
         yaml = new Yaml()
     }
 

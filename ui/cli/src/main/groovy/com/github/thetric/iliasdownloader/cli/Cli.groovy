@@ -12,6 +12,7 @@ import java.nio.file.Paths
 import java.util.function.Function
 
 import static org.apache.logging.log4j.Level.TRACE
+
 /**
  * @author broj
  * @since 14.01.2017
@@ -61,9 +62,10 @@ final class Cli {
 
     def handleOptsReal(OptionAccessor options) {
         Path syncDir = Paths.get(options.d as String)
+        Path settingsPath = syncDir.resolve('.ilias-downloader.yml')
         final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
         Function<String, IliasService> webIliasServiceProvider = { new WebParserIliasServiceProvider(it).newInstance() }
-        UserPreferenceService preferenceService = new UserPreferenceServiceImpl('.ilias-downloader.yml')
+        UserPreferenceService preferenceService = new UserPreferenceServiceImpl(settingsPath)
 
         new IliasCliController(syncDir, webIliasServiceProvider, resourceBundle, preferenceService, consoleService).
             start()
