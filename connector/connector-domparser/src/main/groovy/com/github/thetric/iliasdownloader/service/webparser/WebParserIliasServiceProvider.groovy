@@ -3,8 +3,15 @@ package com.github.thetric.iliasdownloader.service.webparser
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.IliasServiceProvider
 import com.github.thetric.iliasdownloader.service.webparser.impl.*
+import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncService
+import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncServiceImpl
+import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslatorImpl
+import com.github.thetric.iliasdownloader.service.webparser.impl.util.datetime.GermanRelativeDateTimeParser
+import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorProviderImpl
 import groovy.transform.CompileStatic
 import org.jsoup.Jsoup
+
+import java.util.function.Supplier
 
 import static org.jsoup.Connection.Response
 
@@ -56,10 +63,15 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
 
     @Override
     IliasService newInstance() {
+        def relativeDateTimeParser = new GermanRelativeDateTimeParser()
+        def webIoExceptionTranslatorImpl = new WebIoExceptionTranslatorImpl()
+        final Supplier<? extends CourseSyncService> courseSyncServiceSupplier = {
+            new CourseSyncServiceImpl(webIoExceptionTranslatorImpl, iliasBaseUrl, clientId, relativeDateTimeParser)
+        }
         return new WebIliasService(
-            new WebIoExceptionTranslatorImpl(),
+            webIoExceptionTranslatorImpl,
             iliasBaseUrl, clientId,
             new FluentHcExecutorProviderImpl(),
-            new GermanRelativeDateTimeParser())
+            courseSyncServiceSupplier)
     }
 }

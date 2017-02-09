@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.service.webparser.impl
+package com.github.thetric.iliasdownloader.service.webparser.impl.course
 
 import groovy.transform.CompileStatic
 import groovy.transform.PackageScope

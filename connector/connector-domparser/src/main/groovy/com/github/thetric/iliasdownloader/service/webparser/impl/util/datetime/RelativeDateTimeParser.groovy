@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.service.webparser.impl
+package com.github.thetric.iliasdownloader.service.webparser.impl.util.datetime
 
 import java.time.LocalDateTime
 
