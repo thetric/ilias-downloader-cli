@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.service.webparser.impl.util.datetime
+package com.github.thetric.iliasdownloader.service.webparser.impl.course.datetime
 
 import groovy.transform.CompileStatic
 

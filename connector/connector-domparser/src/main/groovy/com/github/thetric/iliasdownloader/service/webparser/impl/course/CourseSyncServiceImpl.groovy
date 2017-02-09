@@ -7,7 +7,7 @@ import com.github.thetric.iliasdownloader.service.model.CourseItem
 import com.github.thetric.iliasdownloader.service.webparser.impl.IliasItemIdStringParsingException
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserService
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
-import com.github.thetric.iliasdownloader.service.webparser.impl.util.datetime.RelativeDateTimeParser
+import com.github.thetric.iliasdownloader.service.webparser.impl.course.datetime.RelativeDateTimeParser
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.reactivex.Observable
@@ -27,6 +27,9 @@ import static java.time.format.DateTimeFormatter.ofPattern
 @CompileStatic
 @Log4j2
 final class CourseSyncServiceImpl implements CourseSyncService {
+    // these types should be ignored in logs
+    private static final Set<String> IGNORED_ITEM_TYPES = new HashSet<>(['frm', 'grp'])
+
     private final WebIoExceptionTranslator exceptionTranslator
 
     private final JSoupParserService jSoupFactoryService
@@ -187,7 +190,9 @@ final class CourseSyncServiceImpl implements CourseSyncService {
                 LocalDateTime lastModified = parseDateString(properties.get(2))
                 return new CourseFile(itemId, "$itemName.$fileType", itemUrl, lastModified)
             default:
-                log.warn('Unknown type: {}, URL: {}', type, itemUrl)
+                if (!IGNORED_ITEM_TYPES.contains(type)) {
+                    log.warn('Unknown type: {}, URL: {}', type, itemUrl)
+                }
                 return null
         }
     }

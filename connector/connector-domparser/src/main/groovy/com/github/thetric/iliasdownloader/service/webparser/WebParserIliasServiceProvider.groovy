@@ -7,7 +7,7 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.WebIliasService
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncServiceImpl
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserServiceImpl
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslatorImpl
-import com.github.thetric.iliasdownloader.service.webparser.impl.util.datetime.GermanRelativeDateTimeParser
+import com.github.thetric.iliasdownloader.service.webparser.impl.course.datetime.GermanRelativeDateTimeParser
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorProviderImpl
 import groovy.transform.CompileStatic
 import org.jsoup.Jsoup
