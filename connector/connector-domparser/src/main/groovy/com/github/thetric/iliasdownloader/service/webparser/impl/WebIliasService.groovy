@@ -35,7 +35,7 @@ final class WebIliasService implements IliasService {
 
     // for German date time format: 23. Sep 2016, 17:34
     private static final DateTimeFormatter lastModifiedFormatter = ofPattern('dd. MMM yyyy, HH:mm', Locale.GERMAN)
-    private final RelativeDateTimeParser relativeDateTimeParser = new GermanRelativeDateTimeParser()
+    private final RelativeDateTimeParser relativeDateTimeParser
 
     private final String iliasBaseUrl
     private final String loginPage
@@ -48,7 +48,11 @@ final class WebIliasService implements IliasService {
     // so we must use the full qualified import ;(
     private final org.apache.http.client.CookieStore cookieStore
 
-    WebIliasService(WebIoExceptionTranslator exceptionTranslator, String iliasBaseUrl, String clientId, FluentHcExecutorProvider fluentHcExecutorProvider) {
+    WebIliasService(
+        WebIoExceptionTranslator exceptionTranslator,
+        String iliasBaseUrl, String clientId,
+        FluentHcExecutorProvider fluentHcExecutorProvider,
+        RelativeDateTimeParser relativeDateTimeParser) {
         this.exceptionTranslator = exceptionTranslator
         this.iliasBaseUrl = iliasBaseUrl
         this.clientId = clientId
@@ -59,6 +63,7 @@ final class WebIliasService implements IliasService {
 
         this.fluentHcExecutorProvider = fluentHcExecutorProvider
         cookieStore = new BasicCookieStore()
+        this.relativeDateTimeParser = relativeDateTimeParser
     }
 
     @Override
