@@ -5,6 +5,7 @@ import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.CourseItem
 import com.github.thetric.iliasdownloader.service.webparser.impl.IliasItemIdStringParsingException
+import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserService
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.datetime.RelativeDateTimeParser
 import groovy.transform.CompileStatic
@@ -12,11 +13,11 @@ import groovy.util.logging.Log4j2
 import io.reactivex.Observable
 import org.apache.http.client.fluent.Executor
 import org.apache.http.client.fluent.Request
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
+import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
@@ -27,6 +28,8 @@ import static java.time.format.DateTimeFormatter.ofPattern
 @Log4j2
 final class CourseSyncServiceImpl implements CourseSyncService {
     private final WebIoExceptionTranslator exceptionTranslator
+
+    private final JSoupParserService jSoupFactoryService
 
     private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]")
 
@@ -40,9 +43,11 @@ final class CourseSyncServiceImpl implements CourseSyncService {
 
 
     CourseSyncServiceImpl(WebIoExceptionTranslator webIoExceptionTranslator,
+                          JSoupParserService jSoupParserService,
                           String iliasBaseUrl, String clientId,
                           RelativeDateTimeParser relativeDateTimeParser) {
         this.exceptionTranslator = webIoExceptionTranslator
+        this.jSoupFactoryService = jSoupParserService
         this.relativeDateTimeParser = relativeDateTimeParser
 
         this.iliasBaseUrl = iliasBaseUrl
@@ -201,8 +206,8 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         try {
             def content = httpRequestExecutor.execute(Request.Get(url))
                                              .returnContent()
-            String html = content.asString()
-            return Jsoup.parse(html)
+            def html = content.asString(StandardCharsets.UTF_8)
+            return jSoupFactoryService.parse(html)
         } catch (IOException e) {
             log.error("Could not GET: $url", e)
             throw exceptionTranslator.translate(e)
