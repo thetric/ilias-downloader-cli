@@ -24,7 +24,6 @@ import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 
 import static java.time.format.DateTimeFormatter.ofPattern
-import static java.util.stream.Collectors.toList
 
 /**
  * @author broj
@@ -95,9 +94,7 @@ final class WebIliasService implements IliasService {
 
     private boolean hasLoginCookie() {
         return cookieStore.getCookies()
-                          .stream()
-                          .map({ it.name })
-                          .anyMatch({ it == 'authchallenge' })
+                          .any({ it.name == 'authchallenge' })
     }
 
     @Override
@@ -147,10 +144,10 @@ final class WebIliasService implements IliasService {
     }
 
     private Collection<Course> getCoursesFromHtml(Document document) {
-        return document.select(CssSelectors.COURSE_SELECTOR.cssSelector)
-                       .stream()
-                       .map({ toCourse(it) })
-                       .collect(toList())
+        return Observable.fromIterable(document.select(CssSelectors.COURSE_SELECTOR.cssSelector))
+                         .map({ toCourse(it) })
+                         .blockingIterable()
+                         .toList()
     }
 
     private Course toCourse(Element courseElement) {
