@@ -16,6 +16,10 @@ import groovy.transform.CompileStatic
  */
 @CompileStatic
 interface IliasService {
+    enum VisitResult {
+        CONTINUE, TERMINATE
+    }
+
     // Session management
 
     /**
@@ -40,18 +44,11 @@ interface IliasService {
      * Finds all courses without any course content.
      *
      * @return all courses of the current user
-     * @see #getCourseItems(com.github.thetric.iliasdownloader.service.model.Course)
+     * @see #visit(com.github.thetric.iliasdownloader.service.model.CourseItem, groovy.lang.Closure)
      */
     Collection<Course> getJoinedCourses()
 
-    /**
-     * Searches the selected courses with their child nodes <b>without downloading them</b>.
-     *
-     * @param course {@link Course} to search for. The course must not be modified
-     * @return new list with {@link CourseItem}s and their child nodes
-     * @see CourseItem
-     */
-    Collection<? extends CourseItem> getCourseItems(Course course)
+    void visit(CourseItem courseItem, Closure<VisitResult> visitMethod)
 
     /**
      * Downloads the content of the {@link CourseFile} from the Ilias.

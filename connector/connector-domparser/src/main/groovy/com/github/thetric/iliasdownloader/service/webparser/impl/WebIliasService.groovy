@@ -117,8 +117,7 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    Collection<? extends CourseItem> getCourseItems(Course course) {
-        return courseSyncService.searchAllItems(course, connectWithSessionCookies())
+    void visit(final CourseItem courseItem, final Closure<IliasService.VisitResult> visitMethod) {
+        courseSyncService.visit(courseItem, visitMethod, connectWithSessionCookies())
     }
-
 }
