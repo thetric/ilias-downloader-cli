@@ -10,7 +10,6 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JS
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
-import io.reactivex.Observable
 import org.apache.http.client.fluent.Executor
 import org.apache.http.client.fluent.Request
 import org.jsoup.nodes.Document
@@ -66,10 +65,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     private Collection<Course> getCoursesFromHtml(Document document) {
-        return Observable.fromIterable(document.select(CssSelectors.COURSE_SELECTOR.cssSelector))
-                         .map({ toCourse(it) })
-                         .blockingIterable()
-                         .toList()
+        return document.select(COURSE_SELECTOR).collect { toCourse(it) }
     }
 
     private Course toCourse(Element courseElement) {
