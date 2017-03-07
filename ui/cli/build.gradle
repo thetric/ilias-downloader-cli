@@ -5,17 +5,12 @@ dependencies {
     compile 'commons-cli:commons-cli:1.3.1'
 }
 
-// create application bundle with libs, readme and license
-apply plugin: 'application'
-
-mainClassName = 'com.github.thetric.iliasdownloader.cli.Cli'
-
-applicationDistribution.from("${rootProject.projectDir}/") {
-    include "README.md", "LICENSE"
-}
-
-distributions {
-    main {
-        baseName = 'ilias-downloader-cli'
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest {
+        attributes(
+            'Main-Class': 'com.github.thetric.iliasdownloader.cli.Cli',
+            'Implementation-Version': version
+        )
     }
 }
