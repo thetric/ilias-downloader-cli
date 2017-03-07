@@ -14,13 +14,15 @@ import groovy.transform.TupleConstructor
 @EqualsAndHashCode
 @CompileStatic
 abstract class AbstractIliasItem implements IliasItem {
-    int id
-    String name
-    String url
+    final int id
+    final String name
+    final String url
+    final IliasItem parent
 
-    AbstractIliasItem(int id, String name, String url) {
+    AbstractIliasItem(int id, String name, String url, IliasItem parent) {
         this.id = id
         this.name = name
         this.url = url
+        this.parent = parent
     }
 }

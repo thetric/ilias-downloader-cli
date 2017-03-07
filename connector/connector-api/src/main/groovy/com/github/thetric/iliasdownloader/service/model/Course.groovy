@@ -14,7 +14,7 @@ import groovy.transform.ToString
 @CompileStatic
 final class Course extends AbstractIliasItem {
     Course(int id, String name, String url) {
-        super(id, name, url)
+        super(id, name, url, null)
     }
 }
 

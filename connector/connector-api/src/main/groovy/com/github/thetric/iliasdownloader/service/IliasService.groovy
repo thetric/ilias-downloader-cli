@@ -2,10 +2,8 @@ package com.github.thetric.iliasdownloader.service
 
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
-import com.github.thetric.iliasdownloader.service.model.CourseItem
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import groovy.transform.CompileStatic
-
 /**
  * Provides access to the Ilias.
  * This interface provides some methods for basic session management (login, logout) and it can list the courses
@@ -44,11 +42,11 @@ interface IliasService {
      * Finds all courses without any course content.
      *
      * @return all courses of the current user
-     * @see #visit(com.github.thetric.iliasdownloader.service.model.CourseItem, groovy.lang.Closure)
+     * @see #visit(com.github.thetric.iliasdownloader.service.model.Course, groovy.lang.Closure)
      */
     Collection<Course> getJoinedCourses()
 
-    void visit(CourseItem courseItem, Closure<VisitResult> visitMethod)
+    void visit(Course courseItem, Closure<VisitResult> visitMethod)
 
     /**
      * Downloads the content of the {@link CourseFile} from the Ilias.
