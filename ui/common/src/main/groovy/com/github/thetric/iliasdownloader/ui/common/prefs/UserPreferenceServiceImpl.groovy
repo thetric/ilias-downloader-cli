@@ -5,8 +5,8 @@ import groovy.util.logging.Log4j2
 import org.yaml.snakeyaml.Yaml
 
 import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.nio.file.Path
-
 /**
  * Created by Dominik Broj on 31.01.2016.
  *
@@ -32,6 +32,10 @@ final class UserPreferenceServiceImpl implements UserPreferenceService {
 
     @Override
     void saveUserPreferences(UserPreferences userPreferences) throws IOException {
+        if (Files.notExists(settingsFile)) {
+            Files.createDirectories(settingsFile.parent)
+            Files.createFile settingsFile
+        }
         settingsFile.withWriter StandardCharsets.UTF_8.name(), {
             yaml.dump userPreferences, it
         }
