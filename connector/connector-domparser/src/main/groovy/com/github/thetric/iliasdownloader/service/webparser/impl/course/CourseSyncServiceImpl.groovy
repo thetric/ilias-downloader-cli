@@ -1,9 +1,10 @@
 package com.github.thetric.iliasdownloader.service.webparser.impl.course
 
+import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
-import com.github.thetric.iliasdownloader.service.model.CourseItem
+import com.github.thetric.iliasdownloader.service.model.IliasItem
 import com.github.thetric.iliasdownloader.service.webparser.impl.IliasItemIdStringParsingException
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.datetime.RelativeDateTimeParser
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserService
@@ -26,12 +27,13 @@ import static java.time.format.DateTimeFormatter.ofPattern
 @CompileStatic
 @Log4j2
 final class CourseSyncServiceImpl implements CourseSyncService {
+    private static final String COURSE_SELECTOR = "a[href*='_crs_'].il_ContainerItemTitle"
+    private static final String ITEM_CONTAINER_SELECTOR = '.il_ContainerListItem'
+    private static final String ITEM_TITLE_SELECTOR = 'a.il_ContainerItemTitle'
+    private static final String ITEM_PROPERTIES_SELECTOR = '.il_ItemProperty'
+
     // these types should be ignored in logs
     private static final Set<String> IGNORED_ITEM_TYPES = new HashSet<>(['frm', 'grp'])
-
-    private final WebIoExceptionTranslator exceptionTranslator
-
-    private final JSoupParserService jSoupFactoryService
 
     private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]")
 
@@ -39,17 +41,20 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private static final DateTimeFormatter lastModifiedFormatter = ofPattern('dd. MMM yyyy, HH:mm', Locale.GERMAN)
     private final RelativeDateTimeParser relativeDateTimeParser
 
+    private final WebIoExceptionTranslator exceptionTranslator
+
+    private final JSoupParserService jSoupParserService
+
     private final String iliasBaseUrl
     private final String courseOverview
     private final String courseLinkPrefix
-
 
     CourseSyncServiceImpl(WebIoExceptionTranslator webIoExceptionTranslator,
                           JSoupParserService jSoupParserService,
                           String iliasBaseUrl, String clientId,
                           RelativeDateTimeParser relativeDateTimeParser) {
         this.exceptionTranslator = webIoExceptionTranslator
-        this.jSoupFactoryService = jSoupParserService
+        this.jSoupParserService = jSoupParserService
         this.relativeDateTimeParser = relativeDateTimeParser
 
         this.iliasBaseUrl = iliasBaseUrl
@@ -94,31 +99,43 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     @Override
-    Collection<? extends CourseItem> searchAllItems(Course course, Executor httpRequestExecutor) {
-        return findCourseItems(course, httpRequestExecutor)
-    }
+    IliasService.VisitResult visit(
+        final IliasItem courseItem,
+        final Closure<IliasService.VisitResult> visitMethod, final Executor httpRequestExecutor) {
 
-    private Collection<? extends CourseItem> findCourseItems(Course course, Executor httpRequestExecutor) {
-        log.debug('Find all children for {}', course.name)
-        return searchItemsRecursively(course.url, httpRequestExecutor)
-    }
-
-    private Collection<? extends CourseItem> searchItemsRecursively(String itemUrl, Executor httpRequestExecutor) {
-        def list = new ArrayList<>()
-        for (Element element : getItemContainersFromUrl(itemUrl, httpRequestExecutor)) {
-            def item = toCourseItem(element, httpRequestExecutor)
-            if (item) list << item
+        for (IliasItem item : findItems(courseItem, httpRequestExecutor)) {
+            def visitResult = visitMethod(item)
+            if (visitResult == IliasService.VisitResult.TERMINATE) {
+                return IliasService.VisitResult.TERMINATE
+            }
+            if (isNodeItem(item)) {
+                def childResult = visit(item, visitMethod, httpRequestExecutor)
+                if (childResult == IliasService.VisitResult.TERMINATE) {
+                    return IliasService.VisitResult.TERMINATE
+                }
+            }
         }
-        return list
+        return IliasService.VisitResult.CONTINUE
+    }
+
+    private boolean isNodeItem(IliasItem iliasItem) {
+        return iliasItem instanceof Course || iliasItem instanceof CourseFolder
+    }
+
+    private Collection<? extends IliasItem> findItems(final IliasItem courseItem, Executor httpRequestExecutor) {
+        return getItemContainersFromUrl(courseItem.url, httpRequestExecutor)
+            .collect({ toIliasItem(courseItem, it) })
+            .findAll()
     }
 
     private Elements getItemContainersFromUrl(String itemUrl, Executor httpRequestExecutor) {
-        return connectAndGetDocument(itemUrl, httpRequestExecutor).
-            select(CssSelectors.ITEM_CONTAINER_SELECTOR.getCssSelector())
+        // TODO replace with Kevin's Ilias Downloader 1 Method (directory output)
+        // --> Performance?
+        return connectAndGetDocument(itemUrl, httpRequestExecutor).select(ITEM_CONTAINER_SELECTOR)
     }
 
-    private CourseItem toCourseItem(Element itemContainer, Executor httpRequestExecutor) {
-        Elements itemTitle = itemContainer.select(CssSelectors.ITEM_TITLE_SELECTOR.getCssSelector())
+    private IliasItem toIliasItem(IliasItem parent, Element itemContainer) {
+        Elements itemTitle = itemContainer.select(ITEM_TITLE_SELECTOR)
         String itemName = itemTitle.text()
         String itemUrl = itemTitle.attr('href')
         String idString = getItemIdFromUrl(itemUrl)
@@ -129,18 +146,11 @@ final class CourseSyncServiceImpl implements CourseSyncService {
 
         List<String> properties = getSanitizedItemProperties(itemContainer)
 
-        return createCourseItem(type, itemId, itemName, itemUrl, properties, httpRequestExecutor)
+        return createIliasItem(parent, type, itemId, itemName, itemUrl, properties)
     }
 
     private List<String> getSanitizedItemProperties(Element itemContainer) {
-        def itemProps = new ArrayList<>()
-        for (Element element : getItemProperties(itemContainer)) {
-            String text = trimAllWhitespaces(element)
-            if (text && !text.empty) {
-                itemProps << text
-            }
-        }
-        return itemProps
+        getItemProperties(itemContainer).collect { trimAllWhitespaces(it) }.findAll()
     }
 
     private String trimAllWhitespaces(Element element) {
@@ -148,7 +158,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     private static Elements getItemProperties(Element itemContainer) {
-        return itemContainer.select(CssSelectors.ITEM_PROPERTIES_SELECTOR.getCssSelector())
+        return itemContainer.select(ITEM_PROPERTIES_SELECTOR)
     }
 
     /**
@@ -166,23 +176,22 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return itemUrl.replaceFirst("${iliasBaseUrl}goto_ilias-fhdo_", '')
     }
 
-    private CourseItem createCourseItem(
+    private IliasItem createIliasItem(
+        IliasItem parent,
         String type, int itemId,
-        String itemName, String itemUrl, List<String> properties,
-        Executor httpRequestExecutor) {
+        String itemName, String itemUrl, List<String> properties) {
         switch (type) {
             case 'fold':
-                Collection<? extends CourseItem> courseItems = searchItemsRecursively(itemUrl, httpRequestExecutor)
-                return new CourseFolder(itemId, itemName, itemUrl, courseItems)
+                return new CourseFolder(itemId, itemName, itemUrl, parent)
             case 'file':
-                log.debug("itemId {}, name {}, url {}", itemId, itemName, itemUrl)
+                log.debug('itemId {}, name {}, url {}', itemId, itemName, itemUrl)
                 String fileType = properties.get(0)
                 if (properties.size() < 3) {
                     throw new IllegalArgumentException("No last modified timestamp present! Item with " +
-                                                           "ID $itemId (URL: $itemUrl) has only following properties: $properties")
+                        "ID $itemId (URL: $itemUrl) has only following properties: $properties")
                 }
                 LocalDateTime lastModified = parseDateString(properties.get(2))
-                return new CourseFile(itemId, "$itemName.$fileType", itemUrl, lastModified)
+                return new CourseFile(itemId, "$itemName.$fileType", itemUrl, parent, lastModified)
             default:
                 if (!IGNORED_ITEM_TYPES.contains(type)) {
                     log.warn('Unknown type: {}, URL: {}', type, itemUrl)
@@ -206,7 +215,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
             def content = httpRequestExecutor.execute(Request.Get(url))
                                              .returnContent()
             def html = content.asString(StandardCharsets.UTF_8)
-            return jSoupFactoryService.parse(html)
+            return jSoupParserService.parse(html)
         } catch (IOException e) {
             log.error("Could not GET: $url", e)
             throw exceptionTranslator.translate(e)

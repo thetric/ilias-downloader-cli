@@ -4,7 +4,6 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
-import com.github.thetric.iliasdownloader.service.model.CourseItem
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncService
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
@@ -17,7 +16,6 @@ import org.apache.http.client.fluent.Request
 import org.apache.http.impl.client.BasicCookieStore
 
 import java.util.function.Supplier
-
 /**
  * @author broj
  * @since 31.05.2016
@@ -117,8 +115,7 @@ final class WebIliasService implements IliasService {
     }
 
     @Override
-    Collection<? extends CourseItem> getCourseItems(Course course) {
-        return courseSyncService.searchAllItems(course, connectWithSessionCookies())
+    void visit(final Course courseItem, final Closure<IliasService.VisitResult> visitMethod) {
+        courseSyncService.visit(courseItem, visitMethod, connectWithSessionCookies())
     }
-
 }

@@ -13,11 +13,11 @@ import java.time.LocalDateTime
 @EqualsAndHashCode
 @ToString(includeNames = true, includeSuperProperties = true)
 @CompileStatic
-final class CourseFile extends AbstractIliasItem implements CourseItem {
+final class CourseFile extends AbstractIliasItem {
     LocalDateTime modified
 
-    CourseFile(int id, String name, String url, LocalDateTime modified) {
-        super(id, name, url)
+    CourseFile(int id, String name, String url, IliasItem parent, LocalDateTime modified) {
+        super(id, name, url, parent)
         this.modified = modified
     }
 

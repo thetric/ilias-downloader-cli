@@ -14,9 +14,5 @@ interface IliasItem {
 
     String getUrl()
 
-    void setId(int id)
-
-    void setName(String name)
-
-    void setUrl(String url)
+    IliasItem getParent()
 }

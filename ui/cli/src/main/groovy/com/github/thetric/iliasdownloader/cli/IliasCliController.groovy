@@ -1,8 +1,8 @@
 package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.service.IliasService
-import com.github.thetric.iliasdownloader.service.SyncingIliasItemVisitor
 import com.github.thetric.iliasdownloader.service.model.Course
+import com.github.thetric.iliasdownloader.service.model.IliasItem
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
@@ -48,10 +48,18 @@ final class IliasCliController {
         joinedCourses.each { println it.name }
 
         log.info(resourceBundle.getString('sync.started'))
-        def itemVisitor = new SyncingIliasItemVisitor(basePath, iliasService)
+        SyncHandler syncHandler = new SyncHandlerImpl(basePath, iliasService)
         for (Course course : joinedCourses) {
-            itemVisitor.visit(course, iliasService.getCourseItems(course))
+            if (shouldTerminate()) break
+            iliasService.visit(course, { IliasItem iliasItem ->
+                syncHandler.handle(iliasItem)
+            })
         }
         log.info(resourceBundle.getString('sync.finished'))
+    }
+
+    private boolean shouldTerminate() {
+        // TODO
+        false
     }
 }

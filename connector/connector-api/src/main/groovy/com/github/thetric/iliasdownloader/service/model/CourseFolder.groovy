@@ -11,11 +11,8 @@ import groovy.transform.ToString
 @EqualsAndHashCode
 @ToString(includeNames = true, includeSuperProperties = true)
 @CompileStatic
-final class CourseFolder extends AbstractIliasItem implements CourseItem {
-    final Collection<? extends CourseItem> courseItems
-
-    CourseFolder(int id, String name, String url, Collection<? extends CourseItem> courseItems) {
-        super(id, name, url)
-        this.courseItems = courseItems
+final class CourseFolder extends AbstractIliasItem {
+    CourseFolder(int id, String name, String url, IliasItem parent) {
+        super(id, name, url, parent)
     }
 }

@@ -2,10 +2,8 @@ package com.github.thetric.iliasdownloader.service
 
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
-import com.github.thetric.iliasdownloader.service.model.CourseItem
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import groovy.transform.CompileStatic
-
 /**
  * Provides access to the Ilias.
  * This interface provides some methods for basic session management (login, logout) and it can list the courses
@@ -16,6 +14,10 @@ import groovy.transform.CompileStatic
  */
 @CompileStatic
 interface IliasService {
+    enum VisitResult {
+        CONTINUE, TERMINATE
+    }
+
     // Session management
 
     /**
@@ -40,18 +42,11 @@ interface IliasService {
      * Finds all courses without any course content.
      *
      * @return all courses of the current user
-     * @see #getCourseItems(com.github.thetric.iliasdownloader.service.model.Course)
+     * @see #visit(com.github.thetric.iliasdownloader.service.model.Course, groovy.lang.Closure)
      */
     Collection<Course> getJoinedCourses()
 
-    /**
-     * Searches the selected courses with their child nodes <b>without downloading them</b>.
-     *
-     * @param course {@link Course} to search for. The course must not be modified
-     * @return new list with {@link CourseItem}s and their child nodes
-     * @see CourseItem
-     */
-    Collection<? extends CourseItem> getCourseItems(Course course)
+    void visit(Course courseItem, Closure<VisitResult> visitMethod)
 
     /**
      * Downloads the content of the {@link CourseFile} from the Ilias.
