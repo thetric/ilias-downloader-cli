@@ -20,10 +20,10 @@ subprojects {
     version '0.0.1-SNAPSHOT'
 
     dependencies {
-        compile 'org.codehaus.groovy:groovy-all:2.4.8'
+        compile 'org.codehaus.groovy:groovy-all:2.4.9'
 
         // logging libs
-        compile 'org.apache.logging.log4j:log4j-core:2.8'
+        compile 'org.apache.logging.log4j:log4j-core:2.8.1'
 
         // test
         testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-3'
@@ -34,7 +34,7 @@ subprojects {
     apply plugin: 'jacoco'
 
     jacoco {
-        toolVersion = '0.7.8'
+        toolVersion = '0.7.9'
     }
 
     jacocoTestReport {
