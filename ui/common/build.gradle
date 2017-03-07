@@ -1,4 +1,4 @@
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.16.12'
-    compile 'org.yaml:snakeyaml:1.17'
+    compileOnly 'org.projectlombok:lombok:1.16.14'
+    compile 'org.yaml:snakeyaml:1.18'
 }
