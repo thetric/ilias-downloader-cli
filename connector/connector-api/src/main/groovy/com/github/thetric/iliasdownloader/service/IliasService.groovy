@@ -5,7 +5,6 @@ import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseItem
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import groovy.transform.CompileStatic
-import io.reactivex.Single
 
 /**
  * Provides access to the Ilias.
@@ -59,7 +58,7 @@ interface IliasService {
      *
      * @param file
      * {@link CourseFile} to download
-     * @return {@link Single} which publishes either the data as a byte array or an exception
+     * @return {@link InputStream} content of the file
      * @see java.io.IOException
      * @see com.github.thetric.iliasdownloader.service.exception.IliasException
      */
