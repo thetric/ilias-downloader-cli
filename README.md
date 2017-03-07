@@ -3,7 +3,7 @@
 # Ilias Downloader
 
 The Ilias Downloader enables you to easily download the files from your Ilias account.
-The primary target is to provide a simple yet beautiful JavaFX UI.
+The first release will provide a simple CLI, the second a JavaFX UI.
 
 
 ## Getting started
@@ -27,4 +27,4 @@ To actually build the app execute the following command in a terminal app:
 gradlew build
 ```
 
-This will download all necessary tools and libraries and create an executable jar at `jfx-ui/build/libs`.
+This will download all necessary tools and libraries and create an executable jar at `ui/cli/build/libs/ilias-downloader-cli-[VERSION].jar`.
