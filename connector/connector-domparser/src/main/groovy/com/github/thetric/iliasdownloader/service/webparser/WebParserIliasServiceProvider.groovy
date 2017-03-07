@@ -20,8 +20,8 @@ import static org.jsoup.Connection.Response
  */
 @CompileStatic
 final class WebParserIliasServiceProvider implements IliasServiceProvider {
-    private static final String LOGIN_PAGE_NAME = "login.php"
-    private static final String ILIAS_CLIENT_ID_COOKIE_NAME = "ilClientId"
+    private static final String LOGIN_PAGE_NAME = 'login.php'
+    private static final String ILIAS_CLIENT_ID_COOKIE_NAME = 'ilClientId'
 
     private final String iliasBaseUrl
     private final String clientId
@@ -34,9 +34,9 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
     private String getBaseUrl(String loginPage) {
         loginPage = loginPage.trim()
         if (loginPage.empty) {
-            throw new IllegalArgumentException("Die angegebene Loginseiten URL darf nicht leer sein")
+            throw new IllegalArgumentException('Die angegebene Loginseiten URL darf nicht leer sein')
         }
-        if (!loginPage.startsWith("http://") && !loginPage.startsWith("https://")) {
+        if (!loginPage.startsWith('http://') && !loginPage.startsWith('https://')) {
             loginPage = "https://$loginPage"
         }
         int loginPageNameIndex = loginPage.indexOf(LOGIN_PAGE_NAME)
@@ -66,17 +66,18 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
         def webIoExceptionTranslator = new WebIoExceptionTranslatorImpl()
         def jSoupParserService = new JSoupParserServiceImpl()
         def fluentHcExecutorProvider = new FluentHcExecutorProviderImpl()
+        def courseSyncServiceProvider = {
+            new CourseSyncServiceImpl(
+                webIoExceptionTranslator,
+                jSoupParserService,
+                iliasBaseUrl,
+                clientId,
+                relativeDateTimeParser)
+        }
         return new WebIliasService(
             webIoExceptionTranslator,
             iliasBaseUrl, clientId,
             fluentHcExecutorProvider,
-            {
-                new CourseSyncServiceImpl(
-                    webIoExceptionTranslator,
-                    jSoupParserService,
-                    iliasBaseUrl,
-                    clientId,
-                    relativeDateTimeParser)
-            })
+            courseSyncServiceProvider)
     }
 }
