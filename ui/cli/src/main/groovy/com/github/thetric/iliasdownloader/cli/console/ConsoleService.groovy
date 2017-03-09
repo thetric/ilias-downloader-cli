@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.cli
+package com.github.thetric.iliasdownloader.cli.console
 
 /**
  * @author broj

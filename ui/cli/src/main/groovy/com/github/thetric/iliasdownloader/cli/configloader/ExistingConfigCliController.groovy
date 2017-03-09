@@ -1,5 +1,6 @@
-package com.github.thetric.iliasdownloader.cli
+package com.github.thetric.iliasdownloader.cli.configloader
 
+import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials

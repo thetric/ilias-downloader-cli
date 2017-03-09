@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.cli
+package com.github.thetric.iliasdownloader.cli.sync
 
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course

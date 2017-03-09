@@ -1,5 +1,7 @@
 package com.github.thetric.iliasdownloader.cli
 
+import com.github.thetric.iliasdownloader.cli.console.ConsoleService
+import com.github.thetric.iliasdownloader.cli.console.SystemEnvironmentAwareConsoleService
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService

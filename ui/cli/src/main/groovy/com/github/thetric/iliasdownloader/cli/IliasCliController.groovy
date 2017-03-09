@@ -1,5 +1,10 @@
 package com.github.thetric.iliasdownloader.cli
 
+import com.github.thetric.iliasdownloader.cli.configloader.ExistingConfigCliController
+import com.github.thetric.iliasdownloader.cli.configloader.SetupController
+import com.github.thetric.iliasdownloader.cli.console.ConsoleService
+import com.github.thetric.iliasdownloader.cli.sync.SyncHandler
+import com.github.thetric.iliasdownloader.cli.sync.SyncHandlerImpl
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.IliasItem
