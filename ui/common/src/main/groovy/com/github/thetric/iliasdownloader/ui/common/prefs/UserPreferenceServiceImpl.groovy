@@ -28,7 +28,9 @@ final class UserPreferenceServiceImpl implements UserPreferenceService {
     @Override
     void saveUserPreferences(UserPreferences userPreferences) throws IOException {
         if (Files.notExists(settingsFile)) {
-            Files.createDirectories(settingsFile.parent)
+            if (Files.notExists(settingsFile.parent)) {
+                Files.createDirectories(settingsFile.parent)
+            }
             Files.createFile settingsFile
         }
         settingsFile.withWriter StandardCharsets.UTF_8.name(), {
