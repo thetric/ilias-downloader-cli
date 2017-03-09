@@ -6,6 +6,7 @@ import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
 import groovy.transform.CompileStatic
+import groovy.transform.Memoized
 import groovy.transform.PackageScope
 import groovy.util.logging.Log4j2
 
@@ -35,6 +36,7 @@ final class SyncHandlerImpl implements SyncHandler {
         return parentItemPath.resolve(sanitizeFileName(iliasItem.name))
     }
 
+    @Memoized
     private Path resolvePathOfParent(IliasItem parentItem) {
         if (!parentItem) return basePath
         def itemNamesInPath = []
@@ -62,8 +64,6 @@ final class SyncHandlerImpl implements SyncHandler {
     @Override
     void handle(Course course) {
         log.info("Visiting course '${course.name}' (id: ${course.id}")
-        // do NOT create folders for empty courses
-        // def coursePath = resolvePathAndCreateMissingDirs(course)
     }
 
     @Override
@@ -73,14 +73,14 @@ final class SyncHandlerImpl implements SyncHandler {
 
     @Override
     void handle(CourseFolder folder) {
-        log.info("Visiting folder '${folder.name}'")
+        log.debug("Visiting folder '${folder.name}'")
         // do NOT create directories for empty course folders
         // def folderPath = resolvePathAndCreateMissingDirs(folder)
     }
 
     @Override
     void handle(CourseFile file) {
-        log.info("Visiting file ${file.name}")
+        log.debug("Visiting file ${file.name}")
         def filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
             log.info("Downloading file $file")
