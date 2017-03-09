@@ -16,10 +16,7 @@ import org.apache.http.client.fluent.Request
 import org.apache.http.impl.client.BasicCookieStore
 
 import java.util.function.Supplier
-/**
- * @author broj
- * @since 31.05.2016
- */
+
 @Log4j2
 @CompileStatic
 final class WebIliasService implements IliasService {

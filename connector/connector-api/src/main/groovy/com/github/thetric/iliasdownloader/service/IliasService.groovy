@@ -4,6 +4,7 @@ import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import groovy.transform.CompileStatic
+
 /**
  * Provides access to the Ilias.
  * This interface provides some methods for basic session management (login, logout) and it can list the courses

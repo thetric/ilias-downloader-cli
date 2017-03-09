@@ -5,10 +5,6 @@ import lombok.Data;
 import java.util.Collection;
 import java.util.HashSet;
 
-/**
- * @author broj
- * @since 16.01.2017
- */
 @Data
 public final class UserPreferences {
     private String iliasServerURL;

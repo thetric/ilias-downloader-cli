@@ -12,10 +12,6 @@ import org.apache.logging.log4j.Level
 
 import java.util.function.Function
 
-/**
- * @author broj
- * @since 16.01.2017
- */
 @Log4j2
 @TupleConstructor
 class SetupController {

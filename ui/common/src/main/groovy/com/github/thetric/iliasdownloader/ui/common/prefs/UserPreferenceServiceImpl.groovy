@@ -7,12 +7,7 @@ import org.yaml.snakeyaml.Yaml
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
-/**
- * Created by Dominik Broj on 31.01.2016.
- *
- * @author Dominik Broj
- * @since 31.01.2016
- */
+
 @CompileStatic
 @Log4j2
 final class UserPreferenceServiceImpl implements UserPreferenceService {

@@ -6,9 +6,6 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-/**
- * @author broj
- */
 @CompileStatic
 final class GermanRelativeDateTimeParser implements RelativeDateTimeParser {
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern('HH:mm', Locale.GERMAN)

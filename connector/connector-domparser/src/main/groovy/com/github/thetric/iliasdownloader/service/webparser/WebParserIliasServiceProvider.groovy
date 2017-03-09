@@ -14,10 +14,6 @@ import org.jsoup.Jsoup
 
 import static org.jsoup.Connection.Response
 
-/**
- * @author broj
- * @since 25.09.2016
- */
 @CompileStatic
 final class WebParserIliasServiceProvider implements IliasServiceProvider {
     private static final String LOGIN_PAGE_NAME = 'login.php'

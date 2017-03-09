@@ -15,10 +15,6 @@ import java.util.function.Function
 
 import static org.apache.logging.log4j.Level.TRACE
 
-/**
- * @author broj
- * @since 14.01.2017
- */
 @Log4j2
 @TupleConstructor
 final class Cli {

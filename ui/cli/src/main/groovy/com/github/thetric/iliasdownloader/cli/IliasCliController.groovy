@@ -15,13 +15,8 @@ import groovy.util.logging.Log4j2
 import java.nio.file.NoSuchFileException
 import java.util.function.Function
 
-import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.CONTINUE
 import static org.apache.logging.log4j.Level.DEBUG
 
-/**
- * @author broj
- * @since 16.01.2017
- */
 @Log4j2
 @TupleConstructor
 final class IliasCliController {

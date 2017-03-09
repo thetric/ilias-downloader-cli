@@ -13,10 +13,6 @@ import org.apache.logging.log4j.Level
 
 import java.util.function.Function
 
-/**
- * @author broj
- * @since 17.01.2017
- */
 @TupleConstructor
 @Log4j2
 @CompileStatic
