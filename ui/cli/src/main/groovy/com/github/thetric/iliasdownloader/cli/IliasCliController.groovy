@@ -9,7 +9,6 @@ import groovy.util.logging.Log4j2
 import org.apache.logging.log4j.Level
 
 import java.nio.file.NoSuchFileException
-import java.nio.file.Path
 import java.util.function.Function
 
 /**
@@ -19,7 +18,7 @@ import java.util.function.Function
 @Log4j2
 @TupleConstructor
 final class IliasCliController {
-    Path basePath
+    CliOptions cliOptions
 
     Function<String, IliasService> iliasProvider
     ResourceBundle resourceBundle
@@ -48,7 +47,7 @@ final class IliasCliController {
         joinedCourses.each { println it.name }
 
         log.info(resourceBundle.getString('sync.started'))
-        SyncHandler syncHandler = new SyncHandlerImpl(basePath, iliasService)
+        SyncHandler syncHandler = new SyncHandlerImpl(cliOptions.syncDir, iliasService)
         for (Course course : joinedCourses) {
             if (shouldTerminate()) break
             iliasService.visit(course, { IliasItem iliasItem ->

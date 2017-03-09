@@ -61,13 +61,15 @@ final class Cli {
     }
 
     def handleOptsReal(OptionAccessor options) {
-        Path syncDir = Paths.get(options.d as String)
+        def cliOptions = new CliOptions(
+            syncDir: Paths.get(options.d as String)
+        )
         Path settingsPath = syncDir.resolve('.ilias-downloader.yml')
+        UserPreferenceService preferenceService = new UserPreferenceServiceImpl(settingsPath)
         final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
         Function<String, IliasService> webIliasServiceProvider = { new WebParserIliasServiceProvider(it).newInstance() }
-        UserPreferenceService preferenceService = new UserPreferenceServiceImpl(settingsPath)
 
-        new IliasCliController(syncDir, webIliasServiceProvider, resourceBundle, preferenceService, consoleService).
+        new IliasCliController(cliOptions, webIliasServiceProvider, resourceBundle, preferenceService, consoleService).
             start()
     }
 }
