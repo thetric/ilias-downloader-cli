@@ -57,14 +57,20 @@ final class Cli {
             args: 1,
             required: true,
             resourceBundle.getString('args.directory.description'))
+        cliBuilder.c(
+            longOpt: 'select-courses',
+            required: false,
+            args: 0,
+            resourceBundle.getString('args.course.selection'))
         return cliBuilder
     }
 
     def handleOptsReal(OptionAccessor options) {
         def cliOptions = new CliOptions(
-            syncDir: Paths.get(options.d as String)
+            syncDir: Paths.get(options.d as String),
+            showCourseSelection: options.c as boolean
         )
-        Path settingsPath = syncDir.resolve('.ilias-downloader.yml')
+        Path settingsPath = cliOptions.syncDir.resolve('.ilias-downloader.yml')
         UserPreferenceService preferenceService = new UserPreferenceServiceImpl(settingsPath)
         final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
         Function<String, IliasService> webIliasServiceProvider = { new WebParserIliasServiceProvider(it).newInstance() }

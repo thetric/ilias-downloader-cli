@@ -4,7 +4,8 @@ import groovy.transform.Immutable
 
 import java.nio.file.Path
 
-@Immutable
+@Immutable(knownImmutableClasses = [Path])
 class CliOptions {
     Path syncDir
+    boolean showCourseSelection
 }
