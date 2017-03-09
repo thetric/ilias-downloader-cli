@@ -58,7 +58,7 @@ class SetupController {
         try {
             String usernamePrompt = "${resourceBundle.getString('login.credentials.username')}: "
             def username = consoleService.readLine('ilias.credentials.username', usernamePrompt)
-            String passwordPrompt = "${resourceBundle.getString('login.credentials.password')}: "
+            String passwordPrompt = resourceBundle.getString('login.credentials.password')
             def password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
 
             iliasService.login(new LoginCredentials(username, password))

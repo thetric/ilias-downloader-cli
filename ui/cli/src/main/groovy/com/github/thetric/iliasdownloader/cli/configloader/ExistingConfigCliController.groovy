@@ -36,7 +36,7 @@ final class ExistingConfigCliController {
     def promptForPassword(IliasService iliasService, UserPreferences prefs) {
         while (true) {
             try {
-                String passwordPrompt = "${resourceBundle.getString('login.credentials.password')}: "
+                def passwordPrompt = resourceBundle.getString('login.credentials.password')
                 def password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
                 iliasService.login(new LoginCredentials(prefs.userName, password))
                 return

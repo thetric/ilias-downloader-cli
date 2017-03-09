@@ -1,5 +1,6 @@
 package com.github.thetric.iliasdownloader.cli.console
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 
 /**
@@ -8,6 +9,7 @@ import groovy.util.logging.Log4j2
  * @since 16.01.2017
  */
 @Log4j2
+@CompileStatic
 final class SystemEnvironmentAwareConsoleService implements ConsoleService {
     @Override
     String readLine(String systemProp, String prompt) {
@@ -33,7 +35,7 @@ final class SystemEnvironmentAwareConsoleService implements ConsoleService {
         def credentials = System.getProperty(systemProp)
         if (credentials) return credentials
 
-        print prompt
+        print "$prompt: "
         if (System.console()) {
             return System.console().readPassword().toString()
         } else {
