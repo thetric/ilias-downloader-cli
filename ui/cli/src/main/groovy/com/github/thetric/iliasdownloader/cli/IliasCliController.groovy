@@ -9,12 +9,14 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.IliasItem
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
 
 import java.nio.file.NoSuchFileException
 import java.util.function.Function
 
+import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.CONTINUE
 import static org.apache.logging.log4j.Level.DEBUG
 
 @Log4j2
@@ -37,7 +39,7 @@ final class IliasCliController {
         if (cliOptions.showCourseSelection) {
             try {
                 coursesToSync = showAndSaveCourseSelection(coursesFromIlias)
-                prefs.activeCourses = coursesToSync.collect { it.id } unique()
+                prefs.activeCourses = coursesToSync*.id.unique()
             } catch (CourseSelectionOutOfRange e) {
                 log.catching(DEBUG, e)
                 def errMsg = resourceBundle.getString('sync.courses.prompt.errors.out-of-range')
@@ -53,7 +55,7 @@ final class IliasCliController {
         println ">>> Syncing ${coursesToSync.size()} courses:"
         print coursesToSync.collect { "  > ${it.name}" }.join('\n')
 
-        executeSync(iliasService, coursesToSync)
+        executeSync(iliasService, coursesToSync, prefs)
     }
 
     private IliasService createIliasService() {
@@ -75,10 +77,10 @@ final class IliasCliController {
         }
     }
 
-    private void executeSync(IliasService iliasService, Collection<Course> coursesToSync) {
+    private void executeSync(IliasService iliasService, Collection<Course> coursesToSync, UserPreferences prefs) {
         println ''
         println ">>> ${resourceBundle.getString('sync.started')}"
-        SyncHandler syncHandler = new SyncHandlerImpl(cliOptions.syncDir, iliasService)
+        SyncHandler syncHandler = new SyncHandlerImpl(cliOptions.syncDir, iliasService, prefs)
         for (Course course : coursesToSync) {
             iliasService.visit(course, { IliasItem iliasItem ->
                 syncHandler.handle(iliasItem)

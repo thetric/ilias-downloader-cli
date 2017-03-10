@@ -21,7 +21,7 @@ final class UserPreferenceServiceImpl implements UserPreferenceService {
 
     UserPreferences loadUserPreferences() throws IOException {
         return settingsFile.withInputStream {
-            return yaml.loadAs(it, UserPreferences.class)
+            return yaml.loadAs(it, UserPreferences)
         } as UserPreferences
     }
 

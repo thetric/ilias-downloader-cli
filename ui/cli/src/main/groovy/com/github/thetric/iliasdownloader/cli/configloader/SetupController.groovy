@@ -38,7 +38,7 @@ class SetupController {
                 IliasService iliasService = iliasProvider.apply(serverUrl)
                 prefs.iliasServerURL = serverUrl
                 return iliasService
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.catching(e)
             }
         }

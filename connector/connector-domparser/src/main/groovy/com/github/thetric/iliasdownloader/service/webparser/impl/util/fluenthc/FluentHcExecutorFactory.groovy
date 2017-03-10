@@ -4,6 +4,6 @@ import groovy.transform.CompileStatic
 import org.apache.http.client.fluent.Executor
 
 @CompileStatic
-interface FluentHcExecutorProvider {
+interface FluentHcExecutorFactory {
     Executor createFluentHcExecutor(org.apache.http.client.CookieStore cookieStore)
 }

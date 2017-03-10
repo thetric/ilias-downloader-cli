@@ -29,20 +29,16 @@ final class Cli {
             new Cli(resourceBundle).parseAndHandleOpts args
         } catch (InvalidUsageException ue) {
             log.catching(TRACE, ue)
-            System.exit(1)
-        } catch (Throwable t) {
-            log.catching(t)
-            System.exit(2)
         }
     }
 
     def parseAndHandleOpts(String[] args) {
         def cliBuilder = createCliBuilder()
         final opts = cliBuilder.parse(args)
-        if (!opts) {
-            throw new InvalidUsageException()
-        } else {
+        if (opts) {
             handleOptsReal(cliBuilder.parse(args))
+        } else {
+            throw new InvalidUsageException()
         }
     }
 
@@ -66,7 +62,7 @@ final class Cli {
     def handleOptsReal(OptionAccessor options) {
         def cliOptions = new CliOptions(
             syncDir: Paths.get(options.d as String),
-            showCourseSelection: options.c as boolean
+            showCourseSelection: options.c as boolean,
         )
         Path settingsPath = cliOptions.syncDir.resolve('.ilias-downloader.yml')
         UserPreferenceService preferenceService = new UserPreferenceServiceImpl(settingsPath)

@@ -7,7 +7,7 @@ import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncService
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
-import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorProvider
+import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorFactory
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import org.apache.http.client.fluent.Executor
@@ -21,7 +21,7 @@ import java.util.function.Supplier
 @CompileStatic
 final class WebIliasService implements IliasService {
     private final WebIoExceptionTranslator exceptionTranslator
-    private final FluentHcExecutorProvider fluentHcExecutorProvider
+    private final FluentHcExecutorFactory fluentHcExecutorProvider
     private final Supplier<? extends CourseSyncService> courseSyncServiceSupplier
 
     private final String iliasBaseUrl
@@ -36,7 +36,7 @@ final class WebIliasService implements IliasService {
     WebIliasService(
         WebIoExceptionTranslator exceptionTranslator,
         String iliasBaseUrl, String clientId,
-        FluentHcExecutorProvider fluentHcExecutorProvider,
+        FluentHcExecutorFactory fluentHcExecutorProvider,
         Supplier<? extends CourseSyncService> courseSyncServiceSupplier) {
         this.exceptionTranslator = exceptionTranslator
         this.iliasBaseUrl = iliasBaseUrl
@@ -80,8 +80,7 @@ final class WebIliasService implements IliasService {
     }
 
     private boolean hasLoginCookie() {
-        return cookieStore.getCookies()
-                          .any({ it.name == 'authchallenge' })
+        return cookieStore.cookies.any { it.name == 'authchallenge' }
     }
 
     @Override

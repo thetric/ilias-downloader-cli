@@ -8,7 +8,7 @@ import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClients
 
 @CompileStatic
-final class FluentHcExecutorProviderImpl implements FluentHcExecutorProvider {
+final class FluentHcExecutorFactoryImpl implements FluentHcExecutorFactory {
     @Override
     Executor createFluentHcExecutor(org.apache.http.client.CookieStore cookieStore) {
         // reuse existing executor?!

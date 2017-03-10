@@ -14,7 +14,9 @@ final class SystemEnvironmentAwareConsoleService implements ConsoleService {
     @Override
     String readLine(String systemProp, String prompt) {
         def property = System.getProperty(systemProp)
-        if (property) return property
+        if (property) {
+            return property
+        }
 
         print "$prompt: "
         def scanner = new Scanner(System.in)
@@ -33,16 +35,17 @@ final class SystemEnvironmentAwareConsoleService implements ConsoleService {
     @Override
     String readPassword(String systemProp, String prompt) {
         def credentials = System.getProperty(systemProp)
-        if (credentials) return credentials
+        if (credentials) {
+            return credentials
+        }
 
         print "$prompt: "
         if (System.console()) {
             return System.console().readPassword().toString()
-        } else {
-            log.warn('Password input in IDEs are _not_ supported')
-            log.warn('FALLING BACK TO PLAIN TEXT MODE')
-            def s = new Scanner(System.in)
-            return s.nextLine()
         }
+        log.warn('Password input in IDEs are _not_ supported')
+        log.warn('FALLING BACK TO PLAIN TEXT MODE')
+        def s = new Scanner(System.in)
+        return s.nextLine()
     }
 }

@@ -5,9 +5,9 @@ import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
-import groovy.transform.PackageScope
 import groovy.util.logging.Log4j2
 
 import java.nio.file.Files
@@ -23,14 +23,15 @@ final class SyncHandlerImpl implements SyncHandler {
     private static final ZoneId SYSTEM_ZONE = ZoneId.systemDefault()
     private final Path basePath
     private final IliasService iliasService
+    private final UserPreferences preferences
 
-    SyncHandlerImpl(final Path basePath, final IliasService iliasService) {
+    SyncHandlerImpl(final Path basePath, final IliasService iliasService, final UserPreferences preferences) {
         this.basePath = basePath
         this.iliasService = iliasService
+        this.preferences = preferences
     }
 
-    @PackageScope
-    Path resolvePathAndCreateMissingDirs(IliasItem iliasItem) {
+    private Path resolvePathAndCreateMissingDirs(IliasItem iliasItem) {
         Path parentItemPath = resolvePathOfParent(iliasItem.parent)
         Files.createDirectories parentItemPath
         return parentItemPath.resolve(sanitizeFileName(iliasItem.name))
@@ -38,7 +39,9 @@ final class SyncHandlerImpl implements SyncHandler {
 
     @Memoized
     private Path resolvePathOfParent(IliasItem parentItem) {
-        if (!parentItem) return basePath
+        if (!parentItem) {
+            return basePath
+        }
         def itemNamesInPath = []
         for (IliasItem i = parentItem; i; i = i.parent) {
             itemNamesInPath << i.name
@@ -88,25 +91,28 @@ final class SyncHandlerImpl implements SyncHandler {
         }
     }
 
-    @PackageScope
-    static boolean needsToSync(Path path, CourseFile file) {
-        if (Files.notExists(path)) {
-            return true
-        } else {
-            def lastModifiedTime = Files.getLastModifiedTime(path)
-            return lastModifiedTime != toFileTime(file.modified)
-        }
+    private boolean needsToSync(Path path, CourseFile file) {
+        return (Files.notExists(path) || isFileModified(path, file)) && isUnderFileLimit(file)
     }
 
-    @PackageScope
-    void syncAndSaveFile(Path path, CourseFile file) {
+    private boolean isFileModified(Path path, CourseFile file) {
+        def lastModifiedTime = Files.getLastModifiedTime(path)
+        return lastModifiedTime != toFileTime(file.modified)
+    }
+
+    private boolean isUnderFileLimit(CourseFile file) {
+        assert file
+        // TODO impl file size from ilias item!
+        true
+    }
+
+    private void syncAndSaveFile(Path path, CourseFile file) {
         InputStream inputStream = iliasService.getContentAsStream(file)
         Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING)
         Files.setLastModifiedTime(path, toFileTime(file.modified))
     }
 
-    @PackageScope
-    static FileTime toFileTime(LocalDateTime dateTime) {
+    private static FileTime toFileTime(LocalDateTime dateTime) {
         Objects.requireNonNull(dateTime, 'dateTime')
         FileTime.from(dateTime.toInstant(SYSTEM_ZONE.rules.getOffset(dateTime)))
     }

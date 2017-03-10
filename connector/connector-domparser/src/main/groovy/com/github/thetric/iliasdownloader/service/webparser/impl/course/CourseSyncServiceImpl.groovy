@@ -35,10 +35,10 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     // these types should be ignored in logs
     private static final Set<String> IGNORED_ITEM_TYPES = new HashSet<>(['frm', 'grp'])
 
-    private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile("[_.]")
+    private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile('[_.]')
 
     // for German date time format: 23. Sep 2016, 17:34
-    private static final DateTimeFormatter lastModifiedFormatter = ofPattern('dd. MMM yyyy, HH:mm', Locale.GERMAN)
+    private static final DateTimeFormatter LAST_MODIFIED_FORMATTER = ofPattern('dd. MMM yyyy, HH:mm', Locale.GERMAN)
     private final RelativeDateTimeParser relativeDateTimeParser
 
     private final WebIoExceptionTranslator exceptionTranslator
@@ -70,7 +70,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     private Collection<Course> getCoursesFromHtml(Document document) {
-        return document.select(COURSE_SELECTOR).collect { toCourse(it) }
+        return document.select(COURSE_SELECTOR).collect({ toCourse(it) })
     }
 
     private Course toCourse(Element courseElement) {
@@ -83,8 +83,8 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private int getCourseId(Element aTag) {
         String href = aTag.attr('href')
         // href="http://www.ilias.fh-dortmund.de/ilias/goto_ilias-fhdo_crs_\d+.html"
-        String idString = href.replaceFirst(courseLinkPrefix, "")
-                              .replace(".html", "")
+        String idString = href.replaceFirst(courseLinkPrefix, '')
+                              .replace('.html', '')
         // der Rest muss ein int sein
         return parseId(href, idString)
     }
@@ -124,7 +124,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
 
     private Collection<? extends IliasItem> findItems(final IliasItem courseItem, Executor httpRequestExecutor) {
         return getItemContainersFromUrl(courseItem.url, httpRequestExecutor)
-            .collect({ toIliasItem(courseItem, it) })
+            .collect { toIliasItem(courseItem, it) }
             .findAll()
     }
 
@@ -187,7 +187,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
                 log.debug('itemId {}, name {}, url {}', itemId, itemName, itemUrl)
                 String fileType = properties.get(0)
                 if (properties.size() < 3) {
-                    throw new IllegalArgumentException("No last modified timestamp present! Item with " +
+                    throw new IllegalArgumentException('No last modified timestamp present! Item with ' +
                         "ID $itemId (URL: $itemUrl) has only following properties: $properties")
                 }
                 LocalDateTime lastModified = parseDateString(properties.get(2))
@@ -204,9 +204,8 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         if (relativeDateTimeParser.isRelativeDateTime(lastModifiedDateTimeString)) {
             log.debug('{} is a relative date', lastModifiedDateTimeString)
             return relativeDateTimeParser.parse(lastModifiedDateTimeString)
-        } else {
-            return LocalDateTime.parse(lastModifiedDateTimeString, lastModifiedFormatter)
         }
+        return LocalDateTime.parse(lastModifiedDateTimeString, LAST_MODIFIED_FORMATTER)
     }
 
     private Document connectAndGetDocument(String url, Executor httpRequestExecutor) {
