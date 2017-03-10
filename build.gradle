@@ -31,23 +31,7 @@ subprojects {
         testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-3'
     }
 
-    // Code coverage
-
-    apply plugin: 'jacoco'
-
-    jacoco {
-        toolVersion = '0.7.9'
-    }
-
-    jacocoTestReport {
-        reports {
-            xml.enabled false
-            csv.enabled false
-            html.enabled true
-        }
-    }
-
-    check.dependsOn jacocoTestReport
+    apply from: rootProject.file('config/gradle/coverage.gradle')
 
     repositories {
         jcenter()
