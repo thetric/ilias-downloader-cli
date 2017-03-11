@@ -101,9 +101,10 @@ final class SyncHandlerImpl implements SyncHandler {
     }
 
     private boolean isUnderFileLimit(CourseFile file) {
-        assert file
-        // TODO impl file size from ilias item!
-        true
+        if (preferences.maxFileSize > 0) {
+            return file.size < preferences.maxFileSize
+        }
+        return true
     }
 
     private void syncAndSaveFile(Path path, CourseFile file) {
