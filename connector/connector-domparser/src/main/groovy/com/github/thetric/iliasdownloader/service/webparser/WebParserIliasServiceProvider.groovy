@@ -7,7 +7,6 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.WebIliasService
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncServiceImpl
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserServiceImpl
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslatorImpl
-import com.github.thetric.iliasdownloader.service.webparser.impl.course.datetime.GermanRelativeDateTimeParser
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorFactoryImpl
 import groovy.transform.CompileStatic
 import org.jsoup.Jsoup
@@ -28,7 +27,7 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
     }
 
     private String getBaseUrl(String loginPage) {
-        def trimmed = loginPage.trim()
+        String trimmed = loginPage.trim()
         if (trimmed.empty) {
             throw new IllegalArgumentException('Die angegebene Loginseiten URL darf nicht leer sein')
         }
@@ -59,7 +58,6 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
 
     @Override
     IliasService newInstance() {
-        def relativeDateTimeParser = new GermanRelativeDateTimeParser()
         def webIoExceptionTranslator = new WebIoExceptionTranslatorImpl()
         def jSoupParserService = new JSoupParserServiceImpl()
         def fluentHcExecutorProvider = new FluentHcExecutorFactoryImpl()
@@ -68,8 +66,7 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
                 webIoExceptionTranslator,
                 jSoupParserService,
                 iliasBaseUrl,
-                clientId,
-                relativeDateTimeParser)
+                clientId)
         }
         return new WebIliasService(
             webIoExceptionTranslator,
