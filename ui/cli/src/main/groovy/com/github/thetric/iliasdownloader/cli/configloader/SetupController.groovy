@@ -27,6 +27,7 @@ class SetupController {
         log.info('Connected!')
         login(iliasService)
         log.info(resourceBundle.getString('login.successful'))
+        preferenceService.saveUserPreferences(prefs)
 
         return iliasService
     }
