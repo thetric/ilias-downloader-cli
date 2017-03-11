@@ -8,10 +8,14 @@ import java.time.LocalDateTime
 @ToString(includeNames = true, includeSuperProperties = true)
 @CompileStatic
 final class CourseFile extends AbstractIliasItem {
-    LocalDateTime modified
+    final LocalDateTime modified
+    final long size
 
-    CourseFile(int id, String name, String url, IliasItem parent, LocalDateTime modified) {
+    CourseFile(
+        final int id,
+        final String name, final String url, final IliasItem parent, final LocalDateTime modified, final long size) {
         super(id, name, url, parent)
         this.modified = modified
+        this.size = size
     }
 }

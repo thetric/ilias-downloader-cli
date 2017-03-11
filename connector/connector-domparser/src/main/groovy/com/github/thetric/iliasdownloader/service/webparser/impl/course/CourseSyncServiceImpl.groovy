@@ -6,13 +6,13 @@ import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
 import com.github.thetric.iliasdownloader.service.webparser.impl.IliasItemIdStringParsingException
-import com.github.thetric.iliasdownloader.service.webparser.impl.course.datetime.RelativeDateTimeParser
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserService
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import org.apache.http.client.fluent.Executor
 import org.apache.http.client.fluent.Request
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
@@ -20,7 +20,7 @@ import org.jsoup.select.Elements
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.regex.Pattern
+import java.util.regex.Matcher
 
 import static java.time.format.DateTimeFormatter.ofPattern
 
@@ -28,18 +28,12 @@ import static java.time.format.DateTimeFormatter.ofPattern
 @Log4j2
 final class CourseSyncServiceImpl implements CourseSyncService {
     private static final String COURSE_SELECTOR = "a[href*='_crs_'].il_ContainerItemTitle"
-    private static final String ITEM_CONTAINER_SELECTOR = '.il_ContainerListItem'
-    private static final String ITEM_TITLE_SELECTOR = 'a.il_ContainerItemTitle'
-    private static final String ITEM_PROPERTIES_SELECTOR = '.il_ItemProperty'
 
-    // these types should be ignored in logs
-    private static final Set<String> IGNORED_ITEM_TYPES = new HashSet<>(['frm', 'grp'])
-
-    private static final Pattern ITEM_URL_SPLIT_PATTERN = Pattern.compile('[_.]')
-
-    // for German date time format: 23. Sep 2016, 17:34
-    private static final DateTimeFormatter LAST_MODIFIED_FORMATTER = ofPattern('dd. MMM yyyy, HH:mm', Locale.GERMAN)
-    private final RelativeDateTimeParser relativeDateTimeParser
+    // modified ISO 8601 formatter - the default from Java require a 'T' as date-time separator
+    // e.g. 2016-11-15 14:13:59
+    private static final DateTimeFormatter LAST_MODIFIED_FORMATTER = ofPattern('yyyy-MM-dd HH:mm:ss')
+    private static final String COURSE_LINK_REGEX = /<a href="(?<url>.+)">(?<name>.+)<\/a>/
+    private static final String ROW_SEPARATOR = '  '
 
     private final WebIoExceptionTranslator exceptionTranslator
 
@@ -48,18 +42,18 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private final String iliasBaseUrl
     private final String courseOverview
     private final String courseLinkPrefix
+    private final String courseWebDavPrefix
 
     CourseSyncServiceImpl(WebIoExceptionTranslator webIoExceptionTranslator,
                           JSoupParserService jSoupParserService,
-                          String iliasBaseUrl, String clientId,
-                          RelativeDateTimeParser relativeDateTimeParser) {
+                          String iliasBaseUrl, String clientId) {
         this.exceptionTranslator = webIoExceptionTranslator
         this.jSoupParserService = jSoupParserService
-        this.relativeDateTimeParser = relativeDateTimeParser
 
         this.iliasBaseUrl = iliasBaseUrl
         courseOverview = "${iliasBaseUrl}ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems"
         courseLinkPrefix = "${iliasBaseUrl}goto_${clientId}_crs_"
+        courseWebDavPrefix = "${iliasBaseUrl}webdav.php/ilias-fhdo/ref_"
     }
 
     @Override
@@ -76,7 +70,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private Course toCourse(Element courseElement) {
         int courseId = getCourseId(courseElement)
         String courseName = courseElement.text()
-        String courseUrl = courseElement.attr('href')
+        String courseUrl = "${courseWebDavPrefix}$courseId/"
         return new Course(courseId, courseName, courseUrl)
     }
 
@@ -122,99 +116,131 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return iliasItem instanceof Course || iliasItem instanceof CourseFolder
     }
 
-    private Collection<? extends IliasItem> findItems(final IliasItem courseItem, Executor httpRequestExecutor) {
-        return getItemContainersFromUrl(courseItem.url, httpRequestExecutor)
-            .collect { toIliasItem(courseItem, it) }
-            .findAll()
-    }
-
-    private Elements getItemContainersFromUrl(String itemUrl, Executor httpRequestExecutor) {
-        // TODO replace with Kevin's Ilias Downloader 1 Method (directory output)
-        // --> Performance?
-        return connectAndGetDocument(itemUrl, httpRequestExecutor).select(ITEM_CONTAINER_SELECTOR)
-    }
-
-    private IliasItem toIliasItem(IliasItem parent, Element itemContainer) {
-        Elements itemTitle = itemContainer.select(ITEM_TITLE_SELECTOR)
-        String itemName = itemTitle.text()
-        String itemUrl = itemTitle.attr('href')
-        String idString = getItemIdFromUrl(itemUrl)
-        String[] split = ITEM_URL_SPLIT_PATTERN.split(idString)
-
-        String type = split[0]
-        int itemId = Integer.parseInt(split[1])
-
-        List<String> properties = getSanitizedItemProperties(itemContainer)
-
-        return createIliasItem(parent, type, itemId, itemName, itemUrl, properties)
-    }
-
-    private List<String> getSanitizedItemProperties(Element itemContainer) {
-        getItemProperties(itemContainer).collect { trimAllWhitespaces(it) }.findAll()
-    }
-
-    private String trimAllWhitespaces(Element element) {
-        return trimNbspFromString(element.text()).trim()
-    }
-
-    private static Elements getItemProperties(Element itemContainer) {
-        return itemContainer.select(ITEM_PROPERTIES_SELECTOR)
+    private Collection<? extends IliasItem> findItems(final IliasItem courseItem, final Executor httpRequestExecutor) {
+        String itemContainer = getItemContainersFromUrl(courseItem.url, httpRequestExecutor)
+        if (!itemContainer.empty) {
+            def all = getIliasItemRows(itemContainer, courseItem)*.trim().findAll()
+            return all.collect { toIliasItem(courseItem, it) }.
+                findAll()
+        }
+        throw new IllegalArgumentException("No items found at URL: ${courseItem.url}!")
     }
 
     /**
-     * Removes the "no backspace" ({@literal &nbsp} character from the string.
-     *
-     * @param s
-     *         String to trim
-     * @return a new String without "no backspace" characters
+     * Extract HTML from the 'table'
+     * @param itemContainer
+     * @param courseItem
      */
-    private static String trimNbspFromString(String s) {
-        return s.replace('\u00a0', '')
+    private Collection<String> getIliasItemRows(final String tableHtml, final IliasItem courseItem) {
+        def itemListStartDelimiter = '<hr>'
+        def startIndexItemList = tableHtml.indexOf(itemListStartDelimiter)
+        checkItemListIndex(startIndexItemList, 'Begin', courseItem)
+
+        def itemListEndDelimiter = '\n<hr>'
+        def endIndexItemList = tableHtml.lastIndexOf(itemListEndDelimiter)
+        checkItemListIndex(endIndexItemList, 'End', courseItem)
+
+        def itemListBeginPos = startIndexItemList + itemListStartDelimiter.length()
+        if (itemListBeginPos >= endIndexItemList) {
+            return []
+        }
+        return tableHtml[itemListBeginPos..endIndexItemList].split('\n')*.trim()
     }
 
-    private String getItemIdFromUrl(String itemUrl) {
-        return itemUrl.replaceFirst("${iliasBaseUrl}goto_ilias-fhdo_", '')
-    }
-
-    private IliasItem createIliasItem(
-        IliasItem parent,
-        String type, int itemId,
-        String itemName, String itemUrl, List<String> properties) {
-        switch (type) {
-            case 'fold':
-                return new CourseFolder(itemId, itemName, itemUrl, parent)
-            case 'file':
-                log.debug('itemId {}, name {}, url {}', itemId, itemName, itemUrl)
-                String fileType = properties.get(0)
-                if (properties.size() < 3) {
-                    throw new IllegalArgumentException('No last modified timestamp present! Item with ' +
-                        "ID $itemId (URL: $itemUrl) has only following properties: $properties")
-                }
-                LocalDateTime lastModified = parseDateString(properties.get(2))
-                return new CourseFile(itemId, "$itemName.$fileType", itemUrl, parent, lastModified)
-            default:
-                if (!IGNORED_ITEM_TYPES.contains(type)) {
-                    log.warn('Unknown type: {}, URL: {}', type, itemUrl)
-                }
-                return null
+    private void checkItemListIndex(final int index, final String name, final IliasItem item) {
+        if (index == -1) {
+            throw new IllegalArgumentException("$name of item list not found! Search URL is ${item.url}")
         }
     }
 
-    private LocalDateTime parseDateString(String lastModifiedDateTimeString) {
-        if (relativeDateTimeParser.isRelativeDateTime(lastModifiedDateTimeString)) {
-            log.debug('{} is a relative date', lastModifiedDateTimeString)
-            return relativeDateTimeParser.parse(lastModifiedDateTimeString)
-        }
-        return LocalDateTime.parse(lastModifiedDateTimeString, LAST_MODIFIED_FORMATTER)
+    private String getItemContainersFromUrl(final String itemUrl, final Executor httpRequestExecutor) {
+        def html = this.getHtml(itemUrl, httpRequestExecutor)
+        def startTag = '<pre>'
+        def startIndexTable = html.indexOf(startTag)
+        def endTag = '</pre>'
+        def endIndexTable = html.lastIndexOf(endTag)
+        def exclusiveStartIndex = startIndexTable + startTag.length()
+        return html[exclusiveStartIndex..endIndexTable - 1]
     }
 
-    private Document connectAndGetDocument(String url, Executor httpRequestExecutor) {
+    private IliasItem toIliasItem(final IliasItem parent, final String itemRow) {
+        // item format: (size or character '-' [=folder])  last modified  link
+        if (isFolder(itemRow)) {
+            return createFolder(parent, itemRow)
+        } else {
+            // assume it is a file
+            return createFile(parent, itemRow)
+        }
+    }
+
+    private boolean isFolder(final String itemRow) {
+        return itemRow[0] == '-'
+    }
+
+    private CourseFolder createFolder(final IliasItem parent, final String itemRow) {
+        final int firstPosSeparator = itemRow.indexOf(ROW_SEPARATOR)
+        final int secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length())
+        def parsedLink = parseLink(itemRow, secondPosSeparator)
+        return new CourseFolder(2, parsedLink.group('name'), resolveItemLink(parent, parsedLink), parent)
+    }
+
+    private GString resolveItemLink(IliasItem parent, Matcher parsedLink) {
+        return "${parent.url}/${parsedLink.group('url')}"
+    }
+
+    private CourseFile createFile(final IliasItem parent, final String itemRow) {
+        final int firstPosSeparator = itemRow.indexOf(ROW_SEPARATOR)
+        final int secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length())
+
+        def parsedLinkName = parseLink(itemRow, secondPosSeparator)
+        def lastModified = parseLastModified(itemRow, firstPosSeparator, secondPosSeparator)
+        def fileSize = parseFileSize(itemRow, firstPosSeparator)
+        def name = parsedLinkName.group('name')
+        def url = resolveItemLink(parent, parsedLinkName)
+        return new CourseFile(1, name, url, parent, lastModified, fileSize)
+    }
+
+    private long parseFileSize(final String itemRow, final int firstPosSeparator) {
+        def rawSizeInBytes = itemRow[0..firstPosSeparator - 1]
+        def sanitizedSizeInBytes = rawSizeInBytes.replaceAll(',', '')
+        return Long.parseLong(sanitizedSizeInBytes)
+    }
+
+    private Matcher parseLink(final String itemRow, final int secondPosSeparator) {
+        def startIndex = secondPosSeparator + ROW_SEPARATOR.length()
+        def matcher = itemRow[startIndex..-1] =~ COURSE_LINK_REGEX
+        if (!matcher) {
+            throw new IllegalStateException("Failed to parse $itemRow")
+        }
+        return matcher
+    }
+
+    private LocalDateTime parseLastModified(final String itemRow, final int firstPosSeparator, final int secondPosSep) {
+        def startIndex = firstPosSeparator + ROW_SEPARATOR.length()
+        def lastModifiedString = itemRow[startIndex..secondPosSep - 1]
+        return LocalDateTime.parse(lastModifiedString, LAST_MODIFIED_FORMATTER)
+    }
+
+    @Deprecated
+    private Document connectAndGetDocument(final String url, final Executor httpRequestExecutor) {
         log.debug('Getting: "{}"', url)
         try {
             def content = httpRequestExecutor.execute(Request.Get(url))
                                              .returnContent()
             def html = content.asString(StandardCharsets.UTF_8)
             return jSoupParserService.parse(html)
+        } catch (IOException e) {
+            log.error("Could not GET: $url", e)
+            throw exceptionTranslator.translate(e)
+        }
+    }
+
+    private String getHtml(final String url, final Executor httpRequestExecutor) {
+        log.debug('Getting: "{}"', url)
+        try {
+            def content = httpRequestExecutor.execute(Request.Get(url))
+                                             .returnContent()
+                                             .asString(StandardCharsets.UTF_8)
         } catch (IOException e) {
             log.error("Could not GET: $url", e)
             throw exceptionTranslator.translate(e)
