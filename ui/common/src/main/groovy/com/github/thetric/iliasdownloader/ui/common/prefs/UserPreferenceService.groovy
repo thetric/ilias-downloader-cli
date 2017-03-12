@@ -2,19 +2,23 @@ package com.github.thetric.iliasdownloader.ui.common.prefs
 
 import groovy.transform.CompileStatic
 
+/**
+ * Saves and loads {@link UserPreferenceService}s.
+ */
 @CompileStatic
 interface UserPreferenceService {
     /**
-     * Falls die Nutzereinstellungen vorhanden sind, werden diese geladen. Andernfalls wird eine {@link
-     * java.nio.file.NoSuchFileException} geworfen.
+     * Loads the {@link UserPreferences}.
      *
-     * @return die Nutzereinstellungen (falls vorhanden)
-     * @throws java.nio.file.NoSuchFileException
-     *         falls die Nutzereinstellungen nicht gefunden werden konnten
-     * @throws IOException
-     *         falls ein I/O-Fehler auftritt
+     * @return the {@link UserPreferences}
+     * @throws IOException when the {@link UserPreferences} cannot be loaded
      */
     UserPreferences loadUserPreferences() throws IOException
 
+    /**
+     * Saves the {@link UserPreferences}.
+     * @param userPreferences {@link UserPreferences} to save
+     * @throws IOException
+     */
     void saveUserPreferences(UserPreferences userPreferences) throws IOException
 }
