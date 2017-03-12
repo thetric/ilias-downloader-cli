@@ -4,12 +4,18 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.IliasServiceProvider
 import com.github.thetric.iliasdownloader.service.webparser.impl.NoCookiesAvailableException
 import com.github.thetric.iliasdownloader.service.webparser.impl.WebIliasService
+import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncService
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncServiceImpl
+import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserService
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserServiceImpl
+import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslatorImpl
+import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorFactory
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorFactoryImpl
 import groovy.transform.CompileStatic
 import org.jsoup.Jsoup
+
+import java.util.function.Supplier
 
 import static org.jsoup.Connection.Response
 
@@ -58,10 +64,10 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
 
     @Override
     IliasService newInstance() {
-        def webIoExceptionTranslator = new WebIoExceptionTranslatorImpl()
-        def jSoupParserService = new JSoupParserServiceImpl()
-        def fluentHcExecutorProvider = new FluentHcExecutorFactoryImpl()
-        def courseSyncServiceProvider = {
+        WebIoExceptionTranslator webIoExceptionTranslator = new WebIoExceptionTranslatorImpl()
+        JSoupParserService jSoupParserService = new JSoupParserServiceImpl()
+        FluentHcExecutorFactory fluentHcExecutorProvider = new FluentHcExecutorFactoryImpl()
+        Supplier<? extends CourseSyncService> courseSyncServiceProvider = {
             new CourseSyncServiceImpl(
                 webIoExceptionTranslator,
                 jSoupParserService,
