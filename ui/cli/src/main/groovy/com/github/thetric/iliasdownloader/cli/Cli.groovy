@@ -56,13 +56,21 @@ final class Cli {
             required: false,
             args: 0,
             resourceBundle.getString('args.course.selection'))
+        cliBuilder.s(
+            longOpt: 'max-size',
+            required: false,
+            args: 1,
+            resourceBundle.getString('args.sync.max-size')
+        )
         return cliBuilder
     }
 
     def handleOptsReal(OptionAccessor options) {
+        def size = options.s == false ? null : options.s as Long
         def cliOptions = new CliOptions(
             syncDir: Paths.get(options.d as String),
             showCourseSelection: options.c as boolean,
+            fileSizeLimitinMiB: size,
         )
         Path settingsPath = cliOptions.syncDir.resolve('.ilias-downloader.yml')
         UserPreferenceService preferenceService = new UserPreferenceServiceImpl(settingsPath)

@@ -8,4 +8,5 @@ import java.nio.file.Path
 class CliOptions {
     Path syncDir
     boolean showCourseSelection
+    Long fileSizeLimitinMiB
 }

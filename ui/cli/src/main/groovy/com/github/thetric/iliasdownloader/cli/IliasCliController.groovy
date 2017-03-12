@@ -33,6 +33,8 @@ final class IliasCliController {
         def iliasService = createIliasService()
         def prefs = preferenceService.loadUserPreferences()
 
+        updateFileSizeLimitFromCliOpts(prefs)
+
         Collection<Course> coursesFromIlias = iliasService.joinedCourses
         Collection<Course> coursesToSync
 
@@ -56,6 +58,18 @@ final class IliasCliController {
         print coursesToSync.collect { "  > ${it.name}" }.join('\n')
 
         executeSync(iliasService, coursesToSync, prefs)
+    }
+
+    private void updateFileSizeLimitFromCliOpts(UserPreferences prefs) {
+        if (cliOptions.fileSizeLimitinMiB != null) {
+            // limit = 0 -> unlimited
+            if (cliOptions.fileSizeLimitinMiB >= 0) {
+                prefs.maxFileSizeInMiB = cliOptions.fileSizeLimitinMiB
+                preferenceService.saveUserPreferences(prefs)
+            } else {
+                throw new IllegalArgumentException("${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitinMiB")
+            }
+        }
     }
 
     private IliasService createIliasService() {
