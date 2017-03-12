@@ -11,7 +11,7 @@ public final class UserPreferences {
 
     private String userName;
 
-    private long maxFileSize;
+    private long maxFileSizeInMiB;
 
     private Collection<Long> activeCourses = new HashSet<>();
 }

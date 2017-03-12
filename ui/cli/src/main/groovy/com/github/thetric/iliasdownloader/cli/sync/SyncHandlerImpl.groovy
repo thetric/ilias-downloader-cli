@@ -32,11 +32,11 @@ final class SyncHandlerImpl implements SyncHandler {
         this.iliasService = iliasService
         this.preferences = preferences
 
-        this.downloadSizeLimitInBytes = preferences.maxFileSize > 0 ? toBytes(preferences) : Long.MAX_VALUE
+        this.downloadSizeLimitInBytes = preferences.maxFileSizeInMiB > 0 ? toBytes(preferences) : Long.MAX_VALUE
     }
 
     private int toBytes(UserPreferences preferences) {
-        return preferences.maxFileSize * 1024 * 1024
+        return preferences.maxFileSizeInMiB * 1024 * 1024
     }
 
     private Path resolvePathAndCreateMissingDirs(IliasItem iliasItem) {
