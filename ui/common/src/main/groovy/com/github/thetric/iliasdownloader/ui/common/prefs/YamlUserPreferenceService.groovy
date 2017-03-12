@@ -1,20 +1,21 @@
 package com.github.thetric.iliasdownloader.ui.common.prefs
 
 import groovy.transform.CompileStatic
-import groovy.util.logging.Log4j2
 import org.yaml.snakeyaml.Yaml
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 
+/**
+ * Loads and saves {@link UserPreferences} from and to a {@code .yml} file.
+ */
 @CompileStatic
-@Log4j2
-final class UserPreferenceServiceImpl implements UserPreferenceService {
+final class YamlUserPreferenceService implements UserPreferenceService {
     private final Yaml yaml
     final Path settingsFile
 
-    UserPreferenceServiceImpl(Path settingsPath) {
+    YamlUserPreferenceService(Path settingsPath) {
         this.settingsFile = settingsPath
         yaml = new Yaml()
     }

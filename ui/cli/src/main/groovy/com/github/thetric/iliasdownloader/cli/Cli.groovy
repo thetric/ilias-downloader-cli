@@ -5,7 +5,7 @@ import com.github.thetric.iliasdownloader.cli.console.SystemEnvironmentAwareCons
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceServiceImpl
+import com.github.thetric.iliasdownloader.ui.common.prefs.YamlUserPreferenceService
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
 
@@ -73,7 +73,7 @@ final class Cli {
             fileSizeLimitinMiB: size,
         )
         Path settingsPath = cliOptions.syncDir.resolve('.ilias-downloader.yml')
-        UserPreferenceService preferenceService = new UserPreferenceServiceImpl(settingsPath)
+        UserPreferenceService preferenceService = new YamlUserPreferenceService(settingsPath)
         final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
         Function<String, IliasService> webIliasServiceProvider = { new WebParserIliasServiceProvider(it).newInstance() }
 
