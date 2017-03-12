@@ -12,10 +12,8 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import org.apache.http.client.fluent.Executor
 import org.apache.http.client.fluent.Request
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
@@ -238,7 +236,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private String getHtml(final String url, final Executor httpRequestExecutor) {
         log.debug('Getting: "{}"', url)
         try {
-            def content = httpRequestExecutor.execute(Request.Get(url))
+            return httpRequestExecutor.execute(Request.Get(url))
                                              .returnContent()
                                              .asString(StandardCharsets.UTF_8)
         } catch (IOException e) {
