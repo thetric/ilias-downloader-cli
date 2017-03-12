@@ -25,10 +25,18 @@ final class SyncHandlerImpl implements SyncHandler {
     private final IliasService iliasService
     private final UserPreferences preferences
 
+    private final long downloadSizeLimitInBytes
+
     SyncHandlerImpl(final Path basePath, final IliasService iliasService, final UserPreferences preferences) {
         this.basePath = basePath
         this.iliasService = iliasService
         this.preferences = preferences
+
+        this.downloadSizeLimitInBytes = preferences.maxFileSize > 0 ? toBytes(preferences) : Long.MAX_VALUE
+    }
+
+    private int toBytes(UserPreferences preferences) {
+        return preferences.maxFileSize * 1024 * 1024
     }
 
     private Path resolvePathAndCreateMissingDirs(IliasItem iliasItem) {
@@ -101,10 +109,7 @@ final class SyncHandlerImpl implements SyncHandler {
     }
 
     private boolean isUnderFileLimit(CourseFile file) {
-        if (preferences.maxFileSize > 0) {
-            return file.size < preferences.maxFileSize
-        }
-        return true
+        return file.size < downloadSizeLimitInBytes
     }
 
     private void syncAndSaveFile(Path path, CourseFile file) {
