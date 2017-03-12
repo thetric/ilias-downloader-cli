@@ -22,18 +22,18 @@ final class ExistingConfigCliController {
     UserPreferenceService preferenceService
     ConsoleService consoleService
 
-    def start() {
+    IliasService start() {
         UserPreferences prefs = preferenceService.loadUserPreferences()
         IliasService iliasService = iliasProvider.apply(prefs.iliasServerURL)
         promptForPassword(iliasService, prefs)
         return iliasService
     }
 
-    def promptForPassword(IliasService iliasService, UserPreferences prefs) {
+    private void promptForPassword(IliasService iliasService, UserPreferences prefs) {
         while (true) {
             try {
-                def passwordPrompt = resourceBundle.getString('login.credentials.password')
-                def password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
+                String passwordPrompt = resourceBundle.getString('login.credentials.password')
+                String password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
                 iliasService.login(new LoginCredentials(prefs.userName, password))
                 return
             } catch (IliasAuthenticationException authEx) {

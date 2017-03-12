@@ -50,11 +50,11 @@ final class SyncHandlerImpl implements SyncHandler {
         if (!parentItem) {
             return basePath
         }
-        def itemNamesInPath = []
+        List<String> itemNamesInPath = []
         for (IliasItem i = parentItem; i; i = i.parent) {
             itemNamesInPath << i.name
         }
-        def itemPath = basePath
+        Path itemPath = basePath
         for (String itemName : itemNamesInPath.reverse()) {
             itemPath = itemPath.resolve(sanitizeFileName(itemName))
         }
@@ -85,14 +85,12 @@ final class SyncHandlerImpl implements SyncHandler {
     @Override
     void handle(CourseFolder folder) {
         log.debug("Visiting folder '${folder.name}'")
-        // do NOT create directories for empty course folders
-        // def folderPath = resolvePathAndCreateMissingDirs(folder)
     }
 
     @Override
     void handle(CourseFile file) {
         log.debug("Visiting file ${file.name}")
-        def filePath = resolvePathAndCreateMissingDirs(file)
+        Path filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
             log.info("Downloading file $file")
             syncAndSaveFile(filePath, file)
@@ -104,7 +102,7 @@ final class SyncHandlerImpl implements SyncHandler {
     }
 
     private boolean isFileModified(Path path, CourseFile file) {
-        def lastModifiedTime = Files.getLastModifiedTime(path)
+        FileTime lastModifiedTime = Files.getLastModifiedTime(path)
         return lastModifiedTime != toFileTime(file.modified)
     }
 

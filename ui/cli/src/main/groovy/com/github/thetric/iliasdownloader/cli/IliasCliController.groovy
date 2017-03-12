@@ -29,9 +29,9 @@ final class IliasCliController {
     UserPreferenceService preferenceService
     ConsoleService consoleService
 
-    def start() {
-        def iliasService = createIliasService()
-        def prefs = preferenceService.loadUserPreferences()
+    void start() {
+        IliasService iliasService = createIliasService()
+        UserPreferences prefs = preferenceService.loadUserPreferences()
 
         updateFileSizeLimitFromCliOpts(prefs)
 
@@ -44,7 +44,7 @@ final class IliasCliController {
                 prefs.activeCourses = coursesToSync*.id.unique()
             } catch (CourseSelectionOutOfRange e) {
                 log.catching(DEBUG, e)
-                def errMsg = resourceBundle.getString('sync.courses.prompt.errors.out-of-range')
+                String errMsg = resourceBundle.getString('sync.courses.prompt.errors.out-of-range')
                 System.err.println errMsg.replace('{0}', coursesFromIlias.size() as String)
                 return
             }
@@ -67,7 +67,8 @@ final class IliasCliController {
                 prefs.maxFileSizeInMiB = cliOptions.fileSizeLimitinMiB
                 preferenceService.saveUserPreferences(prefs)
             } else {
-                throw new IllegalArgumentException("${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitinMiB")
+                def errMsg = "${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitinMiB"
+                throw new IllegalArgumentException(errMsg)
             }
         }
     }
@@ -111,10 +112,11 @@ final class IliasCliController {
         allCourses.eachWithIndex { Course course, int i ->
             println "\t${i + 1} ${course.name} (ID: ${course.id})"
         }
-        def courseIndices = consoleService.readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
-                                          .split(/\s+/)
-                                          .collect { Integer.parseInt it }
-                                          .collect { it - 1 }
+        List<Integer> courseIndices = consoleService.
+            readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
+                                                    .split(/\s+/)
+                                                    .collect { Integer.parseInt it }
+                                                    .collect { it - 1 }
         if (courseIndices.any { it < 0 || it > allCourses.size() }) {
             throw new CourseSelectionOutOfRange()
         }

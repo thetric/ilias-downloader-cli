@@ -26,14 +26,14 @@ final class Cli {
     static void main(String[] args) {
         try {
             ResourceBundle resourceBundle = ResourceBundle.getBundle('ilias-cli')
-            new Cli(resourceBundle).parseAndHandleOpts args
+            new Cli(resourceBundle).parseAndHandleOpts(args)
         } catch (InvalidUsageException ue) {
             log.catching(TRACE, ue)
         }
     }
 
-    def parseAndHandleOpts(String[] args) {
-        def cliBuilder = createCliBuilder()
+    private void parseAndHandleOpts(String[] args) {
+        CliBuilder cliBuilder = createCliBuilder()
         final opts = cliBuilder.parse(args)
         if (opts) {
             handleOptsReal(cliBuilder.parse(args))
@@ -42,7 +42,7 @@ final class Cli {
         }
     }
 
-    def createCliBuilder() {
+    private CliBuilder createCliBuilder() {
         final cliBuilder = new CliBuilder()
         cliBuilder.header = 'Ilias Downloader (CLI)'
         cliBuilder.d(
@@ -65,9 +65,9 @@ final class Cli {
         return cliBuilder
     }
 
-    def handleOptsReal(OptionAccessor options) {
-        def size = options.s == false ? null : options.s as Long
-        def cliOptions = new CliOptions(
+    private void handleOptsReal(OptionAccessor options) {
+        long size = options.s == false ? null : options.s as Long
+        CliOptions cliOptions = new CliOptions(
             syncDir: Paths.get(options.d as String),
             showCourseSelection: options.c as boolean,
             fileSizeLimitinMiB: size,

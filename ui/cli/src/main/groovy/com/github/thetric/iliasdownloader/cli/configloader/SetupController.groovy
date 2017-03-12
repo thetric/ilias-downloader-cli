@@ -20,9 +20,9 @@ class SetupController {
     UserPreferenceService preferenceService
     ConsoleService consoleService
 
-    private UserPreferences prefs = new UserPreferences()
+    private final UserPreferences prefs = new UserPreferences()
 
-    def startSetup() {
+    IliasService startSetup() {
         IliasService iliasService = createIliasService()
         log.info('Connected!')
         login(iliasService)
@@ -53,10 +53,10 @@ class SetupController {
         log.info('Prompting for credentials')
 
         try {
-            String usernamePrompt = "${resourceBundle.getString('login.credentials.username')}: "
-            def username = consoleService.readLine('ilias.credentials.username', usernamePrompt)
+            String usernamePrompt = resourceBundle.getString('login.credentials.username')
+            String username = consoleService.readLine('ilias.credentials.username', usernamePrompt)
             String passwordPrompt = resourceBundle.getString('login.credentials.password')
-            def password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
+            String password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
 
             iliasService.login(new LoginCredentials(username, password))
             prefs.userName = username

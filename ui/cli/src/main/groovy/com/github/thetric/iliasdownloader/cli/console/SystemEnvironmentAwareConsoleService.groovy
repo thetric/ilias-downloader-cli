@@ -13,13 +13,13 @@ import groovy.util.logging.Log4j2
 final class SystemEnvironmentAwareConsoleService implements ConsoleService {
     @Override
     String readLine(String systemProp, String prompt) {
-        def property = System.getProperty(systemProp)
+        String property = System.getProperty(systemProp)
         if (property) {
             return property
         }
 
         print "$prompt: "
-        def scanner = new Scanner(System.in)
+        Scanner scanner = new Scanner(System.in)
         return scanner.nextLine()
     }
 
@@ -34,7 +34,7 @@ final class SystemEnvironmentAwareConsoleService implements ConsoleService {
      */
     @Override
     String readPassword(String systemProp, String prompt) {
-        def credentials = System.getProperty(systemProp)
+        String credentials = System.getProperty(systemProp)
         if (credentials) {
             return credentials
         }
@@ -45,7 +45,7 @@ final class SystemEnvironmentAwareConsoleService implements ConsoleService {
         }
         log.warn('Password input in IDEs are _not_ supported')
         log.warn('FALLING BACK TO PLAIN TEXT MODE')
-        def s = new Scanner(System.in)
+        Scanner s = new Scanner(System.in)
         return s.nextLine()
     }
 }
