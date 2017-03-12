@@ -4,8 +4,6 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 interface IliasItem {
-    int getId()
-
     String getName()
 
     String getUrl()

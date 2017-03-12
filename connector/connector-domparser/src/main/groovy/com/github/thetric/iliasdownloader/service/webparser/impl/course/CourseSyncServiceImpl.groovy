@@ -69,7 +69,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         int courseId = getCourseId(courseElement)
         String courseName = courseElement.text()
         String courseUrl = "${courseWebDavPrefix}$courseId/"
-        return new Course(courseId, courseName, courseUrl)
+        return new Course(id: courseId, name: courseName, url: courseUrl)
     }
 
     private int getCourseId(Element aTag) {
@@ -179,10 +179,14 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         final int firstPosSeparator = itemRow.indexOf(ROW_SEPARATOR)
         final int secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length())
         def parsedLink = parseLink(itemRow, secondPosSeparator)
-        return new CourseFolder(2, parsedLink.group('name'), resolveItemLink(parent, parsedLink), parent)
+        return new CourseFolder(
+            name: parsedLink.group('name'),
+            url: resolveItemLink(parent, parsedLink),
+            parent: parent
+        )
     }
 
-    private GString resolveItemLink(IliasItem parent, Matcher parsedLink) {
+    private String resolveItemLink(final IliasItem parent, final Matcher parsedLink) {
         return "${parent.url}/${parsedLink.group('url')}"
     }
 
@@ -191,11 +195,13 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         final int secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length())
 
         def parsedLinkName = parseLink(itemRow, secondPosSeparator)
-        def lastModified = parseLastModified(itemRow, firstPosSeparator, secondPosSeparator)
-        def fileSize = parseFileSize(itemRow, firstPosSeparator)
-        def name = parsedLinkName.group('name')
-        def url = resolveItemLink(parent, parsedLinkName)
-        return new CourseFile(1, name, url, parent, lastModified, fileSize)
+        return new CourseFile(
+            name: parsedLinkName.group('name'),
+            url: resolveItemLink(parent, parsedLinkName),
+            parent: parent,
+            modified: parseLastModified(itemRow, firstPosSeparator, secondPosSeparator),
+            size: parseFileSize(itemRow, firstPosSeparator)
+        )
     }
 
     private long parseFileSize(final String itemRow, final int firstPosSeparator) {
@@ -237,8 +243,8 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         log.debug('Getting: "{}"', url)
         try {
             return httpRequestExecutor.execute(Request.Get(url))
-                                             .returnContent()
-                                             .asString(StandardCharsets.UTF_8)
+                                      .returnContent()
+                                      .asString(StandardCharsets.UTF_8)
         } catch (IOException e) {
             log.error("Could not GET: $url", e)
             throw exceptionTranslator.translate(e)
