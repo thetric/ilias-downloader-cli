@@ -4,7 +4,6 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 class IliasException extends RuntimeException {
-
     private static final long serialVersionUID = 168546164616546L
 
     IliasException(String message) {
