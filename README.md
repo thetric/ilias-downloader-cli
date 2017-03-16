@@ -5,13 +5,22 @@
 The Ilias Downloader enables you to easily download the files from your Ilias account.
 The first release will provide a simple CLI, the second a JavaFX UI.
 
+## Usage
+
+### CLI
+
+```
+# required
+ -d,--dir <Directory>   Directory for the sync (required)
+
+# optional
+ -c,--select-courses    show dialog to select courses to sync
+ -s,--max-size <arg>    size limit in MiB per file download (exclusive)
+```
 
 ## Getting started
 
 ### Building from source
-As the application has not hit an `1.0` release I won't publish executable JARs.
-So if you are curious about the app you have to built it yourself.
-
 
 In order to build the application you need the latest Java Development Kit (JDK 8) installed.
 It might be possible to build it with earlier versions but I do _not_ recommended it.
