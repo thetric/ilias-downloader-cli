@@ -37,3 +37,20 @@ gradlew build
 ```
 
 This will download all necessary tools and libraries and create an executable jar at `ui/cli/build/libs/ilias-downloader-cli-[VERSION].jar`.
+
+
+## Library usage
+
+The Ilias connector may be used as a library.
+You can get the artifacts from [JitPack.io](https://jitpack.io/#thetric/ilias-downloader) by selecting a release (click on the 'Get it' button) and a subproject (`ilias-downloader-connector-[impl]`).
+
+
+The core classes are in the `connector/connector-api` module:
+
+* `com.github.thetric.iliasdownloader.service.IliasServiceProvider`: factory interface for the `IliasService`, implemented by the implementations
+* `com.github.thetric.iliasdownloader.service.IliasService`: provides access to the Ilias
+
+### Implementations
+
+#### `connector-domparser`
+* service provider: `com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider`
