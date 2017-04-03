@@ -57,6 +57,9 @@ final class IliasCliController {
         println ">>> Syncing ${coursesToSync.size()} courses:"
         print coursesToSync.collect { "  > ${it.name}" }.join('\n')
 
+        prefs.activeCourses = coursesToSync*.id
+        preferenceService.saveUserPreferences(prefs)
+
         executeSync(iliasService, coursesToSync, prefs)
     }
 
