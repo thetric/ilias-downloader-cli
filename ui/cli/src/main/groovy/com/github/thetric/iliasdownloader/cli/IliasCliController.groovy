@@ -64,13 +64,13 @@ final class IliasCliController {
     }
 
     private void updateFileSizeLimitFromCliOpts(UserPreferences prefs) {
-        if (cliOptions.fileSizeLimitinMiB != null) {
+        if (cliOptions.fileSizeLimitInMiB != null) {
             // limit = 0 -> unlimited
-            if (cliOptions.fileSizeLimitinMiB >= 0) {
-                prefs.maxFileSizeInMiB = cliOptions.fileSizeLimitinMiB
+            if (cliOptions.fileSizeLimitInMiB >= 0) {
+                prefs.maxFileSizeInMiB = cliOptions.fileSizeLimitInMiB
                 preferenceService.saveUserPreferences(prefs)
             } else {
-                def errMsg = "${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitinMiB"
+                def errMsg = "${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitInMiB"
                 throw new IllegalArgumentException(errMsg)
             }
         }

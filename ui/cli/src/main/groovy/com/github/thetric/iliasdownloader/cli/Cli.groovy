@@ -70,7 +70,7 @@ final class Cli {
         CliOptions cliOptions = new CliOptions(
             syncDir: Paths.get(options.d as String),
             showCourseSelection: options.c as boolean,
-            fileSizeLimitinMiB: size,
+            fileSizeLimitInMiB: size,
         )
         Path settingsPath = cliOptions.syncDir.resolve('.ilias-downloader.json')
         UserPreferenceService preferenceService = new JsonUserPreferenceService(settingsPath)
