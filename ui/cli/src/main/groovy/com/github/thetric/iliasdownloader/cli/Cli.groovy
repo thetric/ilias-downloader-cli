@@ -66,7 +66,7 @@ final class Cli {
     }
 
     private void handleOptsReal(OptionAccessor options) {
-        long size = options.s == false ? 0 : options.s as Long
+        Long size = options.s == false ? null : options.s as Long
         CliOptions cliOptions = new CliOptions(
             syncDir: Paths.get(options.d as String),
             showCourseSelection: options.c as boolean,
