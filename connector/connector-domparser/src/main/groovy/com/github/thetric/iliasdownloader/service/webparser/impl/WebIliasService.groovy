@@ -15,14 +15,12 @@ import org.apache.http.client.fluent.Form
 import org.apache.http.client.fluent.Request
 import org.apache.http.impl.client.BasicCookieStore
 
-import java.util.function.Supplier
-
 @Log4j2
 @CompileStatic
 final class WebIliasService implements IliasService {
     private final WebIoExceptionTranslator exceptionTranslator
     private final FluentHcExecutorFactory fluentHcExecutorProvider
-    private final Supplier<? extends CourseSyncService> courseSyncServiceSupplier
+    private final CourseSyncService courseSyncService
 
     private final String iliasBaseUrl
     private final String loginPage
@@ -37,7 +35,7 @@ final class WebIliasService implements IliasService {
         WebIoExceptionTranslator exceptionTranslator,
         String iliasBaseUrl, String clientId,
         FluentHcExecutorFactory fluentHcExecutorProvider,
-        Supplier<? extends CourseSyncService> courseSyncServiceSupplier) {
+        CourseSyncService courseSyncService) {
         this.exceptionTranslator = exceptionTranslator
         this.iliasBaseUrl = iliasBaseUrl
         this.clientId = clientId
@@ -47,7 +45,7 @@ final class WebIliasService implements IliasService {
         this.fluentHcExecutorProvider = fluentHcExecutorProvider
         cookieStore = new BasicCookieStore()
 
-        this.courseSyncServiceSupplier = courseSyncServiceSupplier
+        this.courseSyncService = courseSyncService
     }
 
     @Override
@@ -98,8 +96,6 @@ final class WebIliasService implements IliasService {
         }
         log.info('Logout at {} succeeded', logoutPage)
     }
-
-    private CourseSyncService getCourseSyncService() { courseSyncServiceSupplier.get() }
 
     private Executor connectWithSessionCookies() {
         return fluentHcExecutorProvider.createFluentHcExecutor(cookieStore)

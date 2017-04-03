@@ -15,8 +15,6 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.F
 import groovy.transform.CompileStatic
 import org.jsoup.Jsoup
 
-import java.util.function.Supplier
-
 import static org.jsoup.Connection.Response
 
 @CompileStatic
@@ -67,13 +65,11 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
         WebIoExceptionTranslator webIoExceptionTranslator = new WebIoExceptionTranslatorImpl()
         JSoupParserService jSoupParserService = new JSoupParserServiceImpl()
         FluentHcExecutorFactory fluentHcExecutorProvider = new FluentHcExecutorFactoryImpl()
-        Supplier<? extends CourseSyncService> courseSyncServiceProvider = {
-            new CourseSyncServiceImpl(
+        CourseSyncService courseSyncServiceProvider = new CourseSyncServiceImpl(
                 webIoExceptionTranslator,
                 jSoupParserService,
                 iliasBaseUrl,
                 clientId)
-        }
         return new WebIliasService(
             webIoExceptionTranslator,
             iliasBaseUrl, clientId,
