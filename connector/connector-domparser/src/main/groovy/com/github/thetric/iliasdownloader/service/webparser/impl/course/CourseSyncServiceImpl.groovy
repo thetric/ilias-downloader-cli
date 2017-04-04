@@ -226,7 +226,6 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return LocalDateTime.parse(lastModifiedString, LAST_MODIFIED_FORMATTER)
     }
 
-    @Deprecated
     private Document connectAndGetDocument(final String url, final Executor httpRequestExecutor) {
         log.debug('Getting: "{}"', url)
         try {
