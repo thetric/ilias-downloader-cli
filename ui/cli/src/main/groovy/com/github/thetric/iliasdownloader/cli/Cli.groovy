@@ -3,6 +3,8 @@ package com.github.thetric.iliasdownloader.cli
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.cli.console.SystemEnvironmentAwareConsoleService
 import com.github.thetric.iliasdownloader.service.IliasService
+import com.github.thetric.iliasdownloader.service.webparser.CookieService
+import com.github.thetric.iliasdownloader.service.webparser.JsoupCookieService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
 import com.github.thetric.iliasdownloader.ui.common.prefs.JsonUserPreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
@@ -39,8 +41,9 @@ final class Cli {
         Path settingsPath = cliOptions.syncDir.resolve(SETTINGS_FILE_NAME)
         UserPreferenceService preferenceService = new JsonUserPreferenceService(settingsPath)
         final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
+        final CookieService cookieService = new JsoupCookieService()
         Function<String, IliasService> webIliasServiceProvider = { String url ->
-            new WebParserIliasServiceProvider(url).newInstance()
+            new WebParserIliasServiceProvider(cookieService, url).newInstance()
         }
 
         new IliasCliController(cliOptions, webIliasServiceProvider, resourceBundle, preferenceService, consoleService).

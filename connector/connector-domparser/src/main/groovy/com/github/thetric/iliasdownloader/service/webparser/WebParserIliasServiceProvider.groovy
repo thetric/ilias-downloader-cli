@@ -13,26 +13,26 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExcep
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorFactory
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorFactoryImpl
 import groovy.transform.CompileStatic
-import org.jsoup.Jsoup
-
-import static org.jsoup.Connection.Response
 
 @CompileStatic
 final class WebParserIliasServiceProvider implements IliasServiceProvider {
     private static final String LOGIN_PAGE_NAME = 'login.php'
     private static final String ILIAS_CLIENT_ID_COOKIE_NAME = 'ilClientId'
 
+    private final CookieService cookieService
+
     private final String iliasBaseUrl
     private final String clientId
 
-    WebParserIliasServiceProvider(String loginPage) throws IOException {
+    WebParserIliasServiceProvider(CookieService cookieService, String loginPage) throws IOException {
+        this.cookieService = cookieService
         iliasBaseUrl = getBaseUrl(loginPage)
         clientId = getClientId(loginPage)
     }
 
     private String getBaseUrl(String loginPage) {
-        String trimmed = loginPage.trim()
-        if (trimmed.empty) {
+        String trimmed = loginPage?.trim()
+        if (!trimmed) {
             throw new IllegalArgumentException('Die angegebene Loginseiten URL darf nicht leer sein')
         }
         if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
@@ -46,18 +46,16 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
     }
 
     private String getClientId(String loginPage) throws IOException {
-        String id
+        final String id
         try {
-            Response response = Jsoup.connect(loginPage).execute()
-            id = response.cookie(ILIAS_CLIENT_ID_COOKIE_NAME)
+            id = cookieService.getCookieFromUrl(loginPage, ILIAS_CLIENT_ID_COOKIE_NAME)
         } catch (IOException e) {
             throw new IOException("Konnte die URL '$loginPage' nicht erreichen", e)
         }
-        return Optional.ofNullable(id).orElseThrow {
-            new NoCookiesAvailableException(
-                "Konnte das Cookie '${WebParserIliasServiceProvider.ILIAS_CLIENT_ID_COOKIE_NAME}' nicht in der Response " +
-                    "von der Seite $loginPage finden")
-        }
+        return Optional.ofNullable(id).orElseThrow({
+            throw new NoCookiesAvailableException("Konnte das Cookie '" + ILIAS_CLIENT_ID_COOKIE_NAME +
+                "' nicht in der Response von der Seite $loginPage finden")
+        })
     }
 
     @Override
