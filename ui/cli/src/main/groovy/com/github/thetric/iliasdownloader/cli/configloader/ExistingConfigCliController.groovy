@@ -30,15 +30,13 @@ final class ExistingConfigCliController {
     }
 
     private void promptForPassword(IliasService iliasService, UserPreferences prefs) {
-        while (true) {
-            try {
-                String passwordPrompt = resourceBundle.getString('login.credentials.password')
-                String password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
-                iliasService.login(new LoginCredentials(prefs.userName, password))
-                return
-            } catch (IliasAuthenticationException authEx) {
-                log.catching(Level.DEBUG, authEx)
-            }
+        try {
+            String passwordPrompt = resourceBundle.getString('login.credentials.password')
+            String namePwPrompt = String.format(passwordPrompt, prefs.userName)
+            String password = consoleService.readPassword('ilias.credentials.password', namePwPrompt)
+            iliasService.login(new LoginCredentials(prefs.userName, password))
+        } catch (IliasAuthenticationException authEx) {
+            log.catching(Level.DEBUG, authEx)
         }
     }
 }

@@ -33,16 +33,10 @@ class SetupController {
     }
 
     private IliasService createIliasServiceFromUserUrl() {
-        while (true) {
-            String serverUrl = promptForServerUrl()
-            try {
-                IliasService iliasService = iliasProvider.apply(serverUrl)
-                prefs.iliasServerURL = serverUrl
-                return iliasService
-            } catch (RuntimeException e) {
-                log.catching(e)
-            }
-        }
+        String serverUrl = promptForServerUrl()
+        IliasService iliasService = iliasProvider.apply(serverUrl)
+        prefs.iliasServerURL = serverUrl
+        return iliasService
     }
 
     private promptForServerUrl() {
@@ -56,7 +50,8 @@ class SetupController {
             String usernamePrompt = resourceBundle.getString('login.credentials.username')
             String username = consoleService.readLine('ilias.credentials.username', usernamePrompt)
             String passwordPrompt = resourceBundle.getString('login.credentials.password')
-            String password = consoleService.readPassword('ilias.credentials.password', passwordPrompt)
+            String namePwPrompt = String.format(passwordPrompt, prefs.userName)
+            String password = consoleService.readPassword('ilias.credentials.password', namePwPrompt)
 
             iliasService.login(new LoginCredentials(username, password))
             prefs.userName = username
