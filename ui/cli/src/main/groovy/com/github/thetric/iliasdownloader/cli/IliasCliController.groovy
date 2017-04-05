@@ -4,7 +4,6 @@ import com.github.thetric.iliasdownloader.cli.configloader.ExistingConfigCliCont
 import com.github.thetric.iliasdownloader.cli.configloader.SetupController
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.cli.sync.SyncHandler
-import com.github.thetric.iliasdownloader.cli.sync.SyncHandlerImpl
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.IliasItem
@@ -14,7 +13,8 @@ import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
 
 import java.nio.file.NoSuchFileException
-import java.util.function.Function
+import java.util.function.BiFunction
+import java.util.function.Supplier
 
 import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.CONTINUE
 import static org.apache.logging.log4j.Level.DEBUG
@@ -24,7 +24,10 @@ import static org.apache.logging.log4j.Level.DEBUG
 final class IliasCliController {
     CliOptions cliOptions
 
-    Function<String, IliasService> iliasProvider
+    Supplier<ExistingConfigCliController> existingConfigCliCtrlProvider
+    Supplier<SetupController> setupCtrlProvider
+    BiFunction<IliasService, UserPreferences, ? extends SyncHandler> syncHandlerProvider
+
     ResourceBundle resourceBundle
     UserPreferenceService preferenceService
     ConsoleService consoleService
@@ -79,26 +82,18 @@ final class IliasCliController {
     private IliasService createIliasService() {
         try {
             log.debug('check for existing config in {}', cliOptions.syncDir.toAbsolutePath())
-            return new ExistingConfigCliController(
-                iliasProvider,
-                resourceBundle,
-                preferenceService,
-                consoleService).start()
+            return existingConfigCliCtrlProvider.get().start()
         } catch (NoSuchFileException settingsNotFoundEx) {
             log.warn('no config found in {}', cliOptions.syncDir.toAbsolutePath())
             log.catching(DEBUG, settingsNotFoundEx)
-            return new SetupController(
-                iliasProvider,
-                resourceBundle,
-                preferenceService,
-                consoleService).startSetup()
+            return setupCtrlProvider.get().startSetup()
         }
     }
 
     private void executeSync(IliasService iliasService, Collection<Course> coursesToSync, UserPreferences prefs) {
         println ''
         println ">>> ${resourceBundle.getString('sync.started')}"
-        SyncHandler syncHandler = new SyncHandlerImpl(cliOptions.syncDir, iliasService, prefs)
+        SyncHandler syncHandler = syncHandlerProvider.apply(iliasService, prefs)
         for (Course course : coursesToSync) {
             iliasService.visit(course, { IliasItem iliasItem ->
                 syncHandler.handle(iliasItem)
