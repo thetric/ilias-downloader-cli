@@ -26,7 +26,6 @@ class SetupController {
         IliasService iliasService = createIliasServiceFromUserUrl()
         log.info('Connected!')
         login(iliasService)
-        log.info(resourceBundle.getString('login.successful'))
         preferenceService.saveUserPreferences(prefs)
 
         return iliasService
@@ -54,6 +53,8 @@ class SetupController {
             String password = consoleService.readPassword('ilias.credentials.password', namePwPrompt)
 
             iliasService.login(new LoginCredentials(username, password))
+            log.info(resourceBundle.getString('login.successful'))
+
             prefs.userName = username
             preferenceService.saveUserPreferences(prefs)
         } catch (IliasAuthenticationException authEx) {
