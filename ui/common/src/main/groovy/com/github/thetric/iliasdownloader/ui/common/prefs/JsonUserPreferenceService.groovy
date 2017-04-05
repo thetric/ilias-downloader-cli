@@ -17,10 +17,7 @@ final class JsonUserPreferenceService implements UserPreferenceService {
 
     @Override
     UserPreferences loadUserPreferences() throws IOException {
-        return settingsFile.withInputStream {
-            def a = new UserPreferences(jsonSlurper.parse(it) as Map)
-            return a
-        } as UserPreferences
+        return settingsFile.withInputStream { new UserPreferences(jsonSlurper.parse(it) as Map) } as UserPreferences
     }
 
     @Override
