@@ -106,21 +106,31 @@ final class IliasCliController {
         println ">>> ${resourceBundle.getString('sync.finished')}"
     }
 
+    /**
+     * Prompts the user to select the positions of the {@link Course}s to sync. If the input is empty (default) all
+     * courses are selected. Otherwise the space separated positions (1 based) are taken from the {@code allCourses} argument.
+     * @param allCourses {@link Course}s to select from
+     * @return the {@link Course}s to sync
+     */
     private Collection<Course> showAndSaveCourseSelection(Collection<Course> allCourses) {
         println ''
         println ">>> ${resourceBundle.getString('sync.courses.available')}"
         allCourses.eachWithIndex { Course course, int i ->
             println "\t${i + 1} ${course.name} (ID: ${course.id})"
         }
-        List<Integer> courseIndices = consoleService.
-            readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
-                                                    .split(/\s+/)
-                                                    .collect { Integer.parseInt it }
-                                                    .collect { it - 1 }
-        if (courseIndices.any { it < 0 || it > allCourses.size() }) {
-            throw new CourseSelectionOutOfRange()
+        def courseSelection = consoleService.readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
+        final trimmedSelection = courseSelection.trim()
+        if (!trimmedSelection) {
+            return allCourses
+        } else {
+            List<Integer> courseIndices = courseSelection.split(/\s+/)
+                                                         .collect { Integer.parseInt it }
+                                                         .collect { it - 1 }
+            if (courseIndices.any { it < 0 || it > allCourses.size() }) {
+                throw new CourseSelectionOutOfRange()
+            }
+            return courseIndices.collect { allCourses[it] }
         }
-        return courseIndices.collect { allCourses[it] }
     }
 
     private static final class CourseSelectionOutOfRange extends RuntimeException {
