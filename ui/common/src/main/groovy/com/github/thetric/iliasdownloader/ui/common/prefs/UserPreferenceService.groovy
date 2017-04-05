@@ -2,6 +2,8 @@ package com.github.thetric.iliasdownloader.ui.common.prefs
 
 import groovy.transform.CompileStatic
 
+import java.nio.file.Path
+
 /**
  * Saves and loads {@link UserPreferenceService}s.
  */
@@ -21,4 +23,6 @@ interface UserPreferenceService {
      * @throws IOException
      */
     void saveUserPreferences(UserPreferences userPreferences) throws IOException
+
+    Path getSettingsFile()
 }
