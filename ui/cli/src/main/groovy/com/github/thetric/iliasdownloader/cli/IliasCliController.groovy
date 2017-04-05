@@ -1,7 +1,5 @@
 package com.github.thetric.iliasdownloader.cli
 
-import com.github.thetric.iliasdownloader.cli.configloader.ExistingConfigCliController
-import com.github.thetric.iliasdownloader.cli.configloader.SetupController
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.cli.sync.SyncHandler
 import com.github.thetric.iliasdownloader.service.IliasService
@@ -9,31 +7,40 @@ import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.IliasItem
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
-import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
 
-import java.nio.file.NoSuchFileException
 import java.util.function.BiFunction
-import java.util.function.Supplier
 
 import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.CONTINUE
 import static org.apache.logging.log4j.Level.DEBUG
 
 @Log4j2
-@TupleConstructor
 final class IliasCliController {
-    CliOptions cliOptions
+    private final CliOptions cliOptions
 
-    Supplier<ExistingConfigCliController> existingConfigCliCtrlProvider
-    Supplier<SetupController> setupCtrlProvider
-    BiFunction<IliasService, UserPreferences, ? extends SyncHandler> syncHandlerProvider
+    private final IliasService iliasService
 
-    ResourceBundle resourceBundle
-    UserPreferenceService preferenceService
-    ConsoleService consoleService
+    private final BiFunction<IliasService, UserPreferences, ? extends SyncHandler> syncHandlerProvider
+
+    private final ResourceBundle resourceBundle
+    private final UserPreferenceService preferenceService
+    private final ConsoleService consoleService
+
+    IliasCliController(
+        final CliOptions cliOptions,
+        final IliasService iliasService,
+        final BiFunction<IliasService, UserPreferences, ? extends SyncHandler> syncHandlerProvider,
+        final ResourceBundle resourceBundle,
+        final UserPreferenceService preferenceService, final ConsoleService consoleService) {
+        this.cliOptions = cliOptions
+        this.iliasService = iliasService
+        this.syncHandlerProvider = syncHandlerProvider
+        this.resourceBundle = resourceBundle
+        this.preferenceService = preferenceService
+        this.consoleService = consoleService
+    }
 
     void start() {
-        IliasService iliasService = createIliasService()
         UserPreferences prefs = preferenceService.loadUserPreferences()
 
         updateFileSizeLimitFromCliOpts(prefs)
@@ -78,17 +85,6 @@ final class IliasCliController {
                 def errMsg = "${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitInMiB"
                 throw new IllegalArgumentException(errMsg)
             }
-        }
-    }
-
-    private IliasService createIliasService() {
-        try {
-            log.debug('check for existing config in {}', cliOptions.syncDir.toAbsolutePath())
-            return existingConfigCliCtrlProvider.get().createIliasService()
-        } catch (NoSuchFileException settingsNotFoundEx) {
-            log.warn('no config found in {}', cliOptions.syncDir.toAbsolutePath())
-            log.catching(DEBUG, settingsNotFoundEx)
-            return setupCtrlProvider.get().createIliasService()
         }
     }
 

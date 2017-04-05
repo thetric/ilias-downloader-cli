@@ -1,7 +1,5 @@
 package com.github.thetric.iliasdownloader.cli
 
-import com.github.thetric.iliasdownloader.cli.configloader.ExistingConfigCliController
-import com.github.thetric.iliasdownloader.cli.configloader.SetupController
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.cli.console.SystemEnvironmentAwareConsoleService
 import com.github.thetric.iliasdownloader.cli.sync.SyncHandler
@@ -20,7 +18,6 @@ import groovy.util.logging.Log4j2
 import java.nio.file.Path
 import java.util.function.BiFunction
 import java.util.function.Function
-import java.util.function.Supplier
 
 import static org.apache.logging.log4j.Level.TRACE
 
@@ -52,29 +49,22 @@ final class Cli {
         Function<String, IliasService> iliasProvider = { String url ->
             new WebParserIliasServiceProvider(cookieService, url).newInstance()
         }
-        final Supplier<ExistingConfigCliController> existingConfigCliProvider = {
-            return new ExistingConfigCliController(
-                iliasProvider,
-                resourceBundle,
-                preferenceService,
-                consoleService)
-        }
-        final Supplier<SetupController> setupCtrlProvider = {
-            return new SetupController(
-                iliasProvider,
-                resourceBundle,
-                preferenceService,
-                consoleService)
-        }
+        final LoginService loginService = new LoginServiceImpl(
+            iliasProvider,
+            resourceBundle,
+            preferenceService,
+            consoleService)
+
         final BiFunction<IliasService, UserPreferences, ? extends SyncHandler> syncHandlerProvider = {
             IliasService iliasService, UserPreferences prefs ->
                 return new SyncHandlerImpl(cliOptions.syncDir, iliasService, prefs)
         }
 
+        final IliasService iliasService = loginService.connect()
+
         new IliasCliController(
             cliOptions,
-            existingConfigCliProvider,
-            setupCtrlProvider,
+            iliasService,
             syncHandlerProvider,
             resourceBundle,
             preferenceService,
