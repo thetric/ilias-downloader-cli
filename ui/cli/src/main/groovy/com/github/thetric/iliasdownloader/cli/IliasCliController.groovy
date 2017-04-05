@@ -44,7 +44,6 @@ final class IliasCliController {
         if (cliOptions.showCourseSelection) {
             try {
                 coursesToSync = showAndSaveCourseSelection(coursesFromIlias)
-                prefs.activeCourses = coursesToSync*.id.unique()
             } catch (CourseSelectionOutOfRange e) {
                 log.catching(DEBUG, e)
                 String errMsg = resourceBundle.getString('sync.courses.prompt.errors.out-of-range')
@@ -55,12 +54,13 @@ final class IliasCliController {
             println ''
             coursesToSync = coursesFromIlias.findAll { prefs.activeCourses.contains(it.id) }
         }
+        // update ids - some might not exist anymore
+        prefs.activeCourses = coursesToSync*.id.unique()
 
         println ''
         println ">>> Syncing ${coursesToSync.size()} courses:"
         print coursesToSync.collect { "  > ${it.name}" }.join('\n')
 
-        prefs.activeCourses = coursesToSync*.id
         preferenceService.saveUserPreferences(prefs)
 
         executeSync(iliasService, coursesToSync, prefs)
