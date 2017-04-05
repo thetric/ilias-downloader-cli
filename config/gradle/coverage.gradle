@@ -1,15 +1,5 @@
-apply plugin: 'jacoco'
+apply plugin: 'net.saliman.cobertura'
 
-jacoco {
-    toolVersion = '0.7.9'
+cobertura {
+    coverageExcludes = ['.*\\$.*']
 }
-
-jacocoTestReport {
-    reports {
-        xml.enabled = false
-        csv.enabled = false
-        html.enabled = true
-    }
-}
-
-check.dependsOn jacocoTestReport

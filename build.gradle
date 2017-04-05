@@ -8,6 +8,9 @@ buildscript {
     repositories {
         jcenter()
     }
+    dependencies {
+        classpath 'net.saliman:gradle-cobertura-plugin:2.4.0'
+    }
 }
 
 subprojects {
@@ -28,6 +31,8 @@ subprojects {
 
         // test
         testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-4'
+        testCompile 'net.bytebuddy:byte-buddy:1.6.12'
+        testRuntime 'org.slf4j:slf4j-api:1.7.25'
     }
 
     apply from: rootProject.file('config/gradle/coverage.gradle')
