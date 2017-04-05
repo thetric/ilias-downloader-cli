@@ -56,14 +56,16 @@ final class IliasCliController {
         }
         // update ids - some might not exist anymore
         prefs.activeCourses = coursesToSync*.id.unique()
+        preferenceService.saveUserPreferences(prefs)
 
+        printSelectedCourses(coursesToSync)
+        executeSync(iliasService, coursesToSync, prefs)
+    }
+
+    private void printSelectedCourses(Collection<Course> coursesToSync) {
         println ''
         println ">>> Syncing ${coursesToSync.size()} courses:"
         print coursesToSync.collect { "  > ${it.name}" }.join('\n')
-
-        preferenceService.saveUserPreferences(prefs)
-
-        executeSync(iliasService, coursesToSync, prefs)
     }
 
     private void updateFileSizeLimitFromCliOpts(UserPreferences prefs) {
