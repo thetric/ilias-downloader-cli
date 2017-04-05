@@ -42,7 +42,7 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
         if (loginPageNameIndex == -1) {
             throw new IllegalArgumentException("Die angegebene URL enthält kein '$LOGIN_PAGE_NAME'")
         }
-        return loginPage[0..loginPageNameIndex - 1]
+        return trimmed[0..loginPageNameIndex - 1]
     }
 
     private String retrieveClientId(String loginPage) throws IOException {
