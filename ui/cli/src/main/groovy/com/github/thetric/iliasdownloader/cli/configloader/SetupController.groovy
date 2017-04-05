@@ -22,8 +22,8 @@ class SetupController {
 
     private final UserPreferences prefs = new UserPreferences()
 
-    IliasService startSetup() {
-        IliasService iliasService = createIliasService()
+    IliasService createIliasService() {
+        IliasService iliasService = createIliasServiceFromUserUrl()
         log.info('Connected!')
         login(iliasService)
         log.info(resourceBundle.getString('login.successful'))
@@ -32,7 +32,7 @@ class SetupController {
         return iliasService
     }
 
-    private IliasService createIliasService() {
+    private IliasService createIliasServiceFromUserUrl() {
         while (true) {
             String serverUrl = promptForServerUrl()
             try {

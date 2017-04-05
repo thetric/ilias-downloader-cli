@@ -22,7 +22,7 @@ final class ExistingConfigCliController {
     UserPreferenceService preferenceService
     ConsoleService consoleService
 
-    IliasService start() {
+    IliasService createIliasService() {
         UserPreferences prefs = preferenceService.loadUserPreferences()
         IliasService iliasService = iliasProvider.apply(prefs.iliasServerURL)
         promptForPassword(iliasService, prefs)

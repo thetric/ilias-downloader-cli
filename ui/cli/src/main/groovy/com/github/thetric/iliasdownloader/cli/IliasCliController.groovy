@@ -84,11 +84,11 @@ final class IliasCliController {
     private IliasService createIliasService() {
         try {
             log.debug('check for existing config in {}', cliOptions.syncDir.toAbsolutePath())
-            return existingConfigCliCtrlProvider.get().start()
+            return existingConfigCliCtrlProvider.get().createIliasService()
         } catch (NoSuchFileException settingsNotFoundEx) {
             log.warn('no config found in {}', cliOptions.syncDir.toAbsolutePath())
             log.catching(DEBUG, settingsNotFoundEx)
-            return setupCtrlProvider.get().startSetup()
+            return setupCtrlProvider.get().createIliasService()
         }
     }
 
