@@ -21,16 +21,16 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
 
     private final CookieService cookieService
 
-    private final String iliasBaseUrl
-    private final String clientId
+    final String iliasBaseUrl
+    final String clientId
 
     WebParserIliasServiceProvider(CookieService cookieService, String loginPage) throws IOException {
         this.cookieService = cookieService
-        iliasBaseUrl = getBaseUrl(loginPage)
-        clientId = getClientId(loginPage)
+        iliasBaseUrl = retrieveBaseUrl(loginPage)
+        clientId = retrieveClientId(loginPage)
     }
 
-    private String getBaseUrl(String loginPage) {
+    private String retrieveBaseUrl(String loginPage) {
         String trimmed = loginPage?.trim()
         if (!trimmed) {
             throw new IllegalArgumentException('Die angegebene Loginseiten URL darf nicht leer sein')
@@ -45,7 +45,7 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
         return loginPage[0..loginPageNameIndex - 1]
     }
 
-    private String getClientId(String loginPage) throws IOException {
+    private String retrieveClientId(String loginPage) throws IOException {
         final String id
         try {
             id = cookieService.getCookieFromUrl(loginPage, ILIAS_CLIENT_ID_COOKIE_NAME)
