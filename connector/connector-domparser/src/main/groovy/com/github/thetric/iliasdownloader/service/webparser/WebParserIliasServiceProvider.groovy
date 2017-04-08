@@ -10,8 +10,7 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JS
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserServiceImpl
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslatorImpl
-import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorFactory
-import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorFactoryImpl
+import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.IliasWebClient
 import groovy.transform.CompileStatic
 
 @CompileStatic
@@ -54,7 +53,7 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
         }
         return Optional.ofNullable(id).orElseThrow({
             throw new NoCookiesAvailableException("Konnte das Cookie '" + ILIAS_CLIENT_ID_COOKIE_NAME +
-                "' nicht in der Response von der Seite $loginPage finden")
+                                                      "' nicht in der Response von der Seite $loginPage finden")
         })
     }
 
@@ -62,16 +61,13 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
     IliasService newInstance() {
         WebIoExceptionTranslator webIoExceptionTranslator = new WebIoExceptionTranslatorImpl()
         JSoupParserService jSoupParserService = new JSoupParserServiceImpl()
-        FluentHcExecutorFactory fluentHcExecutorProvider = new FluentHcExecutorFactoryImpl()
+        final IliasWebClient iliasWebClient = null
         CourseSyncService courseSyncServiceProvider = new CourseSyncServiceImpl(
-                webIoExceptionTranslator,
-                jSoupParserService,
-                iliasBaseUrl,
-                clientId)
-        return new WebIliasService(
             webIoExceptionTranslator,
-            iliasBaseUrl, clientId,
-            fluentHcExecutorProvider,
-            courseSyncServiceProvider)
+            jSoupParserService,
+            iliasWebClient,
+            iliasBaseUrl,
+            clientId)
+        return new WebIliasService(courseSyncServiceProvider, iliasWebClient)
     }
 }

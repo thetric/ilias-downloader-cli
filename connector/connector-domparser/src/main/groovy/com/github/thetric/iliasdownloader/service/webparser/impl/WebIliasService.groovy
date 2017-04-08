@@ -1,113 +1,47 @@
 package com.github.thetric.iliasdownloader.service.webparser.impl
 
 import com.github.thetric.iliasdownloader.service.IliasService
-import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncService
-import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
-import com.github.thetric.iliasdownloader.service.webparser.impl.util.fluenthc.FluentHcExecutorFactory
+import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.IliasWebClient
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
-import org.apache.http.client.fluent.Executor
-import org.apache.http.client.fluent.Form
-import org.apache.http.client.fluent.Request
-import org.apache.http.impl.client.BasicCookieStore
 
 @Log4j2
 @CompileStatic
 final class WebIliasService implements IliasService {
-    private final WebIoExceptionTranslator exceptionTranslator
-    private final FluentHcExecutorFactory fluentHcExecutorProvider
     private final CourseSyncService courseSyncService
+    private final IliasWebClient iliasWebClient
 
-    private final String iliasBaseUrl
-    private final String loginPage
-    private final String logoutPage
-    private final String clientId
-
-    // per default Groovy imports java.net.* where a CookieStore interface already exists
-    // so we must use the full qualified import ;(
-    private final org.apache.http.client.CookieStore cookieStore
-
-    WebIliasService(
-        WebIoExceptionTranslator exceptionTranslator,
-        String iliasBaseUrl, String clientId,
-        FluentHcExecutorFactory fluentHcExecutorProvider,
-        CourseSyncService courseSyncService) {
-        this.exceptionTranslator = exceptionTranslator
-        this.iliasBaseUrl = iliasBaseUrl
-        this.clientId = clientId
-        loginPage = "${iliasBaseUrl}login.php"
-        logoutPage = "${iliasBaseUrl}logout.php"
-
-        this.fluentHcExecutorProvider = fluentHcExecutorProvider
-        cookieStore = new BasicCookieStore()
-
+    WebIliasService( CourseSyncService courseSyncService, IliasWebClient iliasWebClient) {
         this.courseSyncService = courseSyncService
+        this.iliasWebClient = iliasWebClient
     }
 
     @Override
     InputStream getContentAsStream(CourseFile courseFile) {
-        return connectWithSessionCookies().execute(Request.Get(courseFile.url))
-                                          .returnContent()
-                                          .asStream()
+        return iliasWebClient.getAsInputStream(courseFile.url)
     }
 
     @Override
     void login(LoginCredentials loginCredentials) {
-        log.info('Logging in at {}', loginPage)
-        try {
-            connectWithSessionCookies().execute(Request.Post(loginPage)
-                                                       .bodyForm(Form.form()
-                                                                     .add('username', loginCredentials.userName)
-                                                                     .add('password', loginCredentials.password)
-                                                                     .build()))
-                                       .discardContent()
-            if (!hasLoginCookie()) {
-                cookieStore.clear()
-                throw new IliasAuthenticationException('Ungültiger Login')
-            }
-        } catch (IOException e) {
-            log.error("Login at $loginPage failed", e)
-            cookieStore.clear()
-            throw exceptionTranslator.translate(e)
-        }
-        log.info('Login at {} succeeded', loginPage)
-    }
-
-    private boolean hasLoginCookie() {
-        return cookieStore.cookies.any { it.name == 'authchallenge' }
+        iliasWebClient.login(loginCredentials)
     }
 
     @Override
     void logout() {
-        log.info('Logging out: {}', logoutPage)
-
-        try {
-            connectWithSessionCookies().execute(Request.Get(logoutPage))
-                                       .discardContent()
-        } catch (IOException e) {
-            log.error("Logout at $logoutPage failed", e)
-            throw exceptionTranslator.translate(e)
-        } finally {
-            cookieStore.clear()
-        }
-        log.info('Logout at {} succeeded', logoutPage)
-    }
-
-    private Executor connectWithSessionCookies() {
-        return fluentHcExecutorProvider.createFluentHcExecutor(cookieStore)
+        iliasWebClient.logout()
     }
 
     @Override
     Collection<Course> getJoinedCourses() {
-        return courseSyncService.getJoinedCourses(connectWithSessionCookies())
+        return courseSyncService.getJoinedCourses()
     }
 
     @Override
     void visit(final Course courseItem, final Closure<IliasService.VisitResult> visitMethod) {
-        courseSyncService.visit(courseItem, visitMethod, connectWithSessionCookies())
+        courseSyncService.visit(courseItem, visitMethod)
     }
 }

@@ -9,10 +9,9 @@ import com.github.thetric.iliasdownloader.service.model.IliasItem
 import com.github.thetric.iliasdownloader.service.webparser.impl.IliasItemIdStringParsingException
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserService
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
+import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.IliasWebClient
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
-import org.apache.http.client.fluent.Executor
-import org.apache.http.client.fluent.Request
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -34,8 +33,8 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private static final String ROW_SEPARATOR = '  '
 
     private final WebIoExceptionTranslator exceptionTranslator
-
     private final JSoupParserService jSoupParserService
+    private final IliasWebClient webClient
 
     private final String iliasBaseUrl
     private final String courseOverview
@@ -44,9 +43,11 @@ final class CourseSyncServiceImpl implements CourseSyncService {
 
     CourseSyncServiceImpl(WebIoExceptionTranslator webIoExceptionTranslator,
                           JSoupParserService jSoupParserService,
+                          IliasWebClient iliasWebClient,
                           String iliasBaseUrl, String clientId) {
         this.exceptionTranslator = webIoExceptionTranslator
         this.jSoupParserService = jSoupParserService
+        this.webClient = iliasWebClient
 
         this.iliasBaseUrl = iliasBaseUrl
         courseOverview = "${iliasBaseUrl}ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems"
@@ -55,9 +56,9 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     @Override
-    Collection<Course> getJoinedCourses(Executor httpRequestExecutor) {
+    Collection<Course> getJoinedCourses() {
         log.info('Get all courses and groups from {}', courseOverview)
-        Document document = connectAndGetDocument(courseOverview, httpRequestExecutor)
+        Document document = connectAndGetDocument(courseOverview)
         return getCoursesFromHtml(document)
     }
 
@@ -93,15 +94,15 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     @Override
     IliasService.VisitResult visit(
         final IliasItem courseItem,
-        final Closure<IliasService.VisitResult> visitMethod, final Executor httpRequestExecutor) {
+        final Closure<IliasService.VisitResult> visitMethod) {
 
-        for (IliasItem item : findItems(courseItem, httpRequestExecutor)) {
+        for (IliasItem item : findItems(courseItem)) {
             IliasService.VisitResult visitResult = visitMethod(item)
             if (visitResult == IliasService.VisitResult.TERMINATE) {
                 return IliasService.VisitResult.TERMINATE
             }
             if (isNodeItem(item)) {
-                IliasService.VisitResult childResult = visit(item, visitMethod, httpRequestExecutor)
+                IliasService.VisitResult childResult = visit(item, visitMethod)
                 if (childResult == IliasService.VisitResult.TERMINATE) {
                     return IliasService.VisitResult.TERMINATE
                 }
@@ -114,8 +115,8 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return iliasItem instanceof Course || iliasItem instanceof CourseFolder
     }
 
-    private Collection<? extends IliasItem> findItems(final IliasItem courseItem, final Executor httpRequestExecutor) {
-        String itemContainer = getItemContainersFromUrl(courseItem.url, httpRequestExecutor)
+    private Collection<? extends IliasItem> findItems(final IliasItem courseItem) {
+        String itemContainer = getItemContainersFromUrl(courseItem.url)
         if (!itemContainer.empty) {
             return getIliasItemRows(itemContainer, courseItem)*.trim()
                                                               .findAll()
@@ -152,8 +153,8 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         }
     }
 
-    private String getItemContainersFromUrl(final String itemUrl, final Executor httpRequestExecutor) {
-        String html = this.getHtml(itemUrl, httpRequestExecutor)
+    private String getItemContainersFromUrl(final String itemUrl) {
+        String html = this.getHtml(itemUrl)
         String startTag = '<pre>'
         int startIndexTable = html.indexOf(startTag)
         String endTag = '</pre>'
@@ -183,7 +184,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
             name: parsedLink.group('name'),
             url: resolveItemLink(parent, parsedLink),
             parent: parent,
-        )
+            )
     }
 
     private String resolveItemLink(final IliasItem parent, final Matcher parsedLink) {
@@ -225,20 +226,12 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return LocalDateTime.parse(lastModifiedString, LAST_MODIFIED_FORMATTER)
     }
 
-    private Document connectAndGetDocument(final String url, final Executor httpRequestExecutor) {
-        final String html = getHtml(url, httpRequestExecutor)
+    private Document connectAndGetDocument(final String url) {
+        final String html = getHtml(url)
         return jSoupParserService.parse(html)
     }
 
-    private String getHtml(final String url, final Executor httpRequestExecutor) {
-        log.debug('Getting: "{}"', url)
-        try {
-            return httpRequestExecutor.execute(Request.Get(url))
-                                      .returnContent()
-                                      .asString()
-        } catch (IOException e) {
-            log.error("Could not GET: $url", e)
-            throw exceptionTranslator.translate(e)
-        }
+    private String getHtml(final String url) {
+        return webClient.getHtml(url)
     }
 }
