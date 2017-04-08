@@ -16,7 +16,6 @@ import org.apache.http.client.fluent.Request
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Matcher
@@ -236,7 +235,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         try {
             return httpRequestExecutor.execute(Request.Get(url))
                                       .returnContent()
-                                      .asString(StandardCharsets.UTF_8)
+                                      .asString()
         } catch (IOException e) {
             log.error("Could not GET: $url", e)
             throw exceptionTranslator.translate(e)
