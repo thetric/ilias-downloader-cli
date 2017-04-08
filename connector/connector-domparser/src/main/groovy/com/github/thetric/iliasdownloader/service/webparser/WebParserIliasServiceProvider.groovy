@@ -11,6 +11,7 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JS
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
 import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslatorImpl
 import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.IliasWebClient
+import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.OkHttpIliasWebClient
 import groovy.transform.CompileStatic
 
 @CompileStatic
@@ -61,7 +62,7 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
     IliasService newInstance() {
         WebIoExceptionTranslator webIoExceptionTranslator = new WebIoExceptionTranslatorImpl()
         JSoupParserService jSoupParserService = new JSoupParserServiceImpl()
-        final IliasWebClient iliasWebClient = null
+        final IliasWebClient iliasWebClient = new OkHttpIliasWebClient(iliasBaseUrl, clientId)
         CourseSyncService courseSyncServiceProvider = new CourseSyncServiceImpl(
             webIoExceptionTranslator,
             jSoupParserService,
