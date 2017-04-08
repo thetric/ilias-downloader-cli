@@ -227,16 +227,8 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     private Document connectAndGetDocument(final String url, final Executor httpRequestExecutor) {
-        log.debug('Getting: "{}"', url)
-        try {
-            String html = httpRequestExecutor.execute(Request.Get(url))
-                                             .returnContent()
-                                             .asString(StandardCharsets.UTF_8)
-            return jSoupParserService.parse(html)
-        } catch (IOException e) {
-            log.error("Could not GET: $url", e)
-            throw exceptionTranslator.translate(e)
-        }
+        final String html = getHtml(url, httpRequestExecutor)
+        return jSoupParserService.parse(html)
     }
 
     private String getHtml(final String url, final Executor httpRequestExecutor) {
