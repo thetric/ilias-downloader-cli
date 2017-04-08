@@ -48,7 +48,7 @@ final class IliasCliController {
         Collection<Course> coursesFromIlias = iliasService.joinedCourses
         Collection<Course> coursesToSync
 
-        if (cliOptions.showCourseSelection) {
+        if (cliOptions.showCourseSelection || !prefs.activeCourses) {
             try {
                 coursesToSync = showAndSaveCourseSelection(coursesFromIlias)
             } catch (CourseSelectionOutOfRange e) {
