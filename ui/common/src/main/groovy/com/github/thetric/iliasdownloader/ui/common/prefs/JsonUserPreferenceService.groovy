@@ -4,6 +4,7 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
 import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.nio.file.Path
 
 final class JsonUserPreferenceService implements UserPreferenceService {
@@ -22,6 +23,7 @@ final class JsonUserPreferenceService implements UserPreferenceService {
 
     @Override
     void saveUserPreferences(final UserPreferences userPreferences) throws IOException {
+        Files.createDirectories(settingsFile.parent)
         settingsFile.withWriter(StandardCharsets.UTF_8.name(), {
             def compressedJson = JsonOutput.toJson(userPreferences)
             def prettyPrintedJson = JsonOutput.prettyPrint(compressedJson)
