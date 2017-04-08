@@ -9,7 +9,7 @@ import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.util.logging.Log4j2
 
-import java.util.function.BiFunction
+import java.util.function.Function
 
 import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.CONTINUE
 import static org.apache.logging.log4j.Level.DEBUG
@@ -20,7 +20,7 @@ final class IliasCliController {
 
     private final IliasService iliasService
 
-    private final BiFunction<IliasService, UserPreferences, ? extends SyncHandler> syncHandlerProvider
+    private final Function<UserPreferences, ? extends SyncHandler> syncHandlerProvider
 
     private final ResourceBundle resourceBundle
     private final UserPreferenceService preferenceService
@@ -29,7 +29,7 @@ final class IliasCliController {
     IliasCliController(
         final CliOptions cliOptions,
         final IliasService iliasService,
-        final BiFunction<IliasService, UserPreferences, ? extends SyncHandler> syncHandlerProvider,
+        final Function<UserPreferences, ? extends SyncHandler> syncHandlerProvider,
         final ResourceBundle resourceBundle,
         final UserPreferenceService preferenceService, final ConsoleService consoleService) {
         this.cliOptions = cliOptions
@@ -91,7 +91,7 @@ final class IliasCliController {
     private void executeSync(IliasService iliasService, Collection<Course> coursesToSync, UserPreferences prefs) {
         println ''
         println ">>> ${resourceBundle.getString('sync.started')}"
-        SyncHandler syncHandler = syncHandlerProvider.apply(iliasService, prefs)
+        SyncHandler syncHandler = syncHandlerProvider.apply(prefs)
         for (Course course : coursesToSync) {
             iliasService.visit(course, { IliasItem iliasItem ->
                 syncHandler.handle(iliasItem)

@@ -16,7 +16,6 @@ import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j2
 
 import java.nio.file.Path
-import java.util.function.BiFunction
 import java.util.function.Function
 
 import static org.apache.logging.log4j.Level.TRACE
@@ -55,12 +54,11 @@ final class Cli {
             preferenceService,
             consoleService)
 
-        final BiFunction<IliasService, UserPreferences, ? extends SyncHandler> syncHandlerProvider = {
-            IliasService iliasService, UserPreferences prefs ->
-                return new SyncHandlerImpl(cliOptions.syncDir, iliasService, prefs)
-        }
-
         final IliasService iliasService = loginService.connect()
+
+        final Function<UserPreferences, ? extends SyncHandler> syncHandlerProvider = {
+            UserPreferences prefs -> return new SyncHandlerImpl(cliOptions.syncDir, iliasService, prefs)
+        }
 
         new IliasCliController(
             cliOptions,
