@@ -29,23 +29,34 @@ final class Cli {
 
     private static final String SETTINGS_FILE_NAME = '.ilias-downloader.json'
 
-    static void main(String[] args) {
+    private final ResourceBundle resourceBundle
+    private final CliOptions cliOptions
+
+    private final Path settingsPath
+    private final UserPreferenceService preferenceService
+    private final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
+
+    static void main(final String[] args) {
         try {
-            ResourceBundle resourceBundle = ResourceBundle.getBundle('ilias-cli')
+            final ResourceBundle resourceBundle = ResourceBundle.getBundle('ilias-cli')
             final cliService = new CliService(resourceBundle)
             final opts = cliService.parseOpts(args)
-            startCliController(opts, resourceBundle)
+            new Cli(resourceBundle, opts).startCliController()
         } catch (InvalidUsageException ue) {
             log.catching(TRACE, ue)
         }
     }
 
-    private static void startCliController(CliOptions cliOptions, ResourceBundle resourceBundle) {
-        Path settingsPath = cliOptions.syncDir.resolve(SETTINGS_FILE_NAME)
-        UserPreferenceService preferenceService = new JsonUserPreferenceService(settingsPath)
-        final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
+    Cli(final ResourceBundle resourceBundle, final CliOptions cliOptions) {
+        this.resourceBundle = resourceBundle
+        this.cliOptions = cliOptions
+        settingsPath = cliOptions.syncDir.resolve(SETTINGS_FILE_NAME)
+        preferenceService = new JsonUserPreferenceService(settingsPath)
+    }
+
+    private IliasService createIliasService() {
         final CookieService cookieService = new JsoupCookieService()
-        Function<String, IliasService> iliasProvider = { String url ->
+        final Function<String, IliasService> iliasProvider = { String url ->
             new WebParserIliasServiceProvider(cookieService, url).newInstance()
         }
         final LoginService loginService = new LoginServiceImpl(
@@ -54,12 +65,14 @@ final class Cli {
             preferenceService,
             consoleService)
 
-        final IliasService iliasService = loginService.connect()
+        return loginService.connect()
+    }
 
+    private void startCliController() {
+        final IliasService iliasService = createIliasService()
         final Function<UserPreferences, ? extends SyncHandler> syncHandlerProvider = {
             UserPreferences prefs -> return new SyncHandlerImpl(cliOptions.syncDir, iliasService, prefs)
         }
-
         new IliasCliController(
             cliOptions,
             iliasService,
