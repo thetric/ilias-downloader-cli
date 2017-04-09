@@ -5,6 +5,7 @@ import com.github.thetric.iliasdownloader.cli.console.SystemEnvironmentAwareCons
 import com.github.thetric.iliasdownloader.cli.sync.SyncHandler
 import com.github.thetric.iliasdownloader.cli.sync.SyncHandlerImpl
 import com.github.thetric.iliasdownloader.service.IliasService
+import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.service.webparser.CookieService
 import com.github.thetric.iliasdownloader.service.webparser.JsoupCookieService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
@@ -69,16 +70,20 @@ final class Cli {
     }
 
     private void startCliController() {
-        final IliasService iliasService = createIliasService()
-        final Function<UserPreferences, ? extends SyncHandler> syncHandlerProvider = {
-            UserPreferences prefs -> return new SyncHandlerImpl(cliOptions.syncDir, iliasService, prefs)
+        try {
+            final IliasService iliasService = createIliasService()
+            final Function<UserPreferences, ? extends SyncHandler> syncHandlerProvider = {
+                UserPreferences prefs -> return new SyncHandlerImpl(cliOptions.syncDir, iliasService, prefs)
+            }
+            new IliasCliController(
+                cliOptions,
+                iliasService,
+                syncHandlerProvider,
+                resourceBundle,
+                preferenceService,
+                consoleService).start()
+        } catch (IliasAuthenticationException authEx) {
+            log.error(resourceBundle.getString('login.error'), authEx)
         }
-        new IliasCliController(
-            cliOptions,
-            iliasService,
-            syncHandlerProvider,
-            resourceBundle,
-            preferenceService,
-            consoleService).start()
     }
 }
