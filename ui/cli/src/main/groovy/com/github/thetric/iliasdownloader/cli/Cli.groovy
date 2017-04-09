@@ -38,9 +38,9 @@ final class Cli {
     private final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
 
     static void main(final String[] args) {
+        final ResourceBundle resourceBundle = ResourceBundle.getBundle('ilias-cli')
+        final cliService = new CliService(resourceBundle)
         try {
-            final ResourceBundle resourceBundle = ResourceBundle.getBundle('ilias-cli')
-            final cliService = new CliService(resourceBundle)
             final opts = cliService.parseOpts(args)
             new Cli(resourceBundle, opts).startCliController()
         } catch (InvalidUsageException ue) {
