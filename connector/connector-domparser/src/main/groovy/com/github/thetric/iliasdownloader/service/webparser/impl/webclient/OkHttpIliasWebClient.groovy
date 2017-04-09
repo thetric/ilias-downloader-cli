@@ -1,5 +1,6 @@
 package com.github.thetric.iliasdownloader.service.webparser.impl.webclient
 
+import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.service.exception.IliasException
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import groovy.transform.CompileStatic
@@ -43,6 +44,10 @@ final class OkHttpIliasWebClient implements IliasWebClient {
         def loginClient = client.newBuilder().followRedirects(true).build()
         final Response response = loginClient.newCall(request).execute()
         checkResponse(loginPage, response)
+        if (response.request().url().toString().startsWith(loginPage)) {
+            clearCookies()
+            throw new IliasAuthenticationException("Login at $loginPage failed. Invalid credentials")
+        }
         log.info('Login at {} succeeded', loginPage)
     }
 
@@ -51,9 +56,13 @@ final class OkHttpIliasWebClient implements IliasWebClient {
         log.info('Logging out: {}', logoutPage)
         final response = executeGetRequest(logoutPage)
         // TODO check response
-        cookieManager.cookieStore.removeAll()
+        clearCookies()
         checkResponse(logoutPage, response)
         log.info('Logout at {} succeeded', logoutPage)
+    }
+
+    private void clearCookies() {
+        cookieManager.cookieStore.removeAll()
     }
 
     private Response executeGetRequest(final String url) {
