@@ -8,7 +8,6 @@ import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
 import com.github.thetric.iliasdownloader.service.webparser.impl.IliasItemIdStringParsingException
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserService
-import com.github.thetric.iliasdownloader.service.webparser.impl.util.WebIoExceptionTranslator
 import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.IliasWebClient
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
@@ -32,7 +31,6 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private static final String COURSE_LINK_REGEX = /<a href="(?<url>.+)">(?<name>.+)<\/a>/
     private static final String ROW_SEPARATOR = '  '
 
-    private final WebIoExceptionTranslator exceptionTranslator
     private final JSoupParserService jSoupParserService
     private final IliasWebClient webClient
 
@@ -41,11 +39,9 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private final String courseLinkPrefix
     private final String courseWebDavPrefix
 
-    CourseSyncServiceImpl(WebIoExceptionTranslator webIoExceptionTranslator,
-                          JSoupParserService jSoupParserService,
+    CourseSyncServiceImpl(JSoupParserService jSoupParserService,
                           IliasWebClient iliasWebClient,
                           String iliasBaseUrl, String clientId) {
-        this.exceptionTranslator = webIoExceptionTranslator
         this.jSoupParserService = jSoupParserService
         this.webClient = iliasWebClient
 
