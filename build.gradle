@@ -27,7 +27,7 @@ subprojects {
         compile 'org.codehaus.groovy:groovy:2.4.10'
 
         // logging libs
-        compile 'org.apache.logging.log4j:log4j-core:2.8.1'
+        compile 'org.apache.logging.log4j:log4j-core:2.8.2'
 
         // test
         testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-4'
