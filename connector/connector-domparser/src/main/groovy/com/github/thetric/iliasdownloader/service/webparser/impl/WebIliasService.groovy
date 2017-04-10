@@ -15,18 +15,18 @@ final class WebIliasService implements IliasService {
     private final CourseSyncService courseSyncService
     private final IliasWebClient iliasWebClient
 
-    WebIliasService( CourseSyncService courseSyncService, IliasWebClient iliasWebClient) {
+    WebIliasService(final CourseSyncService courseSyncService, final IliasWebClient iliasWebClient) {
         this.courseSyncService = courseSyncService
         this.iliasWebClient = iliasWebClient
     }
 
     @Override
-    InputStream getContentAsStream(CourseFile courseFile) {
+    InputStream getContentAsStream(final CourseFile courseFile) {
         return iliasWebClient.getAsInputStream(courseFile.url)
     }
 
     @Override
-    void login(LoginCredentials loginCredentials) {
+    void login(final LoginCredentials loginCredentials) {
         iliasWebClient.login(loginCredentials)
     }
 
@@ -37,10 +37,9 @@ final class WebIliasService implements IliasService {
 
     @Override
     Collection<Course> getJoinedCourses() {
-        return courseSyncService.getJoinedCourses()
+        return courseSyncService.joinedCourses
     }
 
-    @Override
     void visit(final Course courseItem, final Closure<IliasService.VisitResult> visitMethod) {
         courseSyncService.visit(courseItem, visitMethod)
     }
