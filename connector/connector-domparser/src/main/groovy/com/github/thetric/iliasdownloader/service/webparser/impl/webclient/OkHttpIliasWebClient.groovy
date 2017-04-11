@@ -41,8 +41,11 @@ final class OkHttpIliasWebClient implements IliasWebClient {
         final Request request = new Request.Builder().url(loginPage)
                                                      .post(loginForm)
                                                      .build()
-        def loginClient = client.newBuilder().followRedirects(true).build()
-        final Response response = loginClient.newCall(request).execute()
+        def loginClient = client.newBuilder()
+                                .followRedirects(true)
+                                .build()
+        final Response response = loginClient.newCall(request)
+                                             .execute()
         checkResponse(loginPage, response)
         if (response.request().url().toString().startsWith(loginPage)) {
             clearCookies()
