@@ -18,6 +18,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Matcher
 
+import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.CONTINUE
+import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.TERMINATE
 import static java.time.format.DateTimeFormatter.ofPattern
 
 @CompileStatic
@@ -58,8 +60,18 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return getCoursesFromHtml(document)
     }
 
+    private Document connectAndGetDocument(final String url) {
+        final String html = getHtml(url)
+        return jSoupParserService.parse(html)
+    }
+
+    private String getHtml(final String url) {
+        return webClient.getHtml(url)
+    }
+
     private Collection<Course> getCoursesFromHtml(Document document) {
-        return document.select(COURSE_SELECTOR).collect { toCourse(it) }
+        return document.select(COURSE_SELECTOR)
+                       .collect { toCourse(it) }
     }
 
     private Course toCourse(Element courseElement) {
@@ -88,23 +100,20 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     @Override
-    IliasService.VisitResult visit(
-        final IliasItem courseItem,
-        final Closure<IliasService.VisitResult> visitMethod) {
-
+    IliasService.VisitResult visit(final IliasItem courseItem, final Closure<IliasService.VisitResult> visitMethod) {
         for (IliasItem item : findItems(courseItem)) {
             IliasService.VisitResult visitResult = visitMethod(item)
-            if (visitResult == IliasService.VisitResult.TERMINATE) {
-                return IliasService.VisitResult.TERMINATE
+            if (visitResult == TERMINATE) {
+                return TERMINATE
             }
             if (isNodeItem(item)) {
                 IliasService.VisitResult childResult = visit(item, visitMethod)
-                if (childResult == IliasService.VisitResult.TERMINATE) {
-                    return IliasService.VisitResult.TERMINATE
+                if (childResult == TERMINATE) {
+                    return TERMINATE
                 }
             }
         }
-        return IliasService.VisitResult.CONTINUE
+        return CONTINUE
     }
 
     private boolean isNodeItem(IliasItem iliasItem) {
@@ -179,8 +188,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return new CourseFolder(
             name: parsedLink.group('name'),
             url: resolveItemLink(parent, parsedLink),
-            parent: parent,
-            )
+            parent: parent)
     }
 
     private String resolveItemLink(final IliasItem parent, final Matcher parsedLink) {
@@ -220,14 +228,5 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         int startIndex = firstPosSeparator + ROW_SEPARATOR.length()
         String lastModifiedString = itemRow[startIndex..secondPosSep - 1]
         return LocalDateTime.parse(lastModifiedString, LAST_MODIFIED_FORMATTER)
-    }
-
-    private Document connectAndGetDocument(final String url) {
-        final String html = getHtml(url)
-        return jSoupParserService.parse(html)
-    }
-
-    private String getHtml(final String url) {
-        return webClient.getHtml(url)
     }
 }
