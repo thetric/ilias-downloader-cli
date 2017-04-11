@@ -26,7 +26,7 @@ final class OkHttpIliasWebClient implements IliasWebClient {
         logoutPage = "${iliasBaseUrl}logout.php"
 
         cookieManager = new CookieManager()
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+        cookieManager.cookiePolicy = CookiePolicy.ACCEPT_ALL
         client = new OkHttpClient.Builder().cookieJar(new JavaNetCookieJar(cookieManager))
                                            .followRedirects(false)
                                            .build()
