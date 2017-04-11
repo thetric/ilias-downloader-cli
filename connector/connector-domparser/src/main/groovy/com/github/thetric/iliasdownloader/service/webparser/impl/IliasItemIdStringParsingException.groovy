@@ -5,15 +5,15 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 final class IliasItemIdStringParsingException extends IliasException {
-    IliasItemIdStringParsingException(String message) {
+    IliasItemIdStringParsingException(final String message) {
         super(message)
     }
 
-    IliasItemIdStringParsingException(String message, Throwable t) {
+    IliasItemIdStringParsingException(final String message, final Throwable t) {
         super(message, t)
     }
 
-    IliasItemIdStringParsingException(Throwable t) {
+    IliasItemIdStringParsingException(final Throwable t) {
         super(t)
     }
 }

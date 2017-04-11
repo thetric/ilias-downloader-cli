@@ -22,13 +22,13 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
     final String iliasBaseUrl
     final String clientId
 
-    WebParserIliasServiceProvider(CookieService cookieService, String loginPage) throws IOException {
+    WebParserIliasServiceProvider(final CookieService cookieService, final String loginPage) throws IOException {
         this.cookieService = cookieService
         iliasBaseUrl = retrieveBaseUrl(loginPage)
         clientId = retrieveClientId(loginPage)
     }
 
-    private String retrieveBaseUrl(String loginPage) {
+    private String retrieveBaseUrl(final String loginPage) {
         String trimmed = loginPage?.trim()
         if (!trimmed) {
             throw new IllegalArgumentException('Die angegebene Loginseiten URL darf nicht leer sein')
@@ -36,18 +36,18 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
         if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
             trimmed = "https://$loginPage"
         }
-        int loginPageNameIndex = trimmed.indexOf(LOGIN_PAGE_NAME)
+        final int loginPageNameIndex = trimmed.indexOf(LOGIN_PAGE_NAME)
         if (loginPageNameIndex == -1) {
             throw new IllegalArgumentException("Die angegebene URL enthält kein '$LOGIN_PAGE_NAME'")
         }
         return trimmed[0..loginPageNameIndex - 1]
     }
 
-    private String retrieveClientId(String loginPage) throws IOException {
+    private String retrieveClientId(final String loginPage) throws IOException {
         final String id
         try {
             id = cookieService.getCookieFromUrl(loginPage, ILIAS_CLIENT_ID_COOKIE_NAME)
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IOException("Konnte die URL '$loginPage' nicht erreichen", e)
         }
         return Optional.ofNullable(id).orElseThrow({
@@ -58,9 +58,9 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
 
     @Override
     IliasService newInstance() {
-        JSoupParserService jSoupParserService = new JSoupParserServiceImpl()
+        final JSoupParserService jSoupParserService = new JSoupParserServiceImpl()
         final IliasWebClient iliasWebClient = new OkHttpIliasWebClient(iliasBaseUrl, clientId)
-        CourseSyncService courseSyncServiceProvider = new CourseSyncServiceImpl(
+        final CourseSyncService courseSyncServiceProvider = new CourseSyncServiceImpl(
             jSoupParserService,
             iliasWebClient,
             iliasBaseUrl,

@@ -5,15 +5,15 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 final class NoCookiesAvailableException extends IliasException {
-    NoCookiesAvailableException(String message) {
+    NoCookiesAvailableException(final String message) {
         super(message)
     }
 
-    NoCookiesAvailableException(String message, Throwable t) {
+    NoCookiesAvailableException(final String message, final Throwable t) {
         super(message, t)
     }
 
-    NoCookiesAvailableException(Throwable t) {
+    NoCookiesAvailableException(final Throwable t) {
         super(t)
     }
 }

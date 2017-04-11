@@ -41,9 +41,9 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private final String courseLinkPrefix
     private final String courseWebDavPrefix
 
-    CourseSyncServiceImpl(JSoupParserService jSoupParserService,
-                          IliasWebClient iliasWebClient,
-                          String iliasBaseUrl, String clientId) {
+    CourseSyncServiceImpl(final JSoupParserService jSoupParserService,
+                          final IliasWebClient iliasWebClient,
+                          final String iliasBaseUrl, final String clientId) {
         this.jSoupParserService = jSoupParserService
         this.webClient = iliasWebClient
 
@@ -56,7 +56,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     @Override
     Collection<Course> getJoinedCourses() {
         log.info('Get all courses and groups from {}', courseOverview)
-        Document document = connectAndGetDocument(courseOverview)
+        final Document document = connectAndGetDocument(courseOverview)
         return getCoursesFromHtml(document)
     }
 
@@ -69,31 +69,31 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return webClient.getHtml(url)
     }
 
-    private Collection<Course> getCoursesFromHtml(Document document) {
+    private Collection<Course> getCoursesFromHtml(final Document document) {
         return document.select(COURSE_SELECTOR)
                        .collect { toCourse(it) }
     }
 
-    private Course toCourse(Element courseElement) {
-        int courseId = getCourseId(courseElement)
-        String courseName = courseElement.text()
-        String courseUrl = "$courseWebDavPrefix$courseId/"
+    private Course toCourse(final Element courseElement) {
+        final int courseId = getCourseId(courseElement)
+        final String courseName = courseElement.text()
+        final String courseUrl = "$courseWebDavPrefix$courseId/"
         return new Course(id: courseId, name: courseName, url: courseUrl)
     }
 
-    private int getCourseId(Element aTag) {
-        String href = aTag.attr('href')
+    private int getCourseId(final Element aTag) {
+        final String href = aTag.attr('href')
         // href="http://www.ilias.fh-dortmund.de/ilias/goto_ilias-fhdo_crs_\d+.html"
-        String idString = href.replaceFirst(courseLinkPrefix, '')
-                              .replace('.html', '')
+        final String idString = href.replaceFirst(courseLinkPrefix, '')
+                                    .replace('.html', '')
         // der Rest muss ein int sein
         return parseId(href, idString)
     }
 
-    private static int parseId(String href, String probableIdString) {
+    private static int parseId(final String href, final String probableIdString) {
         try {
             return Integer.parseInt(probableIdString)
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new IliasItemIdStringParsingException(
                 "Failed to parse '$probableIdString', original string was '$href'", e)
         }
@@ -101,13 +101,13 @@ final class CourseSyncServiceImpl implements CourseSyncService {
 
     @Override
     IliasService.VisitResult visit(final IliasItem courseItem, final Closure<IliasService.VisitResult> visitMethod) {
-        for (IliasItem item : findItems(courseItem)) {
-            IliasService.VisitResult visitResult = visitMethod(item)
+        for (final IliasItem item : findItems(courseItem)) {
+            final IliasService.VisitResult visitResult = visitMethod(item)
             if (visitResult == TERMINATE) {
                 return TERMINATE
             }
             if (isNodeItem(item)) {
-                IliasService.VisitResult childResult = visit(item, visitMethod)
+                final IliasService.VisitResult childResult = visit(item, visitMethod)
                 if (childResult == TERMINATE) {
                     return TERMINATE
                 }
@@ -116,12 +116,12 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return CONTINUE
     }
 
-    private boolean isNodeItem(IliasItem iliasItem) {
+    private boolean isNodeItem(final IliasItem iliasItem) {
         return iliasItem instanceof Course || iliasItem instanceof CourseFolder
     }
 
     private Collection<? extends IliasItem> findItems(final IliasItem courseItem) {
-        String itemContainer = getItemContainersFromUrl(courseItem.url)
+        final String itemContainer = getItemContainersFromUrl(courseItem.url)
         if (!itemContainer.empty) {
             return getIliasItemRows(itemContainer, courseItem)*.trim()
                                                               .findAll()
@@ -137,15 +137,15 @@ final class CourseSyncServiceImpl implements CourseSyncService {
      * @param courseItem
      */
     private Collection<String> getIliasItemRows(final String tableHtml, final IliasItem courseItem) {
-        String itemListStartDelimiter = '<hr>'
-        int startIndexItemList = tableHtml.indexOf(itemListStartDelimiter)
+        final String itemListStartDelimiter = '<hr>'
+        final int startIndexItemList = tableHtml.indexOf(itemListStartDelimiter)
         checkItemListIndex(startIndexItemList, 'Begin', courseItem)
 
-        String itemListEndDelimiter = '\n<hr>'
-        int endIndexItemList = tableHtml.lastIndexOf(itemListEndDelimiter)
+        final String itemListEndDelimiter = '\n<hr>'
+        final int endIndexItemList = tableHtml.lastIndexOf(itemListEndDelimiter)
         checkItemListIndex(endIndexItemList, 'End', courseItem)
 
-        int itemListBeginPos = startIndexItemList + itemListStartDelimiter.length()
+        final int itemListBeginPos = startIndexItemList + itemListStartDelimiter.length()
         if (itemListBeginPos >= endIndexItemList) {
             return []
         }
@@ -159,12 +159,12 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     private String getItemContainersFromUrl(final String itemUrl) {
-        String html = this.getHtml(itemUrl)
-        String startTag = '<pre>'
-        int startIndexTable = html.indexOf(startTag)
-        String endTag = '</pre>'
-        int endIndexTable = html.lastIndexOf(endTag)
-        int exclusiveStartIndex = startIndexTable + startTag.length()
+        final String html = this.getHtml(itemUrl)
+        final String startTag = '<pre>'
+        final int startIndexTable = html.indexOf(startTag)
+        final String endTag = '</pre>'
+        final int endIndexTable = html.lastIndexOf(endTag)
+        final int exclusiveStartIndex = startIndexTable + startTag.length()
         return html[exclusiveStartIndex..endIndexTable - 1]
     }
 
@@ -184,7 +184,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private CourseFolder createFolder(final IliasItem parent, final String itemRow) {
         final int firstPosSeparator = itemRow.indexOf(ROW_SEPARATOR)
         final int secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length())
-        Matcher parsedLink = parseLink(itemRow, secondPosSeparator)
+        final Matcher parsedLink = parseLink(itemRow, secondPosSeparator)
         return new CourseFolder(
             name: parsedLink.group('name'),
             url: resolveItemLink(parent, parsedLink),
@@ -199,7 +199,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         final int firstPosSeparator = itemRow.indexOf(ROW_SEPARATOR)
         final int secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length())
 
-        Matcher parsedLinkName = parseLink(itemRow, secondPosSeparator)
+        final Matcher parsedLinkName = parseLink(itemRow, secondPosSeparator)
         return new CourseFile(
             name: parsedLinkName.group('name'),
             url: resolveItemLink(parent, parsedLinkName),
@@ -210,14 +210,14 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     private long parseFileSize(final String itemRow, final int firstPosSeparator) {
-        String rawSizeInBytes = itemRow[0..firstPosSeparator - 1]
-        String sanitizedSizeInBytes = rawSizeInBytes.replaceAll(',', '')
+        final String rawSizeInBytes = itemRow[0..firstPosSeparator - 1]
+        final String sanitizedSizeInBytes = rawSizeInBytes.replaceAll(',', '')
         return Long.parseLong(sanitizedSizeInBytes)
     }
 
     private Matcher parseLink(final String itemRow, final int secondPosSeparator) {
-        int startIndex = secondPosSeparator + ROW_SEPARATOR.length()
-        Matcher matcher = itemRow[startIndex..-1] =~ COURSE_LINK_REGEX
+        final int startIndex = secondPosSeparator + ROW_SEPARATOR.length()
+        final Matcher matcher = itemRow[startIndex..-1] =~ COURSE_LINK_REGEX
         if (!matcher) {
             throw new IllegalStateException("Failed to parse $itemRow")
         }
@@ -225,8 +225,8 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     private LocalDateTime parseLastModified(final String itemRow, final int firstPosSeparator, final int secondPosSep) {
-        int startIndex = firstPosSeparator + ROW_SEPARATOR.length()
-        String lastModifiedString = itemRow[startIndex..secondPosSep - 1]
+        final int startIndex = firstPosSeparator + ROW_SEPARATOR.length()
+        final String lastModifiedString = itemRow[startIndex..secondPosSep - 1]
         return LocalDateTime.parse(lastModifiedString, LAST_MODIFIED_FORMATTER)
     }
 }
