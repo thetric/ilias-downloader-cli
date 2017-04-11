@@ -65,7 +65,7 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private Course toCourse(Element courseElement) {
         int courseId = getCourseId(courseElement)
         String courseName = courseElement.text()
-        String courseUrl = "${courseWebDavPrefix}$courseId/"
+        String courseUrl = "$courseWebDavPrefix$courseId/"
         return new Course(id: courseId, name: courseName, url: courseUrl)
     }
 
