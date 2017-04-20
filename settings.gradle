@@ -1,10 +1,8 @@
 rootProject.name = 'ilias-downloader'
 
-include 'ui'
 include 'ui:common'
 include 'ui:cli'
 
-include 'connector'
 include 'connector:connector-api'
 include 'connector:connector-domparser'
 
