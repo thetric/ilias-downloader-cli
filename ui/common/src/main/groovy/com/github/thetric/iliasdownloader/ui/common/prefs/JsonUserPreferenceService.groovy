@@ -24,10 +24,10 @@ final class JsonUserPreferenceService implements UserPreferenceService {
     @Override
     void saveUserPreferences(final UserPreferences userPreferences) throws IOException {
         Files.createDirectories(settingsFile.parent)
-        settingsFile.withWriter(StandardCharsets.UTF_8.name(), {
+        settingsFile.withWriter StandardCharsets.UTF_8.name(), {
             def compressedJson = JsonOutput.toJson(userPreferences)
             def prettyPrintedJson = JsonOutput.prettyPrint(compressedJson)
             it.write("$prettyPrintedJson\n")
-        })
+        }
     }
 }

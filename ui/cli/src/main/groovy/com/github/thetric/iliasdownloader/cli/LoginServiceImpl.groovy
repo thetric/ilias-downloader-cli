@@ -31,11 +31,7 @@ final class LoginServiceImpl implements LoginService {
 
     @Override
     IliasService connect() {
-        if (Files.exists(preferenceService.settingsFile)) {
-            return createServiceFromConfig()
-        } else {
-            return createFromFirstTimeSetup()
-        }
+        return Files.exists(preferenceService.settingsFile) ? createServiceFromConfig() : createFromFirstTimeSetup()
     }
 
     private IliasService createServiceFromConfig() {

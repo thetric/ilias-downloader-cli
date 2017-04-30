@@ -93,10 +93,10 @@ final class IliasCliController {
         println ">>> ${resourceBundle.getString('sync.started')}"
         SyncHandler syncHandler = syncHandlerProvider.apply(prefs)
         for (Course course : coursesToSync) {
-            iliasService.visit(course, { IliasItem iliasItem ->
+            iliasService.visit course, { IliasItem iliasItem ->
                 syncHandler.handle(iliasItem)
                 return CONTINUE
-            })
+            }
         }
         println ''
         println ">>> ${resourceBundle.getString('sync.finished')}"
@@ -116,9 +116,7 @@ final class IliasCliController {
         }
         def courseSelection = consoleService.readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
         final trimmedSelection = courseSelection.trim()
-        if (!trimmedSelection) {
-            return allCourses
-        } else {
+        if (trimmedSelection) {
             List<Integer> courseIndices = courseSelection.split(/\s+/)
                                                          .collect { Integer.parseInt it }
                                                          .collect { it - 1 }
@@ -127,6 +125,7 @@ final class IliasCliController {
             }
             return courseIndices.collect { allCourses[it] }
         }
+        return allCourses
     }
 
     private static final class CourseSelectionOutOfRange extends RuntimeException {

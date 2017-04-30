@@ -50,10 +50,10 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
         } catch (final IOException e) {
             throw new IOException("Konnte die URL '$loginPage' nicht erreichen", e)
         }
-        return Optional.ofNullable(id).orElseThrow({
+        return Optional.ofNullable(id).orElseThrow {
             throw new NoCookiesAvailableException("Konnte das Cookie '" + ILIAS_CLIENT_ID_COOKIE_NAME +
                                                       "' nicht in der Response von der Seite $loginPage finden")
-        })
+        }
     }
 
     @Override
