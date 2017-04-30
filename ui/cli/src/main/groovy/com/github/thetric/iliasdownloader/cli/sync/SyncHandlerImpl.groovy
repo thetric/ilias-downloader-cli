@@ -45,7 +45,7 @@ final class SyncHandlerImpl implements SyncHandler {
         return parentItemPath.resolve(sanitizeFileName(iliasItem.name))
     }
 
-    @Memoized
+    @Memoized(maxCacheSize = 5)
     private Path resolvePathOfParent(IliasItem parentItem) {
         if (!parentItem) {
             return basePath
