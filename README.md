@@ -3,8 +3,7 @@
 
 # Ilias Downloader
 
-The Ilias Downloader enables you to easily download the files from your Ilias account.
-The first release will provide a simple CLI, the second a JavaFX UI.
+The Ilias Downloader enables you to easily download the files from your Ilias account through a simple CLI.
 
 ## Usage
 
