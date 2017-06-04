@@ -2,8 +2,8 @@ package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.cli.console.SystemEnvironmentAwareConsoleService
-import com.github.thetric.iliasdownloader.cli.sync.SyncHandler
-import com.github.thetric.iliasdownloader.cli.sync.SyncHandlerImpl
+import com.github.thetric.iliasdownloader.cli.sync.ItemDownloadingItemVisitor
+import com.github.thetric.iliasdownloader.service.IliasItemVisitor
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.service.webparser.CookieService
@@ -72,8 +72,8 @@ final class Cli {
     private void startCliController() {
         try {
             final IliasService iliasService = createIliasService()
-            final Function<UserPreferences, ? extends SyncHandler> syncHandlerProvider = {
-                UserPreferences prefs -> return new SyncHandlerImpl(cliOptions.syncDir, iliasService, prefs)
+            final Function<UserPreferences, ? extends IliasItemVisitor> syncHandlerProvider = {
+                UserPreferences prefs -> return new ItemDownloadingItemVisitor(cliOptions.syncDir, iliasService, prefs)
             }
             new IliasCliController(
                 cliOptions,

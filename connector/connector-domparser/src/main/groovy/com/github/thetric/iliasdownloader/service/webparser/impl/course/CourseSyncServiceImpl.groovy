@@ -1,6 +1,7 @@
 package com.github.thetric.iliasdownloader.service.webparser.impl.course
 
-import com.github.thetric.iliasdownloader.service.IliasService
+import com.github.thetric.iliasdownloader.service.IliasItemVisitor
+import com.github.thetric.iliasdownloader.service.IliasItemVisitor.VisitResult
 import com.github.thetric.iliasdownloader.service.exception.CourseItemNotFoundException
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
@@ -18,8 +19,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Matcher
 
-import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.CONTINUE
-import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.TERMINATE
+import static com.github.thetric.iliasdownloader.service.IliasItemVisitor.VisitResult.CONTINUE
+import static com.github.thetric.iliasdownloader.service.IliasItemVisitor.VisitResult.TERMINATE
 import static java.time.format.DateTimeFormatter.ofPattern
 
 @CompileStatic
@@ -100,35 +101,22 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     }
 
     @Override
-    IliasService.VisitResult visit(final IliasItem courseItem, final Closure<IliasService.VisitResult> visitMethod) {
-        for (final IliasItem item : findItems(courseItem)) {
-            final IliasService.VisitResult visitResult = visitMethod(item)
-            if (visitResult == TERMINATE) {
-                return TERMINATE
-            }
-            if (isNodeItem(item)) {
-                final IliasService.VisitResult childResult = visit(item, visitMethod)
-                if (childResult == TERMINATE) {
+    VisitResult visit(final IliasItem courseItem, final IliasItemVisitor itemVisitor) {
+        final String itemContainer = getItemContainersFromUrl(courseItem.url)
+        if (!itemContainer.empty) {
+            for (final String item in getNonEmptyEntries(itemContainer, courseItem)) {
+                if (toIliasItem(courseItem, item, itemVisitor) == TERMINATE) {
                     return TERMINATE
                 }
             }
-        }
-        return CONTINUE
-    }
-
-    private boolean isNodeItem(final IliasItem iliasItem) {
-        return iliasItem instanceof Course || iliasItem instanceof CourseFolder
-    }
-
-    private Collection<? extends IliasItem> findItems(final IliasItem courseItem) {
-        final String itemContainer = getItemContainersFromUrl(courseItem.url)
-        if (!itemContainer.empty) {
-            return getIliasItemRows(itemContainer, courseItem)*.trim()
-                                                              .findAll()
-                                                              .collect { toIliasItem(courseItem, it) }
-                                                              .findAll()
+            return CONTINUE
         }
         throw new CourseItemNotFoundException('No items found at URL ', courseItem.url)
+    }
+
+    private List<String> getNonEmptyEntries(final String itemContainer, final IliasItem courseItem) {
+        return getIliasItemRows(itemContainer, courseItem)*.trim()
+                                                          .findAll()
     }
 
     /**
@@ -168,13 +156,20 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return html[exclusiveStartIndex..endIndexTable - 1]
     }
 
-    private IliasItem toIliasItem(final IliasItem parent, final String itemRow) {
-        // item format: (size or character '-' [=folder])  last modified  link
+    private VisitResult toIliasItem(final IliasItem parent, final String itemRow, final IliasItemVisitor itemVisitor) {
         if (isFolder(itemRow)) {
-            return createFolder(parent, itemRow)
+            final CourseFolder courseFolder = createFolder(parent, itemRow)
+
+            final VisitResult folderVisitResult = itemVisitor.handleFolder(courseFolder)
+            if (folderVisitResult == TERMINATE) {
+                return TERMINATE
+            }
+
+            final VisitResult childrenVisitResult = visit(courseFolder, itemVisitor)
+            return childrenVisitResult
         }
         // assume it is a file
-        return createFile(parent, itemRow)
+        return itemVisitor.handleFile(createFile(parent, itemRow))
     }
 
     private boolean isFolder(final String itemRow) {

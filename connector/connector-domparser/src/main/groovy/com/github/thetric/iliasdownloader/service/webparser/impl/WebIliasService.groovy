@@ -1,5 +1,6 @@
 package com.github.thetric.iliasdownloader.service.webparser.impl
 
+import com.github.thetric.iliasdownloader.service.IliasItemVisitor
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
@@ -40,7 +41,7 @@ final class WebIliasService implements IliasService {
         return courseSyncService.joinedCourses
     }
 
-    void visit(final Course courseItem, final Closure<IliasService.VisitResult> visitMethod) {
-        courseSyncService.visit(courseItem, visitMethod)
+    void visit(final Course courseItem, final IliasItemVisitor itemVisitor) {
+        courseSyncService.visit(courseItem, itemVisitor)
     }
 }

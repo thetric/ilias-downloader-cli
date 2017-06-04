@@ -1,5 +1,6 @@
 package com.github.thetric.iliasdownloader.service.webparser.impl
 
+import com.github.thetric.iliasdownloader.service.IliasItemVisitor
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
@@ -55,8 +56,8 @@ class WebIliasServiceTest extends Specification {
 
     def "visit: pass through args"() {
         setup:
-        final course = new Course(id: 684, name: 'Web Engineering', url: 'https://fh.de/ilias/we/46', parent: null)
-        final visitMeth = {e -> null}
+        final Course course = new Course(id: 684, name: 'Web Engineering', url: 'https://fh.de/ilias/we/46', parent: null)
+        final IliasItemVisitor visitMeth = Mock()
 
         when:
         sut.visit(course, visitMeth)
