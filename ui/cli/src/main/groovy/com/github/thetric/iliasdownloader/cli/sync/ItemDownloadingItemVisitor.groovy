@@ -1,7 +1,7 @@
 package com.github.thetric.iliasdownloader.cli.sync
 
+import com.github.thetric.iliasdownloader.service.IliasItemVisitor
 import com.github.thetric.iliasdownloader.service.IliasService
-import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
@@ -17,9 +17,11 @@ import java.nio.file.attribute.FileTime
 import java.time.LocalDateTime
 import java.time.ZoneId
 
+import static com.github.thetric.iliasdownloader.service.IliasItemVisitor.VisitResult.CONTINUE
+
 @CompileStatic
 @Log4j2
-final class SyncHandlerImpl implements SyncHandler {
+final class ItemDownloadingItemVisitor implements IliasItemVisitor {
     private static final ZoneId SYSTEM_ZONE = ZoneId.systemDefault()
     private final Path basePath
     private final IliasService iliasService
@@ -27,7 +29,7 @@ final class SyncHandlerImpl implements SyncHandler {
 
     private final long downloadSizeLimitInBytes
 
-    SyncHandlerImpl(final Path basePath, final IliasService iliasService, final UserPreferences preferences) {
+    ItemDownloadingItemVisitor(final Path basePath, final IliasService iliasService, final UserPreferences preferences) {
         this.basePath = basePath
         this.iliasService = iliasService
         this.preferences = preferences
@@ -67,34 +69,25 @@ final class SyncHandlerImpl implements SyncHandler {
      * @param fileName
      * @return file name without invalid NTFS characters
      */
-    @Override
-    String sanitizeFileName(String fileName) {
+    private String sanitizeFileName(String fileName) {
         fileName.replaceAll($/[\\/:*?"<>|]/$, '')
     }
 
     @Override
-    void handle(Course course) {
-        log.info("Visiting course '${course.name}' (id: ${course.id}")
-    }
-
-    @Override
-    void handle(IliasItem courseItem) {
-        log.warn("Unknown IliasItem type ${courseItem.class}: $courseItem")
-    }
-
-    @Override
-    void handle(CourseFolder folder) {
+    IliasItemVisitor.VisitResult handleFolder(CourseFolder folder) {
         log.debug("Visiting folder '${folder.name}'")
+        return CONTINUE
     }
 
     @Override
-    void handle(CourseFile file) {
+    IliasItemVisitor.VisitResult handleFile(CourseFile file) {
         log.debug("Visiting file ${file.name}")
         Path filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
             log.info("Downloading file $file")
             syncAndSaveFile(filePath, file)
         }
+        return CONTINUE
     }
 
     private boolean needsToSync(Path path, CourseFile file) {

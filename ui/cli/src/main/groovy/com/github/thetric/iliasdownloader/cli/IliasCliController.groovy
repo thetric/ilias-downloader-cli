@@ -1,17 +1,15 @@
 package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
-import com.github.thetric.iliasdownloader.cli.sync.SyncHandler
+import com.github.thetric.iliasdownloader.service.IliasItemVisitor
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
-import com.github.thetric.iliasdownloader.service.model.IliasItem
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.util.logging.Log4j2
 
 import java.util.function.Function
 
-import static com.github.thetric.iliasdownloader.service.IliasService.VisitResult.CONTINUE
 import static org.apache.logging.log4j.Level.DEBUG
 
 @Log4j2
@@ -20,7 +18,7 @@ final class IliasCliController {
 
     private final IliasService iliasService
 
-    private final Function<UserPreferences, ? extends SyncHandler> syncHandlerProvider
+    private final Function<UserPreferences, ? extends IliasItemVisitor> syncHandlerProvider
 
     private final ResourceBundle resourceBundle
     private final UserPreferenceService preferenceService
@@ -29,7 +27,7 @@ final class IliasCliController {
     IliasCliController(
         final CliOptions cliOptions,
         final IliasService iliasService,
-        final Function<UserPreferences, ? extends SyncHandler> syncHandlerProvider,
+        final Function<UserPreferences, ? extends IliasItemVisitor> syncHandlerProvider,
         final ResourceBundle resourceBundle,
         final UserPreferenceService preferenceService, final ConsoleService consoleService) {
         this.cliOptions = cliOptions
@@ -91,12 +89,9 @@ final class IliasCliController {
     private void executeSync(IliasService iliasService, Collection<Course> coursesToSync, UserPreferences prefs) {
         println ''
         println ">>> ${resourceBundle.getString('sync.started')}"
-        SyncHandler syncHandler = syncHandlerProvider.apply(prefs)
+        IliasItemVisitor syncHandler = syncHandlerProvider.apply(prefs)
         for (Course course : coursesToSync) {
-            iliasService.visit course, { IliasItem iliasItem ->
-                syncHandler.handle(iliasItem)
-                return CONTINUE
-            }
+            iliasService.visit(course, syncHandler)
         }
         println ''
         println ">>> ${resourceBundle.getString('sync.finished')}"
