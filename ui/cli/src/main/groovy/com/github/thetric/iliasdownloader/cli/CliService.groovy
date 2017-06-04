@@ -6,7 +6,7 @@ class CliService {
     private final CliBuilder cliBuilder
     private final ResourceBundle resourceBundle
 
-    CliService(ResourceBundle resourceBundle) {
+    CliService(final ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle
         this.cliBuilder = createCliBuilder()
     }
@@ -34,8 +34,8 @@ class CliService {
         return cliBuilder
     }
 
-    private OptionAccessor parseArgs(String[] args) {
-        CliBuilder cliBuilder = createCliBuilder()
+    private OptionAccessor parseArgs(final String[] args) {
+        final CliBuilder cliBuilder = createCliBuilder()
         final OptionAccessor opts = cliBuilder.parse(args)
         if (!opts) {
             throw new InvalidUsageException()
@@ -45,7 +45,7 @@ class CliService {
 
     CliOptions parseOpts(final String[] args) {
         final options = parseArgs(args)
-        Long size = options.s == false ? null : options.s as Long
+        final Long size = options.s == false ? null : options.s as Long
         return new CliOptions(
             syncDir: Paths.get(options.d as String),
             showCourseSelection: options.c as boolean,

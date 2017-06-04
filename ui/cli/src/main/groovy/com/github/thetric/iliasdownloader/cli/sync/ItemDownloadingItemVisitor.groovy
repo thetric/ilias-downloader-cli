@@ -37,27 +37,27 @@ final class ItemDownloadingItemVisitor implements IliasItemVisitor {
         this.downloadSizeLimitInBytes = preferences.maxFileSizeInMiB > 0 ? toBytes(preferences) : Long.MAX_VALUE
     }
 
-    private int toBytes(UserPreferences preferences) {
+    private int toBytes(final UserPreferences preferences) {
         return preferences.maxFileSizeInMiB * 1024 * 1024
     }
 
-    private Path resolvePathAndCreateMissingDirs(IliasItem iliasItem) {
-        Path parentItemPath = resolvePathOfParent(iliasItem.parent)
+    private Path resolvePathAndCreateMissingDirs(final IliasItem iliasItem) {
+        final Path parentItemPath = resolvePathOfParent(iliasItem.parent)
         Files.createDirectories parentItemPath
         return parentItemPath.resolve(sanitizeFileName(iliasItem.name))
     }
 
     @Memoized(maxCacheSize = 5)
-    private Path resolvePathOfParent(IliasItem parentItem) {
+    private Path resolvePathOfParent(final IliasItem parentItem) {
         if (!parentItem) {
             return basePath
         }
-        List<String> itemNamesInPath = []
+        final List<String> itemNamesInPath = []
         for (IliasItem i = parentItem; i; i = i.parent) {
             itemNamesInPath << i.name
         }
         Path itemPath = basePath
-        for (String itemName : itemNamesInPath.reverse()) {
+        for (final String itemName : itemNamesInPath.reverse()) {
             itemPath = itemPath.resolve(sanitizeFileName(itemName))
         }
         return itemPath
@@ -69,20 +69,20 @@ final class ItemDownloadingItemVisitor implements IliasItemVisitor {
      * @param fileName
      * @return file name without invalid NTFS characters
      */
-    private String sanitizeFileName(String fileName) {
+    private String sanitizeFileName(final String fileName) {
         fileName.replaceAll($/[\\/:*?"<>|]/$, '')
     }
 
     @Override
-    IliasItemVisitor.VisitResult handleFolder(CourseFolder folder) {
+    IliasItemVisitor.VisitResult handleFolder(final CourseFolder folder) {
         log.debug("Visiting folder '${folder.name}'")
         return CONTINUE
     }
 
     @Override
-    IliasItemVisitor.VisitResult handleFile(CourseFile file) {
+    IliasItemVisitor.VisitResult handleFile(final CourseFile file) {
         log.debug("Visiting file ${file.name}")
-        Path filePath = resolvePathAndCreateMissingDirs(file)
+        final Path filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
             log.info("Downloading file $file")
             syncAndSaveFile(filePath, file)
@@ -90,26 +90,26 @@ final class ItemDownloadingItemVisitor implements IliasItemVisitor {
         return CONTINUE
     }
 
-    private boolean needsToSync(Path path, CourseFile file) {
+    private boolean needsToSync(final Path path, final CourseFile file) {
         return (Files.notExists(path) || isFileModified(path, file)) && isUnderFileLimit(file)
     }
 
-    private boolean isFileModified(Path path, CourseFile file) {
-        FileTime lastModifiedTime = Files.getLastModifiedTime(path)
+    private boolean isFileModified(final Path path, final CourseFile file) {
+        final FileTime lastModifiedTime = Files.getLastModifiedTime(path)
         return lastModifiedTime != toFileTime(file.modified)
     }
 
-    private boolean isUnderFileLimit(CourseFile file) {
+    private boolean isUnderFileLimit(final CourseFile file) {
         return file.size < downloadSizeLimitInBytes
     }
 
-    private void syncAndSaveFile(Path path, CourseFile file) {
-        InputStream inputStream = iliasService.getContentAsStream(file)
+    private void syncAndSaveFile(final Path path, final CourseFile file) {
+        final InputStream inputStream = iliasService.getContentAsStream(file)
         Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING)
         Files.setLastModifiedTime(path, toFileTime(file.modified))
     }
 
-    private static FileTime toFileTime(LocalDateTime dateTime) {
+    private static FileTime toFileTime(final LocalDateTime dateTime) {
         Objects.requireNonNull(dateTime, 'dateTime')
         FileTime.from(dateTime.toInstant(SYSTEM_ZONE.rules.getOffset(dateTime)))
     }

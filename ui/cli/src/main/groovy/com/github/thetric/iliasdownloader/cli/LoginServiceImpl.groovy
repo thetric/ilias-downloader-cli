@@ -43,8 +43,8 @@ final class LoginServiceImpl implements LoginService {
     }
 
     private String promptForPassword(final String username) {
-        String passwordPrompt = resourceBundle.getString('login.credentials.password')
-        String namePwPrompt = String.format(passwordPrompt, username)
+        final String passwordPrompt = resourceBundle.getString('login.credentials.password')
+        final String namePwPrompt = String.format(passwordPrompt, username)
         return consoleService.readPassword('ilias.credentials.password', namePwPrompt)
     }
 
@@ -67,7 +67,7 @@ final class LoginServiceImpl implements LoginService {
     }
 
     private String promptForUserName() {
-        String usernamePrompt = resourceBundle.getString('login.credentials.username')
+        final String usernamePrompt = resourceBundle.getString('login.credentials.username')
         return consoleService.readLine('ilias.credentials.username', usernamePrompt).trim()
     }
 }

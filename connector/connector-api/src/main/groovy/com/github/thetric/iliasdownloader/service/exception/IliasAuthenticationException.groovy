@@ -6,15 +6,15 @@ import groovy.transform.CompileStatic
 final class IliasAuthenticationException extends IliasException {
     private static final long serialVersionUID = 965016465165430L
 
-    IliasAuthenticationException(String message) {
+    IliasAuthenticationException(final String message) {
         super(message)
     }
 
-    IliasAuthenticationException(String message, Throwable t) {
+    IliasAuthenticationException(final String message, final Throwable t) {
         super(message, t)
     }
 
-    IliasAuthenticationException(Throwable t) {
+    IliasAuthenticationException(final Throwable t) {
         super(t)
     }
 }

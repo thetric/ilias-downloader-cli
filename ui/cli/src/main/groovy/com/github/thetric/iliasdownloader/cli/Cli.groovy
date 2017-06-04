@@ -43,7 +43,7 @@ final class Cli {
         try {
             final opts = cliService.parseOpts(args)
             new Cli(resourceBundle, opts).startCliController()
-        } catch (InvalidUsageException ue) {
+        } catch (final InvalidUsageException ue) {
             log.catching(TRACE, ue)
         }
     }
@@ -57,7 +57,7 @@ final class Cli {
 
     private IliasService createIliasService() {
         final CookieService cookieService = new JsoupCookieService()
-        final Function<String, IliasService> iliasProvider = { String url ->
+        final Function<String, IliasService> iliasProvider = { final String url ->
             new WebParserIliasServiceProvider(cookieService, url).newInstance()
         }
         final LoginService loginService = new LoginServiceImpl(
@@ -73,7 +73,7 @@ final class Cli {
         try {
             final IliasService iliasService = createIliasService()
             final Function<UserPreferences, ? extends IliasItemVisitor> syncHandlerProvider = {
-                UserPreferences prefs -> return new ItemDownloadingItemVisitor(cliOptions.syncDir, iliasService, prefs)
+                final UserPreferences prefs -> return new ItemDownloadingItemVisitor(cliOptions.syncDir, iliasService, prefs)
             }
             new IliasCliController(
                 cliOptions,
@@ -82,7 +82,7 @@ final class Cli {
                 resourceBundle,
                 preferenceService,
                 consoleService).start()
-        } catch (IliasAuthenticationException authEx) {
+        } catch (final IliasAuthenticationException authEx) {
             log.error(resourceBundle.getString('login.error'), authEx)
         }
     }

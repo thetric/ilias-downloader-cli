@@ -31,7 +31,7 @@ class CourseSyncServiceImplTest extends Specification {
         final Document doc = Stub(constructorArgs: [iliasBaseUrl])
 
         when:
-        def actual = sut.joinedCourses
+        final def actual = sut.joinedCourses
 
         then:
         1 * webClient.getHtml(courseOverview) >> html
@@ -52,7 +52,7 @@ class CourseSyncServiceImplTest extends Specification {
         courseElement.attr('href') >> "https://www.ilias.fh-dortmund.de/ilias/goto_ilias-fhdo_crs_${courseId}.html"
 
         when:
-        def actual = sut.joinedCourses
+        final def actual = sut.joinedCourses
 
         then:
         1 * webClient.getHtml(courseOverview) >> html

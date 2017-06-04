@@ -47,7 +47,7 @@ class WebIliasServiceTest extends Specification {
 
     def "getJoinedCourses: return courses from course sync srvc"() {
         setup:
-        def expected = Mock(Collection)
+        final def expected = Mock(Collection)
         courseSyncService.joinedCourses >> expected
 
         expect:

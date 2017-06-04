@@ -11,7 +11,7 @@ final class JsonUserPreferenceService implements UserPreferenceService {
     private final JsonSlurper jsonSlurper
     final Path settingsFile
 
-    JsonUserPreferenceService(Path settingsPath) {
+    JsonUserPreferenceService(final Path settingsPath) {
         this.settingsFile = settingsPath
         jsonSlurper = new JsonSlurper()
     }
@@ -25,8 +25,8 @@ final class JsonUserPreferenceService implements UserPreferenceService {
     void saveUserPreferences(final UserPreferences userPreferences) throws IOException {
         Files.createDirectories(settingsFile.parent)
         settingsFile.withWriter StandardCharsets.UTF_8.name(), {
-            def compressedJson = JsonOutput.toJson(userPreferences)
-            def prettyPrintedJson = JsonOutput.prettyPrint(compressedJson)
+            final def compressedJson = JsonOutput.toJson(userPreferences)
+            final def prettyPrintedJson = JsonOutput.prettyPrint(compressedJson)
             it.write("$prettyPrintedJson\n")
         }
     }

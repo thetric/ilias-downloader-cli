@@ -41,7 +41,7 @@ class WebParserIliasServiceProviderTest extends Specification {
         new WebParserIliasServiceProvider(cookieService, 'https://www.ilias.fh-dortmund.de/ilias/login.php')
 
         then:
-        def e = thrown IOException
+        final def e = thrown IOException
         e.cause == originalEx
     }
 
@@ -58,12 +58,12 @@ class WebParserIliasServiceProviderTest extends Specification {
 
     def "constructor: save client id"() {
         setup:
-        def clientId = 'client-id'
-        def loginUrl = 'https://www.ilias.fh-dortmund.de/ilias/login.php'
+        final def clientId = 'client-id'
+        final def loginUrl = 'https://www.ilias.fh-dortmund.de/ilias/login.php'
         cookieService.getCookieFromUrl(loginUrl, _) >> clientId
 
         when:
-        def sut = new WebParserIliasServiceProvider(cookieService, loginUrl)
+        final def sut = new WebParserIliasServiceProvider(cookieService, loginUrl)
 
         then:
         sut.clientId == clientId
@@ -71,12 +71,12 @@ class WebParserIliasServiceProviderTest extends Specification {
 
     def "constructor: prepend 'https://' if loginUrl does not start with it"() {
         setup:
-        def clientId = 'client-id'
-        def loginUrl = 'www.ilias.fh-dortmund.de/ilias/login.php'
+        final def clientId = 'client-id'
+        final def loginUrl = 'www.ilias.fh-dortmund.de/ilias/login.php'
         cookieService.getCookieFromUrl(loginUrl, _) >> clientId
 
         when:
-        def sut = new WebParserIliasServiceProvider(cookieService, loginUrl)
+        final def sut = new WebParserIliasServiceProvider(cookieService, loginUrl)
 
         then:
         sut.clientId == clientId
@@ -86,11 +86,11 @@ class WebParserIliasServiceProviderTest extends Specification {
     @Unroll
     def "constructor: does not prepend 'https://' if loginUrl starts with '#prefix'"() {
         setup:
-        def clientId = 'client-id'
+        final def clientId = 'client-id'
         cookieService.getCookieFromUrl(loginUrl, _) >> clientId
 
         when:
-        def sut = new WebParserIliasServiceProvider(cookieService, loginUrl)
+        final def sut = new WebParserIliasServiceProvider(cookieService, loginUrl)
 
         then:
         sut.clientId == clientId

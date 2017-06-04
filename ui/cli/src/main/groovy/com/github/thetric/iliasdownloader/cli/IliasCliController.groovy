@@ -39,19 +39,19 @@ final class IliasCliController {
     }
 
     void start() {
-        UserPreferences prefs = preferenceService.loadUserPreferences()
+        final UserPreferences prefs = preferenceService.loadUserPreferences()
 
         updateFileSizeLimitFromCliOpts(prefs)
 
-        Collection<Course> coursesFromIlias = iliasService.joinedCourses
-        Collection<Course> coursesToSync
+        final Collection<Course> coursesFromIlias = iliasService.joinedCourses
+        final Collection<Course> coursesToSync
 
         if (cliOptions.showCourseSelection || !prefs.activeCourses) {
             try {
                 coursesToSync = showAndSaveCourseSelection(coursesFromIlias)
-            } catch (CourseSelectionOutOfRange e) {
+            } catch (final CourseSelectionOutOfRange e) {
                 log.catching(DEBUG, e)
-                String errMsg = resourceBundle.getString('sync.courses.prompt.errors.out-of-range')
+                final String errMsg = resourceBundle.getString('sync.courses.prompt.errors.out-of-range')
                 System.err.println errMsg.replace('{0}', coursesFromIlias.size() as String)
                 return
             }
@@ -67,30 +67,30 @@ final class IliasCliController {
         executeSync(iliasService, coursesToSync, prefs)
     }
 
-    private void printSelectedCourses(Collection<Course> coursesToSync) {
+    private void printSelectedCourses(final Collection<Course> coursesToSync) {
         println ''
         println ">>> Syncing ${coursesToSync.size()} courses:"
         print coursesToSync.collect { "  > ${it.name}" }.join('\n')
     }
 
-    private void updateFileSizeLimitFromCliOpts(UserPreferences prefs) {
+    private void updateFileSizeLimitFromCliOpts(final UserPreferences prefs) {
         if (cliOptions.fileSizeLimitInMiB != null) {
             // limit = 0 -> unlimited
             if (cliOptions.fileSizeLimitInMiB >= 0) {
                 prefs.maxFileSizeInMiB = cliOptions.fileSizeLimitInMiB
                 preferenceService.saveUserPreferences(prefs)
             } else {
-                def errMsg = "${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitInMiB"
+                final def errMsg = "${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitInMiB"
                 throw new IllegalArgumentException(errMsg)
             }
         }
     }
 
-    private void executeSync(IliasService iliasService, Collection<Course> coursesToSync, UserPreferences prefs) {
+    private void executeSync(final IliasService iliasService, final Collection<Course> coursesToSync, final UserPreferences prefs) {
         println ''
         println ">>> ${resourceBundle.getString('sync.started')}"
-        IliasItemVisitor syncHandler = syncHandlerProvider.apply(prefs)
-        for (Course course : coursesToSync) {
+        final IliasItemVisitor syncHandler = syncHandlerProvider.apply(prefs)
+        for (final Course course : coursesToSync) {
             iliasService.visit(course, syncHandler)
         }
         println ''
@@ -103,18 +103,18 @@ final class IliasCliController {
      * @param allCourses {@link Course}s to select from
      * @return the {@link Course}s to sync
      */
-    private Collection<Course> showAndSaveCourseSelection(Collection<Course> allCourses) {
+    private Collection<Course> showAndSaveCourseSelection(final Collection<Course> allCourses) {
         println ''
         println ">>> ${resourceBundle.getString('sync.courses.available')}"
-        allCourses.eachWithIndex { Course course, int i ->
+        allCourses.eachWithIndex { final Course course, final int i ->
             println "\t${i + 1} ${course.name} (ID: ${course.id})"
         }
-        def courseSelection = consoleService.readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
+        final def courseSelection = consoleService.readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
         final trimmedSelection = courseSelection.trim()
         if (trimmedSelection) {
-            List<Integer> courseIndices = courseSelection.split(/\s+/)
-                                                         .collect { Integer.parseInt it }
-                                                         .collect { it - 1 }
+            final List<Integer> courseIndices = courseSelection.split(/\s+/)
+                                                               .collect { Integer.parseInt it }
+                                                               .collect { it - 1 }
             if (courseIndices.any { it < 0 || it > allCourses.size() }) {
                 throw new CourseSelectionOutOfRange()
             }
