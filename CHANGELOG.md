@@ -1,3 +1,35 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/thetric/ilias-downloader/compare/1.1.0...v2.0.0) (2017-06-10)
+
+This release contains a breaking change for developers using the `connector` modules.
+
+One notable feature for the CLI users is that the sync log shows the downloaded files (with `file://` URL).
+
+ Another change is the distribution of the CLI as ZIP instead of a JAR.
+ The CLI can be launched by unzipping the archive and executing the corresponding shell script (`bin/cli` for Linux/Mac, `bin/cli.bat` for Windows).
+
+### Bug Fixes
+
+* **cli:** limit cache size of paths ([c80e00d](https://github.com/thetric/ilias-downloader/commit/c80e00d))
+
+
+### Code Refactoring
+
+* **connector/api:** use interface instead of closure as Visitor ([19bb82d](https://github.com/thetric/ilias-downloader/commit/19bb82d))
+
+
+### Features
+
+* **ui/cli:** print URL for downloaded files ([e8777fe](https://github.com/thetric/ilias-downloader/commit/e8777fe))
+
+
+### BREAKING CHANGES
+
+* **connector/api:** The **signature of IliasService#visit has changed** from `Course, Closure<VisitResult>` to `Course, IliasItemVisitor`.
+For Groovy devs nothing changes (due to java 8's default interface impls), Java devs must accommodate to the new API.
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/thetric/ilias-downloader/compare/1.0.2...1.1.0) (2017-04-09)
 
