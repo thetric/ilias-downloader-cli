@@ -5,12 +5,6 @@ dependencies {
     compile 'commons-cli:commons-cli:1.4'
 }
 
-jar {
-    from configurations.compile.collect { it.directory ? it : zipTree(it) }
-    manifest {
-        attributes(
-            'Main-Class': 'com.github.thetric.iliasdownloader.cli.Cli',
-            'Implementation-Version': version
-        )
-    }
-}
+apply plugin: 'application'
+
+mainClassName = 'com.github.thetric.iliasdownloader.cli.Cli'
