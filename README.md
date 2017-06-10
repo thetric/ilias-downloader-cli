@@ -1,4 +1,4 @@
-[![Travis](https://img.shields.io/travis/thetric/ilias-downloader.svg?style=flat-square)](https://travis-ci.org/thetric/ilias-downloader)
+[![Travis](https://img.shields.io/travis/thetric/ilias-downloader/master.svg?style=flat-square)](https://travis-ci.org/thetric/ilias-downloader)
 [![GitHub release](https://img.shields.io/github/release/thetric/ilias-downloader.svg?style=flat-square)](https://github.com/thetric/ilias-downloader/releases)
 
 # Ilias Downloader
