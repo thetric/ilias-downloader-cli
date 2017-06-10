@@ -75,17 +75,18 @@ final class ItemDownloadingItemVisitor implements IliasItemVisitor {
 
     @Override
     IliasItemVisitor.VisitResult handleFolder(final CourseFolder folder) {
-        log.debug("Visiting folder '${folder.name}'")
+        log.debug("Found folder '${folder.name}'")
         return CONTINUE
     }
 
     @Override
     IliasItemVisitor.VisitResult handleFile(final CourseFile file) {
-        log.debug("Visiting file ${file.name}")
+        log.debug("Found file ${file.name}")
         final Path filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
-            log.info("Downloading file $file")
+            log.info("Downloading file '${file.name}' ({$file.size} Bytes)")
             syncAndSaveFile(filePath, file)
+            log.info("Saved to ${filePath.toUri()}")
         }
         return CONTINUE
     }
