@@ -6,16 +6,13 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
-import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 
 import java.util.function.Function
-import java.util.stream.Collectors
 
 import static org.apache.logging.log4j.Level.DEBUG
 
 @Log4j2
-@CompileStatic
 final class IliasCliController {
     private final CliOptions cliOptions
 
@@ -63,10 +60,7 @@ final class IliasCliController {
             coursesToSync = coursesFromIlias.findAll { prefs.activeCourses.contains(it.id) }
         }
         // update ids - some might not exist anymore
-        prefs.activeCourses = coursesToSync.stream()
-                                           .map({ it.id })
-                                           .distinct()
-                                           .collect(Collectors.toList())
+        prefs.activeCourses = coursesToSync*.id.unique()
         preferenceService.saveUserPreferences(prefs)
 
         printSelectedCourses(coursesToSync)
