@@ -8,8 +8,7 @@ import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 
-import static java.util.stream.Collectors.toList
-
+import java.util.stream.Collectors
 /**
  * Updates the {@link UserPreferences}. It updates the file size limit and the courses to sync.
  */
@@ -41,9 +40,9 @@ final class UserPreferencesUpdateServiceImpl implements UserPreferencesUpdateSer
         final Collection<Course> coursesToSync = getCoursesToSync(cliOptions, prefs, coursesFromIlias)
         // update ids - some might not exist anymore
         prefs.activeCourses = coursesToSync.stream()
-                                           .map { it.id }
+                                           .map { it.id as Long }
                                            .distinct()
-                                           .collect(toList())
+                                           .collect(Collectors.<Long> toList())
         preferenceService.saveUserPreferences(prefs)
         return new SyncSettings(coursesToSync, prefs.maxFileSizeInMiB)
     }

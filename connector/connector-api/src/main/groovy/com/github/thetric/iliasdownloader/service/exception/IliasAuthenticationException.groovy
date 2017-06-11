@@ -2,6 +2,9 @@ package com.github.thetric.iliasdownloader.service.exception
 
 import groovy.transform.CompileStatic
 
+/**
+ * Authentication at the Ilias web service failed.
+ */
 @CompileStatic
 final class IliasAuthenticationException extends IliasException {
     private static final long serialVersionUID = 965016465165430L

@@ -11,6 +11,7 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.IliasItemIdStri
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.jsoup.JSoupParserService
 import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.IliasWebClient
 import groovy.transform.CompileStatic
+import groovy.transform.Immutable
 import groovy.util.logging.Log4j2
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -23,6 +24,14 @@ import static com.github.thetric.iliasdownloader.service.IliasItemVisitor.VisitR
 import static com.github.thetric.iliasdownloader.service.IliasItemVisitor.VisitResult.TERMINATE
 import static java.time.format.DateTimeFormatter.ofPattern
 
+@Immutable
+final class ParsedIliasTableRow {
+    final String name, url
+}
+
+/**
+ * {@link CourseSyncService} based on HTML parsing.
+ */
 @CompileStatic
 @Log4j2
 final class CourseSyncServiceImpl implements CourseSyncService {
@@ -179,25 +188,22 @@ final class CourseSyncServiceImpl implements CourseSyncService {
     private CourseFolder createFolder(final IliasItem parent, final String itemRow) {
         final int firstPosSeparator = itemRow.indexOf(ROW_SEPARATOR)
         final int secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length())
-        final Matcher parsedLink = parseLink(itemRow, secondPosSeparator)
-        return new CourseFolder(
-            name: parsedLink.group('name'),
-            url: resolveItemLink(parent, parsedLink),
-            parent: parent)
+        final ParsedIliasTableRow parsedLink = parseLink(itemRow, secondPosSeparator)
+        return new CourseFolder(name: parsedLink.name, url: resolveItemLink(parent, parsedLink.url), parent: parent)
     }
 
-    private String resolveItemLink(final IliasItem parent, final Matcher parsedLink) {
-        return "${parent.url}/${parsedLink.group('url')}"
+    private String resolveItemLink(final IliasItem parent, final String relUrl) {
+        return "$parent.url/$relUrl"
     }
 
     private CourseFile createFile(final IliasItem parent, final String itemRow) {
         final int firstPosSeparator = itemRow.indexOf(ROW_SEPARATOR)
         final int secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length())
 
-        final Matcher parsedLinkName = parseLink(itemRow, secondPosSeparator)
+        final ParsedIliasTableRow parsedLinkName = parseLink(itemRow, secondPosSeparator)
         return new CourseFile(
-            name: parsedLinkName.group('name'),
-            url: resolveItemLink(parent, parsedLinkName),
+            name: parsedLinkName.name,
+            url: resolveItemLink(parent, parsedLinkName.url),
             parent: parent,
             modified: parseLastModified(itemRow, firstPosSeparator, secondPosSeparator),
             size: parseFileSize(itemRow, firstPosSeparator)
@@ -210,13 +216,13 @@ final class CourseSyncServiceImpl implements CourseSyncService {
         return Long.parseLong(sanitizedSizeInBytes)
     }
 
-    private Matcher parseLink(final String itemRow, final int secondPosSeparator) {
+    private ParsedIliasTableRow parseLink(final String itemRow, final int secondPosSeparator) {
         final int startIndex = secondPosSeparator + ROW_SEPARATOR.length()
         final Matcher matcher = itemRow[startIndex..-1] =~ COURSE_LINK_REGEX
         if (!matcher) {
             throw new IllegalStateException("Failed to parse $itemRow")
         }
-        return matcher
+        return new ParsedIliasTableRow(matcher.group('name'), matcher.group('url'))
     }
 
     private LocalDateTime parseLastModified(final String itemRow, final int firstPosSeparator, final int secondPosSep) {

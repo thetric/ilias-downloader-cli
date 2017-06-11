@@ -7,6 +7,9 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import okhttp3.*
 
+/**
+ * {@link IliasWebClient} communicating with the Ilias with OkHttp.
+ */
 @Log4j2
 @CompileStatic
 final class OkHttpIliasWebClient implements IliasWebClient {

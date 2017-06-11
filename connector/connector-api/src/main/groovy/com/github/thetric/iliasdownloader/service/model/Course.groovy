@@ -4,6 +4,9 @@ import groovy.transform.CompileStatic
 import groovy.transform.Immutable
 import groovy.transform.ToString
 
+/**
+ * Ilias course
+ */
 @ToString(includeNames = true, includeSuperProperties = true)
 @CompileStatic
 @Immutable

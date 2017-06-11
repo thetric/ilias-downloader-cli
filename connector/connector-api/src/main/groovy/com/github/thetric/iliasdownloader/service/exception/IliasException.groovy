@@ -2,6 +2,9 @@ package com.github.thetric.iliasdownloader.service.exception
 
 import groovy.transform.CompileStatic
 
+/**
+ * Base class for all Ilias exceptions.
+ */
 @CompileStatic
 class IliasException extends RuntimeException {
     private static final long serialVersionUID = 168546164616546L

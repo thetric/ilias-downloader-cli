@@ -2,7 +2,7 @@ package com.github.thetric.iliasdownloader.service.webparser
 
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.IliasServiceProvider
-import com.github.thetric.iliasdownloader.service.webparser.impl.NoCookiesAvailableException
+import com.github.thetric.iliasdownloader.service.webparser.impl.CookieNotFoundException
 import com.github.thetric.iliasdownloader.service.webparser.impl.WebIliasService
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncService
 import com.github.thetric.iliasdownloader.service.webparser.impl.course.CourseSyncServiceImpl
@@ -12,6 +12,9 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.Ilias
 import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.OkHttpIliasWebClient
 import groovy.transform.CompileStatic
 
+/**
+ * Provides an {@link IliasService} that retrieves information from the Ilias service by parsing the HTML pages.
+ */
 @CompileStatic
 final class WebParserIliasServiceProvider implements IliasServiceProvider {
     private static final String LOGIN_PAGE_NAME = 'login.php'
@@ -51,8 +54,8 @@ final class WebParserIliasServiceProvider implements IliasServiceProvider {
             throw new IOException("Konnte die URL '$loginPage' nicht erreichen", e)
         }
         return Optional.ofNullable(id).orElseThrow {
-            throw new NoCookiesAvailableException("Konnte das Cookie '" + ILIAS_CLIENT_ID_COOKIE_NAME +
-                                                      "' nicht in der Response von der Seite $loginPage finden")
+            throw new CookieNotFoundException("Konnte das Cookie '" + ILIAS_CLIENT_ID_COOKIE_NAME +
+                "' nicht in der Response von der Seite $loginPage finden")
         }
     }
 

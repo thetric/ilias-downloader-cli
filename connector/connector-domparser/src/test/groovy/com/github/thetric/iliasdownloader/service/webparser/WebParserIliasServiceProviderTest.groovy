@@ -1,6 +1,6 @@
 package com.github.thetric.iliasdownloader.service.webparser
 
-import com.github.thetric.iliasdownloader.service.webparser.impl.NoCookiesAvailableException
+import com.github.thetric.iliasdownloader.service.webparser.impl.CookieNotFoundException
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -53,7 +53,7 @@ class WebParserIliasServiceProviderTest extends Specification {
         new WebParserIliasServiceProvider(cookieService, 'https://www.ilias.fh-dortmund.de/ilias/login.php')
 
         then:
-        thrown NoCookiesAvailableException
+        thrown CookieNotFoundException
     }
 
     def "constructor: save client id"() {

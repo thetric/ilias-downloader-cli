@@ -6,6 +6,9 @@ import groovy.transform.ToString
 
 import java.time.LocalDateTime
 
+/**
+ * Represent a Ilias file (without the actual content, just an URL).
+ */
 @ToString(includeNames = true, includeSuperProperties = true)
 @CompileStatic
 @Immutable(knownImmutableClasses = [LocalDateTime])

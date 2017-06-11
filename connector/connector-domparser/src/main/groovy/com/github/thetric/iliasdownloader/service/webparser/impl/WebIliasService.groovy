@@ -10,6 +10,9 @@ import com.github.thetric.iliasdownloader.service.webparser.impl.webclient.Ilias
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 
+/**
+ * {@link IliasService} parsing the HTML from the Ilias website.
+ */
 @Log4j2
 @CompileStatic
 final class WebIliasService implements IliasService {
