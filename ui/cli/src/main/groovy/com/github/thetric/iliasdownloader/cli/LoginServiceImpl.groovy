@@ -11,6 +11,9 @@ import groovy.util.logging.Log4j2
 import java.nio.file.Files
 import java.util.function.Function
 
+/**
+ * Creates a {@link IliasService} from a settings file (if found) or a setup dialog.
+ */
 @Log4j2
 @CompileStatic
 final class LoginServiceImpl implements LoginService {
