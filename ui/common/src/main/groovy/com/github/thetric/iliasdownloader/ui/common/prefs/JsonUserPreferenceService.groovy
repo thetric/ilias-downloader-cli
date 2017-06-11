@@ -7,6 +7,9 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 
+/**
+ * Saves and loads {@link UserPreferences} as JSON
+ */
 final class JsonUserPreferenceService implements UserPreferenceService {
     private final JsonSlurper jsonSlurper
     final Path settingsFile
@@ -25,8 +28,8 @@ final class JsonUserPreferenceService implements UserPreferenceService {
     void saveUserPreferences(final UserPreferences userPreferences) throws IOException {
         Files.createDirectories(settingsFile.parent)
         settingsFile.withWriter StandardCharsets.UTF_8.name(), {
-            final def compressedJson = JsonOutput.toJson(userPreferences)
-            final def prettyPrintedJson = JsonOutput.prettyPrint(compressedJson)
+            final String compressedJson = JsonOutput.toJson(userPreferences)
+            final String prettyPrintedJson = JsonOutput.prettyPrint(compressedJson)
             it.write("$prettyPrintedJson\n")
         }
     }
