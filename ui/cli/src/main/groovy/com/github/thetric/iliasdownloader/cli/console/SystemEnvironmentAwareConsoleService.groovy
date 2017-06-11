@@ -10,6 +10,7 @@ import groovy.util.logging.Log4j2
  */
 @Log4j2
 @CompileStatic
+@SuppressWarnings('Println')
 final class SystemEnvironmentAwareConsoleService implements ConsoleService {
     @Override
     String readLine(final String systemProp, final String prompt) {
