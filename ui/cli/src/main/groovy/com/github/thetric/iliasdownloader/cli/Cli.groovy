@@ -20,7 +20,7 @@ import static org.apache.logging.log4j.Level.TRACE
 @CompileStatic
 final class Cli {
     // NOTE DO NOT launch in IntelliJ with 'Delegate IDE build/run actions to gradle' as no console is then available!
-    // instead you should define system environment variables (see IliasCliController for the var names)
+    // instead you should define system environment variables (see SyncController for the var names)
 
     private static final String SETTINGS_FILE_NAME = '.ilias-downloader.json'
 

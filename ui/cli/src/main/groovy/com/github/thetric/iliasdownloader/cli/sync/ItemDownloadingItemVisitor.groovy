@@ -5,7 +5,6 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
 import groovy.util.logging.Log4j2
@@ -19,26 +18,28 @@ import java.time.ZoneId
 
 import static com.github.thetric.iliasdownloader.service.IliasItemVisitor.VisitResult.CONTINUE
 
+/**
+ * Downloads new or updated {@link CourseFile}s.
+ */
 @CompileStatic
 @Log4j2
 final class ItemDownloadingItemVisitor implements IliasItemVisitor {
     private static final ZoneId SYSTEM_ZONE = ZoneId.systemDefault()
+    private static final long BYTES_PER_MEBIBYTE = 1048576 // = 1024 * 1024
     private final Path basePath
     private final IliasService iliasService
-    private final UserPreferences preferences
 
     private final long downloadSizeLimitInBytes
 
-    ItemDownloadingItemVisitor(final Path basePath, final IliasService iliasService, final UserPreferences preferences) {
+    ItemDownloadingItemVisitor(final Path basePath, final IliasService iliasService, final long maxFileSizeInMiB) {
         this.basePath = basePath
         this.iliasService = iliasService
-        this.preferences = preferences
 
-        this.downloadSizeLimitInBytes = preferences.maxFileSizeInMiB > 0 ? toBytes(preferences) : Long.MAX_VALUE
+        this.downloadSizeLimitInBytes = maxFileSizeInMiB > 0 ? toBytes(maxFileSizeInMiB) : Long.MAX_VALUE
     }
 
-    private int toBytes(final UserPreferences preferences) {
-        return preferences.maxFileSizeInMiB * 1024 * 1024
+    private int toBytes(final long maxFileSizeInMiB) {
+        return maxFileSizeInMiB * BYTES_PER_MEBIBYTE
     }
 
     private Path resolvePathAndCreateMissingDirs(final IliasItem iliasItem) {

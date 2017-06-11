@@ -9,7 +9,6 @@ import com.github.thetric.iliasdownloader.service.webparser.CookieService
 import com.github.thetric.iliasdownloader.service.webparser.JsoupCookieService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 
@@ -42,16 +41,23 @@ final class CliController {
     void startCliController() {
         try {
             final IliasService iliasService = createIliasService()
-            final Function<UserPreferences, ? extends IliasItemVisitor> syncHandlerProvider = {
-                final UserPreferences prefs -> return new ItemDownloadingItemVisitor(cliOptions.syncDir, iliasService, prefs)
-            }
-            new IliasCliController(
-                cliOptions,
+            final UserPreferencesUpdateService preferencesUpdateService = new UserPreferencesUpdateServiceImpl(
                 iliasService,
-                syncHandlerProvider,
                 resourceBundle,
                 preferenceService,
-                consoleService).start()
+                consoleService)
+            final SyncSettings syncSettings = preferencesUpdateService.updatePreferences(cliOptions)
+            final IliasItemVisitor itemVisitor = new ItemDownloadingItemVisitor(
+                cliOptions.syncDir,
+                iliasService,
+                syncSettings.maxFileSizePerFileInMiB)
+            final SyncController syncController = new SyncController(
+                iliasService,
+                itemVisitor,
+                resourceBundle,
+                preferenceService,
+                consoleService)
+            syncController.startSync(syncSettings.courses)
         } catch (final IliasAuthenticationException authEx) {
             log.error(resourceBundle.getString('login.error'), authEx)
         }

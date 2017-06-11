@@ -1,100 +1,80 @@
 package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
-import com.github.thetric.iliasdownloader.service.IliasItemVisitor
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
+import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 
-import java.util.function.Function
+import static java.util.stream.Collectors.toList
 
-import static org.apache.logging.log4j.Level.DEBUG
-
+/**
+ * Updates the {@link UserPreferences}. It updates the file size limit and the courses to sync.
+ */
 @Log4j2
-final class IliasCliController {
-    private final CliOptions cliOptions
-
+@CompileStatic
+final class UserPreferencesUpdateServiceImpl implements UserPreferencesUpdateService {
     private final IliasService iliasService
-
-    private final Function<UserPreferences, ? extends IliasItemVisitor> syncHandlerProvider
 
     private final ResourceBundle resourceBundle
     private final UserPreferenceService preferenceService
     private final ConsoleService consoleService
 
-    IliasCliController(
-        final CliOptions cliOptions,
+    UserPreferencesUpdateServiceImpl(
         final IliasService iliasService,
-        final Function<UserPreferences, ? extends IliasItemVisitor> syncHandlerProvider,
-        final ResourceBundle resourceBundle,
-        final UserPreferenceService preferenceService, final ConsoleService consoleService) {
-        this.cliOptions = cliOptions
+        final ResourceBundle resourceBundle, final UserPreferenceService preferenceService, final ConsoleService consoleService) {
         this.iliasService = iliasService
-        this.syncHandlerProvider = syncHandlerProvider
         this.resourceBundle = resourceBundle
         this.preferenceService = preferenceService
         this.consoleService = consoleService
     }
 
-    void start() {
+    @Override
+    SyncSettings updatePreferences(final CliOptions cliOptions) {
         final UserPreferences prefs = preferenceService.loadUserPreferences()
 
-        updateFileSizeLimitFromCliOpts(prefs)
+        updateFileSizeLimitFromCliOpts(prefs, cliOptions)
 
         final Collection<Course> coursesFromIlias = iliasService.joinedCourses
-        final Collection<Course> coursesToSync
+        final Collection<Course> coursesToSync = getCoursesToSync(cliOptions, prefs, coursesFromIlias)
+        // update ids - some might not exist anymore
+        prefs.activeCourses = coursesToSync.stream()
+                                           .map { it.id }
+                                           .distinct()
+                                           .collect(toList())
+        preferenceService.saveUserPreferences(prefs)
+        return new SyncSettings(coursesToSync, prefs.maxFileSizeInMiB)
+    }
 
+    private Collection<Course> getCoursesToSync(
+        final CliOptions cliOptions, final UserPreferences prefs, final Collection<Course> coursesFromIlias) {
         if (cliOptions.showCourseSelection || !prefs.activeCourses) {
             try {
-                coursesToSync = showAndSaveCourseSelection(coursesFromIlias)
+                return showAndSaveCourseSelection(coursesFromIlias)
             } catch (final CourseSelectionOutOfRange e) {
-                log.catching(DEBUG, e)
                 final String errMsg = resourceBundle.getString('sync.courses.prompt.errors.out-of-range')
-                System.err.println errMsg.replace('{0}', coursesFromIlias.size() as String)
-                return
+                throw new InvalidUsageException(errMsg.replace('{0}', coursesFromIlias.size() as String), e)
             }
         } else {
             println ''
-            coursesToSync = coursesFromIlias.findAll { prefs.activeCourses.contains(it.id) }
+            return coursesFromIlias.findAll { prefs.activeCourses.contains(it.id) }
         }
-        // update ids - some might not exist anymore
-        prefs.activeCourses = coursesToSync*.id.unique()
-        preferenceService.saveUserPreferences(prefs)
-
-        printSelectedCourses(coursesToSync)
-        executeSync(iliasService, coursesToSync, prefs)
     }
 
-    private void printSelectedCourses(final Collection<Course> coursesToSync) {
-        println ''
-        println ">>> Syncing ${coursesToSync.size()} courses:"
-        print coursesToSync.collect { "  > ${it.name}" }.join('\n')
-    }
-
-    private void updateFileSizeLimitFromCliOpts(final UserPreferences prefs) {
+    private void updateFileSizeLimitFromCliOpts(final UserPreferences prefs, final CliOptions cliOptions) {
         if (cliOptions.fileSizeLimitInMiB != null) {
             // limit = 0 -> unlimited
             if (cliOptions.fileSizeLimitInMiB >= 0) {
+                log.debug('New max file size limit (MiB): {}, old was {}', cliOptions.fileSizeLimitInMiB, prefs.maxFileSizeInMiB)
                 prefs.maxFileSizeInMiB = cliOptions.fileSizeLimitInMiB
                 preferenceService.saveUserPreferences(prefs)
             } else {
-                final def errMsg = "${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitInMiB"
+                final GString errMsg = "${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitInMiB"
                 throw new IllegalArgumentException(errMsg)
             }
         }
-    }
-
-    private void executeSync(final IliasService iliasService, final Collection<Course> coursesToSync, final UserPreferences prefs) {
-        println ''
-        println ">>> ${resourceBundle.getString('sync.started')}"
-        final IliasItemVisitor syncHandler = syncHandlerProvider.apply(prefs)
-        for (final Course course : coursesToSync) {
-            iliasService.visit(course, syncHandler)
-        }
-        println ''
-        println ">>> ${resourceBundle.getString('sync.finished')}"
     }
 
     /**
@@ -109,11 +89,11 @@ final class IliasCliController {
         allCourses.eachWithIndex { final Course course, final int i ->
             println "\t${i + 1} ${course.name} (ID: ${course.id})"
         }
-        final def courseSelection = consoleService.readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
+        final String courseSelection = consoleService.readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
         final trimmedSelection = courseSelection.trim()
         if (trimmedSelection) {
             final List<Integer> courseIndices = courseSelection.split(/\s+/)
-                                                               .collect { Integer.parseInt it }
+                                                               .collect { final String it -> Integer.parseInt it }
                                                                .collect { it - 1 }
             if (courseIndices.any { it < 0 || it > allCourses.size() }) {
                 throw new CourseSelectionOutOfRange()
