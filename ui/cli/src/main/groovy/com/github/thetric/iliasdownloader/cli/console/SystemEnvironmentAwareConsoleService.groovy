@@ -19,8 +19,7 @@ final class SystemEnvironmentAwareConsoleService implements ConsoleService {
         }
 
         print "$prompt: "
-        final Scanner scanner = new Scanner(System.in)
-        return scanner.nextLine()
+        return readNextLine()
     }
 
     /**
@@ -45,7 +44,15 @@ final class SystemEnvironmentAwareConsoleService implements ConsoleService {
         }
         log.warn('Password input in IDEs are _not_ supported')
         log.warn('FALLING BACK TO PLAIN TEXT MODE')
-        final Scanner s = new Scanner(System.in)
-        return s.nextLine()
+        return readNextLine()
+    }
+
+    private String readNextLine() {
+        final Scanner scanner = new Scanner(System.in)
+        try {
+            return scanner.nextLine()
+        } finally {
+            scanner.close()
+        }
     }
 }
