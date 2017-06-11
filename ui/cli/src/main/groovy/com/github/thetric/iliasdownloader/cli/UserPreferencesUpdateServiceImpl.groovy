@@ -58,7 +58,6 @@ final class UserPreferencesUpdateServiceImpl implements UserPreferencesUpdateSer
                 throw new InvalidUsageException(errMsg.replace('{0}', coursesFromIlias.size() as String), e)
             }
         } else {
-            println ''
             return coursesFromIlias.findAll { prefs.activeCourses.contains(it.id) }
         }
     }
@@ -84,10 +83,9 @@ final class UserPreferencesUpdateServiceImpl implements UserPreferencesUpdateSer
      * @return the {@link Course}s to sync
      */
     private Collection<Course> showAndSaveCourseSelection(final Collection<Course> allCourses) {
-        println ''
-        println ">>> ${resourceBundle.getString('sync.courses.available')}"
+        log.info ">>> ${resourceBundle.getString('sync.courses.available')}"
         allCourses.eachWithIndex { final Course course, final int i ->
-            println "\t${i + 1} ${course.name} (ID: ${course.id})"
+            log.info "\t${i + 1} ${course.name} (ID: ${course.id})"
         }
         final String courseSelection = consoleService.readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
         final trimmedSelection = courseSelection.trim()
