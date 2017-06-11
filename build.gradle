@@ -16,6 +16,7 @@ buildscript {
 configure(subprojects.findAll { it.childProjects.isEmpty() }) {
     apply plugin: 'groovy'
     apply plugin: 'maven'
+    apply plugin: 'codenarc'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -36,9 +37,13 @@ configure(subprojects.findAll { it.childProjects.isEmpty() }) {
         }
         testCompile 'net.bytebuddy:byte-buddy:1.7.0'
         testRuntime 'org.slf4j:slf4j-api:1.7.25'
+
+        // code analysis
+        codenarc 'org.codenarc:CodeNarc:0.27.0'
     }
 
     apply from: rootProject.file('config/gradle/coverage.gradle')
+    apply from: rootProject.file('config/codenarc.gradle')
 
     repositories {
         jcenter()
