@@ -9,6 +9,7 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 
 import java.util.stream.Collectors
+
 /**
  * Updates the {@link UserPreferences}. It updates the file size limit and the courses to sync.
  */
