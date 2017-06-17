@@ -1,3 +1,13 @@
+<a name="2.0.2"></a>
+## [2.0.2](https://github.com/thetric/ilias-downloader/compare/2.0.1...v2.0.2) (2017-06-17)
+
+
+### Bug Fixes
+
+* **ui/cli:** don't print a groovy runtime exception due to wrong API ([59f5630](https://github.com/thetric/ilias-downloader/commit/59f5630))
+
+
+
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/thetric/ilias-downloader/compare/2.0.0...v2.0.1) (2017-06-13)
 
