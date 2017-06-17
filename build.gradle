@@ -21,7 +21,7 @@ configure(subprojects.findAll { it.childProjects.isEmpty() }) {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    version '2.0.1'
+    version '2.0.2'
     jar.baseName = 'ilias-downloader'
     jar.appendix = it.name
 
