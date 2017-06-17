@@ -54,7 +54,7 @@ class CliService {
         final CliBuilder cliBuilder = createCliBuilder()
         final OptionAccessor opts = cliBuilder.parse(args)
         if (!opts) {
-            throw new InvalidUsageException()
+            throw new InvalidUsageException(resourceBundle.getString('args.invalid'))
         }
         return opts
     }
