@@ -1,8 +1,0 @@
-dependencies {
-    compile project(':ui:common')
-    compile project(':connector:connector-domparser')
-
-    compile 'commons-cli:commons-cli:1.4'
-}
-
-

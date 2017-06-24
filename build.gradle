@@ -1,56 +1,54 @@
-group 'com.github.thetric.iliasdownloader'
+plugins {
+    id 'groovy'
+    id 'codenarc'
+    id 'net.saliman.cobertura' version '2.5.0'
+    id 'application'
+}
 
 repositories {
     jcenter()
 }
 
-buildscript {
-    repositories {
-        jcenter()
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version '3.0.0'
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy:2.4.11'
+
+    compile 'commons-cli:commons-cli:1.4'
+
+    compile 'com.github.thetric:ilias-downloader-connector-domparser:3.0.0'
+    compile 'com.github.thetric:ilias-downloader-ui-common:3.0.0'
+
+    // logging libs
+    compile 'org.apache.logging.log4j:log4j-core:2.8.2'
+
+    // test
+    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    dependencies {
-        classpath 'net.saliman:gradle-cobertura-plugin:2.4.0'
-    }
+    testCompile 'net.bytebuddy:byte-buddy:1.7.0'
+    testRuntime 'org.slf4j:slf4j-api:1.7.25'
+
+    // code analysis
+    codenarc 'org.codenarc:CodeNarc:0.27.0'
 }
 
-configure(subprojects.findAll { it.childProjects.isEmpty() }) {
-    apply plugin: 'groovy'
-    apply plugin: 'maven'
-    apply plugin: 'codenarc'
+apply from: rootProject.file('config/gradle/coverage.gradle')
+apply from: rootProject.file('config/codenarc.gradle')
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    version '2.0.2'
-    jar.baseName = 'ilias-downloader'
-    jar.appendix = it.name
-
-    dependencies {
-        compile 'org.codehaus.groovy:groovy:2.4.11'
-
-        // logging libs
-        compile 'org.apache.logging.log4j:log4j-core:2.8.2'
-
-        // test
-        testCompile ('org.spockframework:spock-core:1.1-groovy-2.4') {
-            exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-        }
-        testCompile 'net.bytebuddy:byte-buddy:1.7.0'
-        testRuntime 'org.slf4j:slf4j-api:1.7.25'
-
-        // code analysis
-        codenarc 'org.codenarc:CodeNarc:0.27.0'
-    }
-
-    apply from: rootProject.file('config/gradle/coverage.gradle')
-    apply from: rootProject.file('config/codenarc.gradle')
-
-    repositories {
-        jcenter()
-        maven { url "https://jitpack.io" }
-    }
-
-    tasks.withType(GroovyCompile) {
-        groovyOptions.optimizationOptions.indy = true
-    }
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
 }
+
+tasks.withType(GroovyCompile) {
+    groovyOptions.optimizationOptions.indy = true
+}
+
+mainClassName = 'com.github.thetric.iliasdownloader.cli.Cli'
+
+distTar.compression = Compression.GZIP
+distTar.extension = 'tar.gz'
