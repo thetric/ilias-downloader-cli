@@ -5,9 +5,4 @@ dependencies {
     compile 'commons-cli:commons-cli:1.4'
 }
 
-apply plugin: 'application'
 
-mainClassName = 'com.github.thetric.iliasdownloader.cli.Cli'
-
-distTar.compression = Compression.GZIP
-distTar.extension = 'tar.gz'

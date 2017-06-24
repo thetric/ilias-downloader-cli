@@ -1,4 +1,0 @@
-dependencies {
-    compile 'org.codehaus.groovy:groovy-json:2.4.11'
-    compile 'org.codehaus.groovy:groovy-nio:2.4.11'
-}
