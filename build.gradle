@@ -7,6 +7,7 @@ plugins {
 
 repositories {
     jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 sourceCompatibility = 1.8
@@ -38,11 +39,6 @@ dependencies {
 
 apply from: rootProject.file('config/gradle/coverage.gradle')
 apply from: rootProject.file('config/codenarc.gradle')
-
-repositories {
-    jcenter()
-    maven { url "https://jitpack.io" }
-}
 
 tasks.withType(GroovyCompile) {
     groovyOptions.optimizationOptions.indy = true
