@@ -3,7 +3,7 @@ package com.github.thetric.iliasdownloader.cli
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
+import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
@@ -19,12 +19,13 @@ final class UserPreferencesUpdateServiceImpl implements UserPreferencesUpdateSer
     private final IliasService iliasService
 
     private final ResourceBundle resourceBundle
-    private final UserPreferenceService preferenceService
+    private final PreferenceService<UserPreferences> preferenceService
     private final ConsoleService consoleService
 
     UserPreferencesUpdateServiceImpl(
         final IliasService iliasService,
-        final ResourceBundle resourceBundle, final UserPreferenceService preferenceService, final ConsoleService consoleService) {
+        final ResourceBundle resourceBundle, final PreferenceService<UserPreferences> preferenceService,
+        final ConsoleService consoleService) {
         this.iliasService = iliasService
         this.resourceBundle = resourceBundle
         this.preferenceService = preferenceService
@@ -33,7 +34,7 @@ final class UserPreferencesUpdateServiceImpl implements UserPreferencesUpdateSer
 
     @Override
     SyncSettings updatePreferences(final CliOptions cliOptions) {
-        final UserPreferences prefs = preferenceService.loadUserPreferences()
+        final UserPreferences prefs = preferenceService.loadPreferences()
 
         updateFileSizeLimitFromCliOpts(prefs, cliOptions)
 
@@ -44,7 +45,7 @@ final class UserPreferencesUpdateServiceImpl implements UserPreferencesUpdateSer
                                            .map { it.id as Long }
                                            .distinct()
                                            .collect(Collectors.<Long> toList())
-        preferenceService.saveUserPreferences(prefs)
+        preferenceService.savePreferences(prefs)
         return new SyncSettings(coursesToSync, prefs.maxFileSizeInMiB)
     }
 
@@ -68,7 +69,7 @@ final class UserPreferencesUpdateServiceImpl implements UserPreferencesUpdateSer
             if (cliOptions.fileSizeLimitInMiB >= 0) {
                 log.debug('New max file size limit (MiB): {}, old was {}', cliOptions.fileSizeLimitInMiB, prefs.maxFileSizeInMiB)
                 prefs.maxFileSizeInMiB = cliOptions.fileSizeLimitInMiB
-                preferenceService.saveUserPreferences(prefs)
+                preferenceService.savePreferences(prefs)
             } else {
                 final GString errMsg = "${resourceBundle.getString('args.sync.max-size.negative')} $cliOptions.fileSizeLimitInMiB"
                 throw new IllegalArgumentException(errMsg)

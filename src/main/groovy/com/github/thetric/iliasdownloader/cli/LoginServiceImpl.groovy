@@ -3,7 +3,7 @@ package com.github.thetric.iliasdownloader.cli
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
+import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
@@ -19,13 +19,13 @@ import java.util.function.Function
 final class LoginServiceImpl implements LoginService {
     private final Function<String, IliasService> iliasProvider
     private final ResourceBundle resourceBundle
-    private final UserPreferenceService preferenceService
+    private final PreferenceService<UserPreferences> preferenceService
     private final ConsoleService consoleService
 
     LoginServiceImpl(
         final Function<String, IliasService> iliasProvider,
         final ResourceBundle resourceBundle,
-        final UserPreferenceService preferenceService, final ConsoleService consoleService) {
+        final PreferenceService<UserPreferences> preferenceService, final ConsoleService consoleService) {
         this.iliasProvider = iliasProvider
         this.resourceBundle = resourceBundle
         this.preferenceService = preferenceService
@@ -38,7 +38,7 @@ final class LoginServiceImpl implements LoginService {
     }
 
     private IliasService createServiceFromConfig() {
-        final UserPreferences prefs = preferenceService.loadUserPreferences()
+        final UserPreferences prefs = preferenceService.loadPreferences()
         final IliasService iliasService = iliasProvider.apply(prefs.iliasServerURL)
         final String password = promptForPassword(prefs.userName)
         iliasService.login(new LoginCredentials(userName: prefs.userName, password: password))
@@ -59,7 +59,7 @@ final class LoginServiceImpl implements LoginService {
         final LoginCredentials credentials = promptForCredentials()
         iliasService.login(credentials)
         final UserPreferences prefs = new UserPreferences(iliasLoginUrl, credentials.userName, 0)
-        preferenceService.saveUserPreferences(prefs)
+        preferenceService.savePreferences(prefs)
         return iliasService
     }
 

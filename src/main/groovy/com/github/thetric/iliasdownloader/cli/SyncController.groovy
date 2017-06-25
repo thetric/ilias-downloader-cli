@@ -4,7 +4,7 @@ import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.service.IliasItemVisitor
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
+import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
@@ -13,7 +13,7 @@ import groovy.util.logging.Log4j2
  * Updates the {@link UserPreferences} and executes the sync.
  *
  * @see UserPreferences
- * @see UserPreferenceService
+ * @see PreferenceService
  */
 @Log4j2
 @CompileStatic
@@ -23,14 +23,14 @@ final class SyncController {
     private final IliasItemVisitor iliasItemVisitor
 
     private final ResourceBundle resourceBundle
-    private final UserPreferenceService preferenceService
+    private final PreferenceService<UserPreferences> preferenceService
     private final ConsoleService consoleService
 
     SyncController(
         final IliasService iliasService,
         final IliasItemVisitor iliasItemVisitor,
         final ResourceBundle resourceBundle,
-        final UserPreferenceService preferenceService,
+        final PreferenceService<UserPreferences> preferenceService,
         final ConsoleService consoleService) {
         this.iliasService = iliasService
         this.iliasItemVisitor = iliasItemVisitor

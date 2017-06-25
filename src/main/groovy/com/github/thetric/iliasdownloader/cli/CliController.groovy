@@ -8,7 +8,8 @@ import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationE
 import com.github.thetric.iliasdownloader.service.webparser.CookieService
 import com.github.thetric.iliasdownloader.service.webparser.JsoupCookieService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferenceService
+import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
+import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 
@@ -25,12 +26,12 @@ final class CliController {
     private final CliOptions cliOptions
 
     private final Path settingsPath
-    private final UserPreferenceService preferenceService
+    private final PreferenceService<UserPreferences> preferenceService
     private final ConsoleService consoleService
 
     CliController(
         final ResourceBundle resourceBundle, final CliOptions cliOptions, final Path settingsPath,
-        final ConsoleService consoleService, final UserPreferenceService preferenceService) {
+        final ConsoleService consoleService, final PreferenceService<UserPreferences> preferenceService) {
         this.resourceBundle = resourceBundle
         this.cliOptions = cliOptions
         this.settingsPath = settingsPath
