@@ -21,7 +21,7 @@ dependencies {
     compile 'commons-cli:commons-cli:1.4'
 
     compile 'com.github.thetric:ilias-downloader-connector-domparser:3.0.0'
-    compile 'com.github.thetric:ilias-downloader-ui-common:3.0.0'
+    compile 'com.github.thetric:ilias-downloader-ui-common:4.0.0'
 
     // logging libs
     compile 'org.apache.logging.log4j:log4j-core:2.8.2'
