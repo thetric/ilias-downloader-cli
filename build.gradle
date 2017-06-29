@@ -13,7 +13,7 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version '2.0.3'
+version '2.0.4'
 
 dependencies {
     compile 'org.codehaus.groovy:groovy:2.4.12'
