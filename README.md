@@ -1,5 +1,5 @@
-[![Travis](https://img.shields.io/travis/thetric/ilias-downloader-ui-cli/master.svg?style=flat-square)](https://travis-ci.org/thetric/ilias-downloader-ui-cli)
-[![GitHub release](https://img.shields.io/github/release/thetric/ilias-downloader-ui-cli.svg?style=flat-square)](https://github.com/thetric/ilias-downloader-ui-cli/releases)
+[![Travis](https://img.shields.io/travis/thetric/ilias-downloader-cli/master.svg?style=flat-square)](https://travis-ci.org/thetric/ilias-downloader-cli)
+[![GitHub release](https://img.shields.io/github/release/thetric/ilias-downloader-cli.svg?style=flat-square)](https://github.com/thetric/ilias-downloader-cli/releases)
 
 # Ilias Downloader (CLI)
 
