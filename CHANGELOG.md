@@ -1,3 +1,13 @@
+<a name="2.0.4"></a>
+## [2.0.4](https://github.com/thetric/ilias-downloader-cli/compare/2.0.2...v2.0.4) (2017-06-29)
+
+
+### Bug Fixes
+
+* remove redundant parenthesis in download log ([a589d5c](https://github.com/thetric/ilias-downloader-cli/commit/a589d5c))
+
+
+
 <a name="2.0.3"></a>
 ## [2.0.3](https://github.com/thetric/ilias-downloader-cli/compare/2.0.2...v2.0.3) (2017-06-25)
 
