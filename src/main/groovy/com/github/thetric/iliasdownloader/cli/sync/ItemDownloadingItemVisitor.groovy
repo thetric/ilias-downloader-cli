@@ -85,7 +85,7 @@ final class ItemDownloadingItemVisitor implements IliasItemVisitor {
         log.debug("Found file ${file.name}")
         final Path filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
-            log.info("Downloading file '${file.name}' ({$file.size} Bytes)")
+            log.info("Downloading file '${file.name}' ($file.size Bytes)")
             syncAndSaveFile(filePath, file)
             log.info("Saved to ${filePath.toUri()}")
         }
