@@ -34,7 +34,7 @@ dependencies {
     testRuntime 'org.slf4j:slf4j-api:1.7.25'
 
     // code analysis
-    codenarc 'org.codenarc:CodeNarc:0.27.0'
+    codenarc 'org.codenarc:CodeNarc:1.0'
 }
 
 apply from: rootProject.file('config/gradle/coverage.gradle')
