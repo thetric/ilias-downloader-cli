@@ -89,7 +89,7 @@ final class UserPreferencesUpdateServiceImpl implements UserPreferencesUpdateSer
             log.info "\t${i + 1} ${course.name} (ID: ${course.id})"
         }
         final String courseSelection = consoleService.readLine('sync.courses', resourceBundle.getString('sync.courses.prompt'))
-        final trimmedSelection = courseSelection.trim()
+        final String trimmedSelection = courseSelection.trim()
         if (trimmedSelection) {
             final List<Integer> courseIndices = courseSelection.split(/\s+/)
                                                                .collect { final String it -> Integer.parseInt it }

@@ -18,7 +18,7 @@ class CliService {
     }
 
     CliOptions parseOpts(final String[] args) {
-        final options = parseArgs(args)
+        final OptionAccessor options = parseArgs(args)
         final Long size = options.s == false ? null : options.s as Long
         return new CliOptions(
             syncDir: Paths.get(options.d as String),
@@ -28,7 +28,7 @@ class CliService {
     }
 
     private CliBuilder createCliBuilder() {
-        final cliBuilder = new CliBuilder()
+        final CliBuilder cliBuilder = new CliBuilder()
         cliBuilder.header = 'Ilias Downloader (CLI)'
         cliBuilder.d(
             longOpt: 'dir',

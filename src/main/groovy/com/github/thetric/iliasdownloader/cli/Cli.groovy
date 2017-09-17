@@ -25,9 +25,9 @@ final class Cli {
 
     static void main(final String[] args) {
         final ResourceBundle resourceBundle = ResourceBundle.getBundle('ilias-cli')
-        final cliService = new CliService(resourceBundle)
+        final CliService cliService = new CliService(resourceBundle)
         try {
-            final cliOptions = cliService.parseOpts(args)
+            final CliOptions cliOptions = cliService.parseOpts(args)
             final Path settingsPath = cliOptions.syncDir.resolve(SETTINGS_FILE_NAME)
             final ConsoleService consoleService = new SystemEnvironmentAwareConsoleService()
             final PreferenceService<UserPreferences> preferenceService = new JsonPreferenceService(
