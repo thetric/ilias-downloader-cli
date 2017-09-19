@@ -2,7 +2,7 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout pattern="%msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %highlight{%-5level} [%t] %c{1.} - %msg%n"/>
             <Filters>
                 <!-- deny warn, error, fatal -->
                 <ThresholdFilter level="warn" onMatch="DENY" onMismatch="ACCEPT"/>
