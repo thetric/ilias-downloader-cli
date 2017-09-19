@@ -1,3 +1,8 @@
+<a name="2.0.6"></a>
+## [2.0.6](https://github.com/thetric/ilias-downloader-cli/compare/2.0.5...2.0.6) (2017-09-19)
+
+Improved and lesser logging.
+
 <a name="2.0.5"></a>
 ## [2.0.5](https://github.com/thetric/ilias-downloader-cli/compare/2.0.4...2.0.5) (2017-09-19)
 
