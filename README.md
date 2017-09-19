@@ -18,3 +18,7 @@ Older versions are *not* guaranteed to work.
  -c,--select-courses    show dialog to select courses to sync
  -s,--max-size <arg>    size limit in MiB per file download (exclusive)
 ```
+
+## Debugging
+
+For more debug output add `-Dlog4j.configurationFile=log4j2-debug.xml` to the command line.
