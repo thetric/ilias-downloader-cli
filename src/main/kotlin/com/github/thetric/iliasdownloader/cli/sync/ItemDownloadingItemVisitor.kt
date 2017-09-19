@@ -5,7 +5,7 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
-import org.apache.logging.log4j.LogManager
+import mu.KotlinLogging
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -17,7 +17,7 @@ import java.util.Objects
 
 private val SYSTEM_ZONE = ZoneId.systemDefault()
 private val BYTES_PER_MEBIBYTE: Long = 1_048_576
-private val log = LogManager.getLogger(ItemDownloadingItemVisitor::class.java)
+private val log = KotlinLogging.logger {}
 
 /**
  * Downloads new or updated [CourseFile]s.
@@ -76,17 +76,17 @@ class ItemDownloadingItemVisitor(
     }
 
     override fun handleFolder(folder: CourseFolder): IliasItemVisitor.VisitResult {
-        log.debug("Found folder \'${folder.name}\'")
+        log.debug { "Found folder \'${folder.name}\'" }
         return IliasItemVisitor.VisitResult.CONTINUE
     }
 
     override fun handleFile(file: CourseFile): IliasItemVisitor.VisitResult {
-        log.debug("Found file " + file.name)
+        log.debug { "Found file ${file.name}" }
         val filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
-            log.info("Downloading file \'${file.name}\' (${file.size} Bytes)")
+            log.info { "Downloading file \'${file.name}\' (${file.size} Bytes)" }
             syncAndSaveFile(filePath, file)
-            log.info("Saved to ${filePath.toUri()}")
+            log.info { "Saved to ${filePath.toUri()}" }
         }
         return IliasItemVisitor.VisitResult.CONTINUE
     }

@@ -1,9 +1,9 @@
 package com.github.thetric.iliasdownloader.cli.console
 
-import org.apache.logging.log4j.LogManager
+import mu.KotlinLogging
 import java.util.Scanner
 
-private val log = LogManager.getLogger(SystemEnvironmentAwareConsoleService::class.java)
+private val log = KotlinLogging.logger {}
 
 /**
  * Reads the input either from the system environment or prompts the user for input.

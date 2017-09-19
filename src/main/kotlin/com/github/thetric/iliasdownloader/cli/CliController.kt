@@ -8,10 +8,10 @@ import com.github.thetric.iliasdownloader.service.webparser.JsoupCookieService
 import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
-import org.apache.logging.log4j.LogManager
+import mu.KotlinLogging
 import java.util.ResourceBundle
 
-private val log = LogManager.getLogger(CliController::class.java)
+private val log = KotlinLogging.logger {}
 
 /**
  * Connects to the Ilias and starts the sync.
@@ -39,7 +39,7 @@ internal class CliController(
                 resourceBundle)
             syncController.startSync(syncSettings.courses)
         } catch (authEx: IliasAuthenticationException) {
-            log.error(resourceBundle.getString("login.error"), authEx)
+            log.error(authEx) { resourceBundle.getString("login.error") }
         }
     }
 

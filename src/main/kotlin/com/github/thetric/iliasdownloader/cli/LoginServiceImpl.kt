@@ -5,11 +5,11 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.LoginCredentials
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
-import org.apache.logging.log4j.LogManager
+import mu.KotlinLogging
 import java.nio.file.Files
 import java.util.ResourceBundle
 
-private val log = LogManager.getLogger(LoginServiceImpl::class.java)
+private val log = KotlinLogging.logger {}
 
 /**
  * Creates a [IliasService] from a settings file (if found) or a setup dialog.
@@ -26,7 +26,7 @@ internal class LoginServiceImpl(
     }
 
     private fun createServiceFromConfig(): IliasService {
-        log.debug("Trying to load existing config from {}", preferenceService.settingsFile.toAbsolutePath())
+        log.debug { "Trying to load existing config from ${preferenceService.settingsFile.toAbsolutePath()}" }
         val (iliasServerURL, userName) = preferenceService.loadPreferences()
         val iliasService = iliasProvider(iliasServerURL)
         val password = promptForPassword(userName)
@@ -41,7 +41,7 @@ internal class LoginServiceImpl(
     }
 
     private fun createFromFirstTimeSetup(): IliasService {
-        log.debug("No existing config found, starting first time setup")
+        log.debug { "No existing config found, starting first time setup" }
         val iliasLoginUrl = consoleService.readLine("ilias.server.url", "Ilias Server URL")
         val iliasService = iliasProvider(iliasLoginUrl)
         val credentials = promptForCredentials()
