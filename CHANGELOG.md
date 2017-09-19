@@ -1,3 +1,8 @@
+<a name="2.0.5"></a>
+## [2.0.5](https://github.com/thetric/ilias-downloader-cli/compare/2.0.4...2.0.5) (2017-09-19)
+
+Maintenance release (refactoring, dependency updates, docs).
+
 <a name="2.0.4"></a>
 ## [2.0.4](https://github.com/thetric/ilias-downloader-cli/compare/2.0.2...v2.0.4) (2017-06-29)
 
