@@ -1,9 +1,21 @@
+buildscript {
+    ext.kotlin_version = '1.1.4-3'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.1'
     id 'groovy'
-    id 'codenarc'
     id 'net.saliman.cobertura' version '2.5.0'
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC4-3"
 }
+
+apply plugin: 'kotlin'
 
 repositories {
     jcenter()
@@ -13,41 +25,40 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version '2.0.4'
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+version '2.0.5'
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy:2.4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile 'com.xenomachina:kotlin-argparser:2.0.3'
 
-    compile 'commons-cli:commons-cli:1.4'
-
-    compile 'com.github.thetric:ilias-downloader-connector-domparser:3.0.0'
-    compile 'com.github.thetric:ilias-downloader-ui-common:4.0.0'
+    compile 'com.github.thetric:ilias-downloader-connector-domparser:4.0.3'
+    compile 'com.github.thetric:ilias-downloader-ui-common:5.0.0'
 
     // logging libs
     compile 'org.apache.logging.log4j:log4j-core:2.9.0'
 
     // test
+    testCompile 'org.codehaus.groovy:groovy:2.4.12'
     testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testCompile 'net.bytebuddy:byte-buddy:1.7.5'
     testRuntime 'org.slf4j:slf4j-api:1.7.25'
-
-    // code analysis
-    codenarc 'org.codenarc:CodeNarc:1.0'
 }
 
 apply from: rootProject.file('config/gradle/coverage.gradle')
-apply from: rootProject.file('config/codenarc.gradle')
-
-tasks.withType(GroovyCompile) {
-    groovyOptions.optimizationOptions.indy = true
-}
+apply from: file('gradle/detekt.gradle')
 
 jar {
   manifest {
     attributes(
-      'Main-Class': 'com.github.thetric.iliasdownloader.cli.Cli'
+      'Main-Class': 'com.github.thetric.iliasdownloader.cli.CliKt'
     )
   }
 }

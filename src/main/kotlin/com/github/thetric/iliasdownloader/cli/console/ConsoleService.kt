@@ -4,8 +4,7 @@ package com.github.thetric.iliasdownloader.cli.console
  * Simpler interface to the console.
  */
 interface ConsoleService {
+    fun readLine(systemProp: String, prompt: String): String
 
-    String readLine(String systemProp, String prompt)
-
-    String readPassword(String systemProp, String prompt)
+    fun readPassword(systemProp: String, prompt: String): String
 }
