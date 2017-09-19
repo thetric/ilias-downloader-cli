@@ -26,4 +26,4 @@ java -jar ilias-downloader-cli-$VERSION.jar <CLI options>
 
 ## Debugging
 
-For more debug output add `-Dlog4j.configurationFile=log4j2-debug.xml` to the command line.
+For more debug output add `-Dlogback.configurationFile=logback-debug.xml` to the command line.

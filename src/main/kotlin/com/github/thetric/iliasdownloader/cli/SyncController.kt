@@ -5,10 +5,10 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
-import org.apache.logging.log4j.LogManager
+import mu.KotlinLogging
 import java.util.ResourceBundle
 
-private val log = LogManager.getLogger(SyncController::class.java)
+private val log = KotlinLogging.logger {}
 
 /**
  * Updates the [UserPreferences] and executes the sync.
@@ -30,7 +30,7 @@ internal class SyncController(
 
     private fun printSelectedCourses(coursesToSync: Collection<Course>) {
         val courseList = coursesToSync.map { it.name }.joinToString(separator = ", ")
-        log.info("Syncing ${coursesToSync.size} courses: $courseList")
+        log.info { "Syncing ${coursesToSync.size} courses: $courseList" }
     }
 
     private fun executeSync(courses: Collection<Course>) {

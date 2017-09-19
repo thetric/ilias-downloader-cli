@@ -5,10 +5,10 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
-import org.apache.logging.log4j.LogManager
+import mu.KotlinLogging
 import java.util.ResourceBundle
 
-private val log = LogManager.getLogger(UserPreferencesUpdateServiceImpl::class.java)
+private val log = KotlinLogging.logger {}
 
 /**
  * Updates the [UserPreferences]. It updates the file size limit and the courses to sync.
@@ -58,7 +58,7 @@ internal class UserPreferencesUpdateServiceImpl(
         if (cliOptions.fileSizeLimitInMiB != null) {
             val newLimit = cliOptions.fileSizeLimitInMiB!!
             if (newLimit >= 0) {
-                log.debug("New max file size limit (MiB): {}, old was {}", newLimit, prefs.maxFileSizeInMiB)
+                log.debug { "New max file size limit (MiB): $newLimit, old was ${prefs.maxFileSizeInMiB}" }
                 return prefs.copy(maxFileSizeInMiB = newLimit)
             } else {
                 val errMsg = "${resourceBundle.getString("args.sync.max-size.negative")} $newLimit"
@@ -77,8 +77,8 @@ internal class UserPreferencesUpdateServiceImpl(
      * @return the [Course]s to sync
      */
     private fun showAndSaveCourseSelection(allCourses: List<Course>): Collection<Course> {
-        log.info(">>> " + resourceBundle.getString("sync.courses.available"))
-        allCourses.forEachIndexed { index, (id, name) -> log.info("\t${index + 1} $name (ID: $id)") }
+        log.info { ">>> ${resourceBundle.getString("sync.courses.available")}" }
+        allCourses.forEachIndexed { index, (id, name) -> log.info { "\t${index + 1} $name (ID: $id)" } }
         val courseSelection = consoleService.readLine("sync.courses", resourceBundle.getString("sync.courses.prompt"))
         val trimmedSelection = courseSelection.trim { it <= ' ' }
         if (trimmedSelection.isNotBlank()) {
