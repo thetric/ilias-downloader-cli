@@ -1,5 +1,0 @@
-codenarcMain {
-    config rootProject.resources.text.fromFile('config/codenarc-ruleset.gradle')
-}
-
-codenarcTest.enabled = false
