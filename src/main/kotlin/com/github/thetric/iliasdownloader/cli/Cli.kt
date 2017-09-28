@@ -18,7 +18,6 @@ class Cli
  * Entry point for the CLI.
  */
 fun main(args: Array<String>) {
-
     val resourceBundle = ResourceBundle.getBundle("ilias-cli")
     try {
         val cliOptions = mainBody("Ilias Downloader (CLI)") {
