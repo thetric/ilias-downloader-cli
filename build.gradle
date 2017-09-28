@@ -39,7 +39,7 @@ dependencies {
 
     compile 'com.github.thetric:ilias-downloader-connector-domparser:4.0.6'
 
-    compile 'com.github.thetric:ilias-downloader-ui-common:5.0.0'
+    compile 'com.github.thetric:ilias-downloader-ui-common:5.0.1'
 
     // logging libs
     compile 'io.github.microutils:kotlin-logging:1.4.6'
