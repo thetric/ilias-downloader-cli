@@ -7,18 +7,17 @@ private val log = KotlinLogging.logger {}
 
 /**
  * Reads the input either from the system environment or prompts the user for input.
- *
- * @author broj
- * @since 16.01.2017
  */
 class SystemEnvironmentAwareConsoleService : ConsoleService {
+    private val scanner = Scanner(System.`in`)
+
     override fun readLine(systemProp: String, prompt: String): String {
         val property = System.getProperty(systemProp)
         if (property != null) {
             return property
         }
         print("$prompt: ")
-        return readNextLine()
+        return scanner.nextLine()
     }
 
     /**
@@ -46,10 +45,8 @@ class SystemEnvironmentAwareConsoleService : ConsoleService {
 
         log.warn("Password input in IDEs are _not_ supported")
         log.warn("FALLING BACK TO PLAIN TEXT MODE")
-        return readNextLine()
+        return scanner.nextLine()
     }
 
     private fun isNotRunningInAnIde(): Boolean = System.console() != null
-
-    private fun readNextLine(): String = Scanner(System.`in`).use { return it.nextLine() }
 }
