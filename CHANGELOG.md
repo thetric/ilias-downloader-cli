@@ -1,3 +1,13 @@
+<a name="2.0.7"></a>
+## [2.0.7](https://github.com/thetric/ilias-downloader-cli/compare/2.0.6...2.0.7) (2017-09-28)
+
+
+### Bug Fixes
+
+* **console:** do not close System.in after the first read of console input ([95898df](https://github.com/thetric/ilias-downloader-cli/commit/95898df))
+
+
+
 <a name="2.0.6"></a>
 ## [2.0.6](https://github.com/thetric/ilias-downloader-cli/compare/2.0.5...2.0.6) (2017-09-19)
 
