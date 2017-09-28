@@ -37,7 +37,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'com.xenomachina:kotlin-argparser:2.0.3'
 
-    compile 'com.github.thetric:ilias-downloader-connector-domparser:4.0.5'
+    compile 'com.github.thetric:ilias-downloader-connector-domparser:4.0.6'
 
     compile 'com.github.thetric:ilias-downloader-ui-common:5.0.0'
 
