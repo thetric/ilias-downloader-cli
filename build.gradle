@@ -53,7 +53,7 @@ dependencies {
     testCompile 'net.bytebuddy:byte-buddy:1.7.5'
 }
 
-apply from: rootProject.file('config/gradle/coverage.gradle')
+apply from: rootProject.file('gradle/coverage.gradle')
 apply from: file('gradle/detekt.gradle')
 
 jar {
