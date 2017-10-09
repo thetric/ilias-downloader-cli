@@ -24,9 +24,9 @@ internal class UserPreferencesUpdateServiceImpl(
         val prefs = getPreferences(cliOptions)
         val (coursesToSync, newPrefs) = updateSyncCourses(cliOptions, prefs)
         if (newPrefs != prefs) {
-            preferenceService.savePreferences(prefs)
+            preferenceService.savePreferences(newPrefs)
         }
-        return SyncSettings(coursesToSync, prefs.maxFileSizeInMiB)
+        return SyncSettings(coursesToSync, newPrefs.maxFileSizeInMiB)
     }
 
     private fun updateSyncCourses(cliOptions: CliOptions, prefs: UserPreferences): Pair<Collection<Course>, UserPreferences> {
@@ -39,7 +39,7 @@ internal class UserPreferencesUpdateServiceImpl(
     private fun getCoursesToSync(cliOptions: CliOptions, prefs: UserPreferences, coursesFromIlias: Collection<Course>): Collection<Course> {
         return if (cliOptions.showCourseSelection || prefs.activeCourses.isEmpty()) {
             try {
-                showAndSaveCourseSelection(coursesFromIlias.toList())
+                return showAndSaveCourseSelection(coursesFromIlias.toList())
             } catch (e: CourseSelectionOutOfRange) {
                 val errMsg = resourceBundle.getString("sync.courses.prompt.errors.out-of-range")
                 throw InvalidUsageException(errMsg.replace("{0}", coursesFromIlias.size.toString()), e)
