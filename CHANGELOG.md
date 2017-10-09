@@ -1,3 +1,13 @@
+<a name="2.0.8"></a>
+## [2.0.8](https://github.com/thetric/ilias-downloader-cli/compare/2.0.7...2.0.8) (2017-10-09)
+
+
+### Bug Fixes
+
+* save selected courses ([bcda977](https://github.com/thetric/ilias-downloader-cli/commit/bcda977))
+
+
+
 <a name="2.0.7"></a>
 ## [2.0.7](https://github.com/thetric/ilias-downloader-cli/compare/2.0.6...2.0.7) (2017-09-28)
 
