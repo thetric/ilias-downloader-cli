@@ -1,6 +1,22 @@
 autoCorrect: true
 failFast: false
 
+test-pattern: # Configure exclusions for test sources
+  active: true
+  patterns: # Test file regexes
+    - '.*/test/.*'
+    - '.*Test.kt'
+    - '.*Spec.kt'
+  exclude-rule-sets:
+    - 'comments'
+  exclude-rules:
+    - 'NamingRules'
+    - 'WildcardImport'
+    - 'MagicNumber'
+    - 'MaxLineLength'
+    - 'LateinitUsage'
+    - 'StringLiteralDuplication'
+
 build:
   warningThreshold: 0
   failThreshold: 0
@@ -42,14 +58,24 @@ potential-bugs:
     active: false
   EqualsWithHashCodeExist:
     active: true
+  InvalidLoopCondition:
+    active: false
   WrongEqualsTypeParameter:
+    active: false
+  IteratorHasNextCallsNextMethod:
     active: false
   ExplicitGarbageCollectionCall:
     active: true
+  UnconditionalJumpStatementInLoop:
+    active: false
+  IteratorNotThrowingNoSuchElementException:
+    active: false
   UnreachableCode:
     active: true
   LateinitUsage:
     active: false
+    excludeAnnotatedProperties: ''
+    ignoreOnClassesPattern: ''
   UnsafeCallOnNullableType:
     active: false
   UnsafeCast:
@@ -84,20 +110,23 @@ exceptions:
       - InterruptedException
       - NullPointerException
       - RuntimeException
+      - Throwable
   TooGenericExceptionThrown:
     active: true
     exceptions:
+      - Error
+      - Exception
+      - NullPointerException
+      - RuntimeException
       - Throwable
-      - ThrowError
-      - ThrowException
-      - ThrowNullPointerException
-      - ThrowRuntimeException
-      - ThrowThrowable
   InstanceOfCheckForException:
     active: false
-  IteratorNotThrowingNoSuchElementException:
+  NotImplementedDeclaration:
     active: false
-  PrintExceptionStackTrace:
+  ThrowingExceptionsWithoutMessageOrCause:
+    active: false
+    exceptions: 'IllegalArgumentException,IllegalStateException,IOException'
+  PrintStackTrace:
     active: false
   RethrowCaughtException:
     active: false
@@ -132,6 +161,8 @@ empty-blocks:
     active: true
   EmptyInitBlock:
     active: true
+  EmptyKtFile:
+    active: true
   EmptySecondaryConstructor:
     active: true
   EmptyWhenBlock:
@@ -142,16 +173,32 @@ empty-blocks:
 complexity:
   active: true
   LongMethod:
+    active: true
     threshold: 20
+  NestedBlockDepth:
+    active: true
+    threshold: 3
   LongParameterList:
+    active: true
     threshold: 5
   LargeClass:
+    active: true
     threshold: 150
-  ComplexMethod:
+  ComplexInterface:
+    active: false
     threshold: 10
+    includeStaticDeclarations: false
+  ComplexMethod:
+    active: true
+    threshold: 10
+  MethodOverloading:
+    active: false
+    threshold: 5
   TooManyFunctions:
-    threshold: 20
+    active: true
+    threshold: 12
   ComplexCondition:
+    active: true
     threshold: 3
   LabeledExpression:
     active: false
@@ -169,65 +216,21 @@ code-smell:
     weight: 0.45
     base: 0.5
 
-formatting:
-  active: true
-  useTabs: false
-  Indentation:
-    active: true
-    indentSize: 4
-  ConsecutiveBlankLines:
-    active: true
-    autoCorrect: true
-  MultipleSpaces:
-    active: true
-    autoCorrect: true
-  SpacingAfterComma:
-    active: true
-    autoCorrect: true
-  SpacingAfterKeyword:
-    active: true
-    autoCorrect: true
-  SpacingAroundColon:
-    active: true
-    autoCorrect: true
-  SpacingAroundCurlyBraces:
-    active: true
-    autoCorrect: true
-  SpacingAroundOperator:
-    active: true
-    autoCorrect: true
-  TrailingSpaces:
-    active: true
-    autoCorrect: true
-  UnusedImports:
-    active: true
-    autoCorrect: true
-  OptionalSemicolon:
-    active: true
-    autoCorrect: true
-  OptionalUnit:
-    active: true
-    autoCorrect: true
-  ExpressionBodySyntax:
-    active: false
-    autoCorrect: false
-  ExpressionBodySyntaxLineBreaks:
-    active: false
-    autoCorrect: false
-  OptionalReturnKeyword:
-    active: true
-    autoCorrect: false
-
 style:
   active: true
   ReturnCount:
     active: true
     max: 3
+  ThrowsCount:
+    active: true
+    max: 2
   NewLineAtEndOfFile:
     active: true
   OptionalAbstractKeyword:
     active: true
   OptionalWhenBraces:
+    active: false
+  CollapsibleIfStatements:
     active: false
   EqualsNullCall:
     active: false
@@ -239,6 +242,12 @@ style:
     imports: ''
   PackageDeclarationStyle:
     active: false
+  LoopWithTooManyJumpStatements:
+    active: false
+    maxJumpCount: 1
+  MethodNameEqualsClassName:
+    active: false
+    ignoreOverriddenFunction: true
   ModifierOrder:
     active: true
   MagicNumber:
@@ -246,9 +255,14 @@ style:
     ignoreNumbers: '-1,0,1,2'
     ignoreHashCodeFunction: false
     ignorePropertyDeclaration: false
+    ignoreConstantDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
     ignoreAnnotation: false
+    ignoreNamedArgument: true
+    ignoreEnums: false
   WildcardImport:
     active: true
+    excludeImports: 'java.util.*,kotlinx.android.synthetic.*'
   SafeCast:
     active: true
   MaxLineLength:
@@ -267,7 +281,7 @@ style:
     enumEntryPattern: '^[A-Z$][a-zA-Z_$]*$'
   FunctionNaming:
     active: true
-    functionPattern: '^[a-z$][a-zA-Z$0-9]*$'
+    functionPattern: '^([a-z$][a-zA-Z$0-9]*)|(`.*`)$'
   FunctionMaxLength:
     active: false
     maximumFunctionNameLength: 30
@@ -291,18 +305,43 @@ style:
     forbiddenName: ''
   ProtectedMemberInFinalClass:
     active: false
+  SerialVersionUIDInSerializableClass:
+    active: false
   UnnecessaryParentheses:
+    active: false
+  UnnecessaryInheritance:
+    active: false
+  UtilityClassWithPublicConstructor:
     active: false
   DataClassContainsFunctions:
     active: false
+    conversionFunctionPrefix: 'to'
   UseDataClass:
     active: false
   UnnecessaryAbstractClass:
     active: false
+  OptionalUnit:
+    active: true
+  CommentOverPrivateMethod:
+    active: false
+  OptionalReturnKeyword:
+    active: false
+  ExpressionBodySyntax:
+    active: false
+  UnusedImports:
+    active: false
+  NestedClassesVisibility:
+    active: false
+  RedundantVisibilityModifierRule:
+    active: false
+  FunctionOnlyReturningConstant:
+    active: false
+    ignoreOverridableFunction: true
+    excludedFunctions: 'describeContents'
 
 comments:
-  active: false
-  CommentOverPrivateMethod:
+  active: true
+  CommentOverPrivateFunction:
     active: false
   CommentOverPrivateProperty:
     active: true
