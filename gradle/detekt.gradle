@@ -1,5 +1,5 @@
 detekt {
-    version = '1.0.0.RC4-3'
+    version = '1.0.0.RC5-3'
     profile("main") {
         input = file('src/main/kotlin')
         config = file('gradle/detekt.yml')

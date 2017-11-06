@@ -12,7 +12,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.1'
     id 'groovy'
     id 'net.saliman.cobertura' version '2.5.0'
-    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC4-3"
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC5-3"
 }
 
 apply plugin: 'kotlin'
