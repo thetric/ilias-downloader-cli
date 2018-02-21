@@ -1,3 +1,24 @@
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/thetric/ilias-downloader-cli/compare/2.0.9...3.0.0) (2018-02-21)
+
+
+### Code Refactoring
+
+* simplify item visitor ([d11be03](https://github.com/thetric/ilias-downloader-cli/commit/d11be03))
+
+
+### Features
+
+* add translated logs for download sync ([30904fd](https://github.com/thetric/ilias-downloader-cli/commit/30904fd))
+* format size in download info ([5bd39d1](https://github.com/thetric/ilias-downloader-cli/commit/5bd39d1))
+
+
+### BREAKING CHANGES
+
+* the minimum java version now is java 9
+
+
+
 <a name="2.0.9"></a>
 ## [2.0.9](https://github.com/thetric/ilias-downloader-cli/compare/2.0.8...2.0.9) (2017-11-08)
 
