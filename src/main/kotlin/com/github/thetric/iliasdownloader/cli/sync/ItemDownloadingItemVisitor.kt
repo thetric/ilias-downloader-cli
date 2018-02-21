@@ -11,6 +11,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.FileTime
+import java.text.MessageFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -28,6 +29,7 @@ private val log = KotlinLogging.logger {}
 class ItemDownloadingItemVisitor(
     private val basePath: Path,
     private val iliasService: IliasService,
+    private val bundle: ResourceBundle,
     maxFileSizeInMiB: Long
 ) : IliasItemVisitor {
     private val downloadSizeLimitInBytes: Long = if (maxFileSizeInMiB > 0) {
@@ -43,11 +45,15 @@ class ItemDownloadingItemVisitor(
         log.debug { "Found file ${file.name}" }
         val filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
-            log.info { "Downloading file \'${file.name}\' (${formatBytes(file.size)} Bytes)" }
+            log.info { getLocalizedMessage("sync.download.file.started", file.name, file.size) }
             syncAndSaveFile(filePath, file)
-            log.info { "Saved to ${filePath.toUri()}" }
+            log.info { getLocalizedMessage("sync.download.file.finished", filePath.toUri()) }
         }
         return IliasItemVisitor.VisitResult.CONTINUE
+    }
+
+    private fun getLocalizedMessage(bundleKey: String, vararg msgArgs: Any): String {
+        return MessageFormat.format(bundle.getString(bundleKey), *msgArgs)
     }
 
     private fun resolvePathAndCreateMissingDirs(iliasItem: IliasItem): Path {

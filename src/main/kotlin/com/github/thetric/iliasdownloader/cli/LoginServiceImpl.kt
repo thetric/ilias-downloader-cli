@@ -7,7 +7,8 @@ import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging
 import java.nio.file.Files
-import java.util.ResourceBundle
+import java.text.MessageFormat
+import java.util.*
 
 private val log = KotlinLogging.logger {}
 
@@ -35,9 +36,8 @@ internal class LoginServiceImpl(
     }
 
     private fun promptForPassword(username: String): String {
-        val passwordPrompt = resourceBundle.getString("login.credentials.password")
-        val namePwPrompt = String.format(passwordPrompt, username)
-        return consoleService.readPassword("ilias.credentials.password", namePwPrompt)
+        val passwordPrompt = MessageFormat.format(resourceBundle.getString("login.credentials.password"), username)
+        return consoleService.readPassword("ilias.credentials.password", passwordPrompt)
     }
 
     private fun createFromFirstTimeSetup(): IliasService {

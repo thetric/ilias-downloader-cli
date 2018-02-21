@@ -33,6 +33,7 @@ internal class CliController(
             val syncSettings = preferencesUpdateService.updatePreferences(cliOptions)
             val itemVisitor = ItemDownloadingItemVisitor(cliOptions.syncDir,
                 iliasService,
+                resourceBundle,
                 syncSettings.maxFileSizePerFileInMiB)
             val syncController = SyncController(iliasService,
                 itemVisitor,
