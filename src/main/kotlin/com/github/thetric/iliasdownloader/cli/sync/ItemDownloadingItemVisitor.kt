@@ -6,6 +6,7 @@ import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
 import mu.KotlinLogging
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -14,6 +15,8 @@ import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
+import java.util.stream.Collectors
+import java.util.stream.Stream
 
 private val SYSTEM_ZONE = ZoneId.systemDefault()
 private const val BYTES_PER_MEBIBYTE: Long = 1_048_576
@@ -54,26 +57,13 @@ class ItemDownloadingItemVisitor(
     }
 
     private fun resolvePathOfParent(parentItem: IliasItem?): Path {
-        if (parentItem == null) {
-            return basePath
-        }
-
-        val itemNamesInPath = ArrayList<String>()
-        var i = parentItem
-        while (i != null) {
-            itemNamesInPath.add(i.name)
-            i = i.parent
-        }
-
-        var itemPath = basePath
-        for (itemName in itemNamesInPath.reversed()) {
-            itemPath = itemPath.resolve(sanitizeFileName(itemName))
-        }
-
-        return itemPath
+        val pathSegments = Stream.iterate(parentItem, Objects::nonNull, { it!!.parent })
+            .map { sanitizeFileName(it!!.name) }
+            .collect(Collectors.toList())
+            .reversed()
+            .joinToString(separator = File.separator)
+        return basePath.resolve(pathSegments)
     }
-
-
 
     private fun needsToSync(path: Path, file: CourseFile): Boolean {
         return (Files.notExists(path) || isFileModified(path, file)) && isUnderFileLimit(file)
