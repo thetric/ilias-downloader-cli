@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.1.60'
+    ext.kotlin_version = '1.2.21'
     repositories {
         mavenCentral()
     }
@@ -9,17 +9,17 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'com.github.johnrengelman.shadow' version '2.0.2'
     id 'groovy'
     id 'net.saliman.cobertura' version '2.5.0'
-    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC5-4"
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC6-3'
 }
 
 apply plugin: 'kotlin'
 
 repositories {
     jcenter()
-    maven { url "https://jitpack.io" }
+    maven { url 'https://jitpack.io' }
 }
 
 sourceCompatibility = 1.8
@@ -34,23 +34,23 @@ compileKotlin {
 version '2.0.9'
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile 'com.xenomachina:kotlin-argparser:2.0.3'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile 'com.xenomachina:kotlin-argparser:2.0.4'
 
-    compile 'com.github.thetric:ilias-downloader-connector-domparser:4.0.8'
+    compile 'com.github.thetric:ilias-downloader-connector-domparser:4.0.9'
 
-    compile 'com.github.thetric:ilias-downloader-ui-common:5.0.2'
+    compile 'com.github.thetric:ilias-downloader-ui-common:5.0.3'
 
     // logging libs
-    compile 'io.github.microutils:kotlin-logging:1.4.6'
+    compile 'io.github.microutils:kotlin-logging:1.5.3'
     runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
 
     // test
-    testCompile 'org.codehaus.groovy:groovy:2.4.12'
+    testCompile 'org.codehaus.groovy:groovy:2.4.13'
     testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testCompile 'net.bytebuddy:byte-buddy:1.7.9'
+    testCompile 'net.bytebuddy:byte-buddy:1.7.10'
 }
 
 apply from: rootProject.file('gradle/coverage.gradle')

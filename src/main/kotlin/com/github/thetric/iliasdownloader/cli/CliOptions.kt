@@ -15,7 +15,7 @@ internal class CliOptions(parser: ArgParser, resourceBundle: ResourceBundle) {
     val showCourseSelection: Boolean by parser.flagging("-c", "--select-courses",
         help = resourceBundle.getString("args.course.selection")).default(false)
     val fileSizeLimitInMiB: Long? by parser.storing("-s", "--max-size",
-        help = resourceBundle.getString("args.sync.max-size")) { toLong() }.default(null)
+        help = resourceBundle.getString("args.sync.max-size")) { toLong() }.default(null as Long?)
 
     init {
         parser.force()
