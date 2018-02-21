@@ -12,7 +12,6 @@ import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.FileTime
 import java.text.MessageFormat
-import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -110,8 +109,4 @@ private fun toBytes(maxFileSizeInMiB: Long): Long {
 private fun isFileModified(path: Path, file: CourseFile): Boolean {
     val lastModifiedTime = Files.getLastModifiedTime(path)
     return lastModifiedTime != toFileTime(file.modified)
-}
-
-private fun formatBytes(bytes: Int): String {
-    return NumberFormat.getIntegerInstance().format(bytes)
 }
