@@ -18,7 +18,7 @@ import java.util.*
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
-private val SYSTEM_ZONE = ZoneId.systemDefault()
+private val systemZone = ZoneId.systemDefault()
 private const val BYTES_PER_MEBIBYTE: Long = 1_048_576
 private val log = KotlinLogging.logger {}
 
@@ -45,7 +45,7 @@ class ItemDownloadingItemVisitor(
         val filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
             log.info { getLocalizedMessage("sync.download.file.started", file.name, file.size) }
-            syncAndSaveFile(filePath, file)
+//            syncAndSaveFile(filePath, file)
             log.info { getLocalizedMessage("sync.download.file.finished", filePath.toUri()) }
         }
         return IliasItemVisitor.VisitResult.CONTINUE
@@ -99,7 +99,7 @@ private fun sanitizeFileName(fileName: String): String {
 
 private fun toFileTime(dateTime: LocalDateTime): FileTime {
     Objects.requireNonNull(dateTime, "dateTime")
-    return FileTime.from(dateTime.toInstant(SYSTEM_ZONE.rules.getOffset(dateTime)))
+    return FileTime.from(dateTime.toInstant(systemZone.rules.getOffset(dateTime)))
 }
 
 private fun toBytes(maxFileSizeInMiB: Long): Long {
