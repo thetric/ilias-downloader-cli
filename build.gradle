@@ -32,22 +32,22 @@ version '3.0.0'
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile 'com.xenomachina:kotlin-argparser:2.0.4'
+    compile 'com.xenomachina:kotlin-argparser:2.0.6'
 
     compile 'com.github.thetric:ilias-downloader-connector-domparser:4.0.9'
 
     compile 'com.github.thetric:ilias-downloader-ui-common:5.0.3'
 
     // logging libs
-    compile 'io.github.microutils:kotlin-logging:1.5.3'
+    compile 'io.github.microutils:kotlin-logging:1.5.4'
     runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
 
     // test
-    testCompile 'org.codehaus.groovy:groovy:2.4.13'
+    testCompile 'org.codehaus.groovy:groovy:2.4.15'
     testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testCompile 'net.bytebuddy:byte-buddy:1.7.10'
+    testCompile 'net.bytebuddy:byte-buddy:1.8.3'
 }
 
 apply from: rootProject.file('gradle/coverage.gradle')
