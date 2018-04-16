@@ -45,7 +45,7 @@ class ItemDownloadingItemVisitor(
         val filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
             log.info { getLocalizedMessage("sync.download.file.started", file.name, file.size) }
-//            syncAndSaveFile(filePath, file)
+            syncAndSaveFile(filePath, file)
             log.info { getLocalizedMessage("sync.download.file.finished", filePath.toUri()) }
         }
         return IliasItemVisitor.VisitResult.CONTINUE
