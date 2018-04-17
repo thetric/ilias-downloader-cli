@@ -37,12 +37,12 @@ class ItemDownloadingItemVisitor(
     } else java.lang.Long.MAX_VALUE
 
     override fun handleFolder(folder: CourseFolder): IliasItemVisitor.VisitResult {
-        log.debug { "Found folder \'${folder.name}\'" }
+        log.debug { getLocalizedMessage("sync.course.found", folder.name) }
         return IliasItemVisitor.VisitResult.CONTINUE
     }
 
     override fun handleFile(file: CourseFile): IliasItemVisitor.VisitResult {
-        log.debug { "Found file ${file.name}" }
+        log.debug { getLocalizedMessage("sync.file.found", file.name) }
         val filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
             log.info { getLocalizedMessage("sync.download.file.started", file.name, file.size) }
