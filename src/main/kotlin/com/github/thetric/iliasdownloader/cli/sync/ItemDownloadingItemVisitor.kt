@@ -92,18 +92,14 @@ class ItemDownloadingItemVisitor(
             // can download the file via the 'normal' web interface.
             // other files in the course don't seem affected and can be
             // downloaded.
-            log.error {
-                getLocalizedMessage(
-                    "sync.download.failed",
-                    e.url,
-                    e.statusCode,
-                    file.name
-                )
-            }
-            log.trace(
-                e,
-                { "Download of ${e.url} failed with HTTP status code ${e.statusCode}" }
+            val msg = getLocalizedMessage(
+                "sync.download.course.failed",
+                e.url,
+                e.statusCode,
+                file.name
             )
+            log.error(msg)
+            log.trace(msg, e)
         }
     }
 }
