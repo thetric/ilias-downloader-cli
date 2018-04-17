@@ -1,3 +1,14 @@
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/thetric/ilias-downloader-cli/compare/3.0.0...3.0.1) (2018-04-17)
+
+
+### Bug Fixes
+
+* correct placeholder for password prompt in the default locale ([242215c](https://github.com/thetric/ilias-downloader-cli/commit/242215c))
+* **sync:** continue on unsuccessful downloads and print an error ([8c5f28d](https://github.com/thetric/ilias-downloader-cli/commit/8c5f28d))
+
+
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/thetric/ilias-downloader-cli/compare/2.0.9...3.0.0) (2018-02-21)
 
