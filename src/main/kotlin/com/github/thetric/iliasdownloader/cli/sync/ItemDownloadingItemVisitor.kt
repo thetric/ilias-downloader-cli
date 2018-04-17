@@ -5,6 +5,7 @@ import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
+import com.github.thetric.iliasdownloader.service.webparser.impl.IliasHttpException
 import mu.KotlinLogging
 import java.io.File
 import java.nio.file.Files
@@ -79,10 +80,31 @@ class ItemDownloadingItemVisitor(
     }
 
     private fun syncAndSaveFile(path: Path, file: CourseFile) {
-        iliasService.getContentAsStream(file).use {
-            Files.copy(it, path, StandardCopyOption.REPLACE_EXISTING)
+        try {
+            iliasService.getContentAsStream(file).use {
+                Files.copy(it, path, StandardCopyOption.REPLACE_EXISTING)
+            }
+            Files.setLastModifiedTime(path, toFileTime(file.modified))
+        } catch (e: IliasHttpException) {
+            // skip downloads with an unexpected HTTP status code (not 2xx).
+            // in some rare cases (see issue #11) the webdav interface can
+            // throw a 403 forbidden when accessing a file, although the user
+            // can download the file via the 'normal' web interface.
+            // other files in the course don't seem affected and can be
+            // downloaded.
+            log.error {
+                getLocalizedMessage(
+                    "sync.download.failed",
+                    e.url,
+                    e.statusCode,
+                    file.name
+                )
+            }
+            log.trace(
+                e,
+                { "Download of ${e.url} failed with HTTP status code ${e.statusCode}" }
+            )
         }
-        Files.setLastModifiedTime(path, toFileTime(file.modified))
     }
 }
 
