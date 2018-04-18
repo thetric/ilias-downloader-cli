@@ -1,3 +1,13 @@
+<a name="3.1.0"></a>
+# [3.1.0](https://github.com/thetric/ilias-downloader-cli/compare/3.0.2...3.1.0) (2018-04-18)
+
+
+### Features
+
+* update ilias-connector-domparser to make the CLI compatible with different ilias server than https://ilias.fh-dortmund.de ([3a46491](https://github.com/thetric/ilias-downloader-cli/commit/3a46491))
+
+
+
 <a name="3.0.2"></a>
 ## [3.0.2](https://github.com/thetric/ilias-downloader-cli/compare/3.0.1...3.0.2) (2018-04-18)
 
