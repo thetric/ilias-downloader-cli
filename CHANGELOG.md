@@ -1,3 +1,13 @@
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/thetric/ilias-downloader-cli/compare/3.0.1...3.0.2) (2018-04-18)
+
+
+### Bug Fixes
+
+* **sync:** correct translation key for file download errors ([09c20a3](https://github.com/thetric/ilias-downloader-cli/commit/09c20a3))
+
+
+
 <a name="3.0.1"></a>
 ## [3.0.1](https://github.com/thetric/ilias-downloader-cli/compare/3.0.0...3.0.1) (2018-04-17)
 
