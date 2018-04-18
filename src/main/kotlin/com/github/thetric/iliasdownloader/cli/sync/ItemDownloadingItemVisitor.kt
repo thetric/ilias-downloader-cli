@@ -93,7 +93,7 @@ class ItemDownloadingItemVisitor(
             // other files in the course don't seem affected and can be
             // downloaded.
             val msg = getLocalizedMessage(
-                "sync.download.course.failed",
+                "sync.download.file.failed",
                 e.url,
                 e.statusCode,
                 file.name
