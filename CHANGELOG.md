@@ -1,3 +1,18 @@
+<a name="3.2.0"></a>
+# [3.2.0](https://github.com/thetric/ilias-downloader-cli/compare/3.1.0...3.2.0) (2018-04-22)
+
+
+### Bug Fixes
+
+* update ilias-connector-domparser to fix a sync regression ([2d80c95](https://github.com/thetric/ilias-downloader-cli/commit/2d80c95))
+
+
+### Features
+
+* display human readable file size ([8e180ed](https://github.com/thetric/ilias-downloader-cli/commit/8e180ed))
+
+
+
 <a name="3.1.0"></a>
 # [3.1.0](https://github.com/thetric/ilias-downloader-cli/compare/3.0.2...3.1.0) (2018-04-18)
 
