@@ -12,6 +12,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.FileTime
+import java.text.DecimalFormat
 import java.text.MessageFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -19,8 +20,10 @@ import java.util.*
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
+
 private val systemZone = ZoneId.systemDefault()
-private const val BYTES_PER_MEBIBYTE: Long = 1_048_576
+private const val IEC_BASE = 1024L
+private const val BYTES_PER_MEBIBYTE: Long = IEC_BASE * IEC_BASE
 private val log = KotlinLogging.logger {}
 
 /**
@@ -45,14 +48,22 @@ class ItemDownloadingItemVisitor(
         log.debug { getLocalizedMessage("sync.file.found", file.name) }
         val filePath = resolvePathAndCreateMissingDirs(file)
         if (needsToSync(filePath, file)) {
-            log.info { getLocalizedMessage("sync.download.file.started", file.name, file.size) }
+            log.info {
+                getLocalizedMessage(
+                    "sync.download.file.started",
+                    file.name,
+                    humanReadableFileSize(file.size)
+                )
+            }
             syncAndSaveFile(filePath, file)
-            log.info { getLocalizedMessage("sync.download.file.finished", filePath.toUri()) }
         }
         return IliasItemVisitor.VisitResult.CONTINUE
     }
 
-    private fun getLocalizedMessage(bundleKey: String, vararg msgArgs: Any): String {
+    private fun getLocalizedMessage(
+        bundleKey: String,
+        vararg msgArgs: Any
+    ): String {
         return MessageFormat.format(bundle.getString(bundleKey), *msgArgs)
     }
 
@@ -63,16 +74,18 @@ class ItemDownloadingItemVisitor(
     }
 
     private fun resolvePathOfParent(parentItem: IliasItem?): Path {
-        val pathSegments = Stream.iterate(parentItem, Objects::nonNull, { it!!.parent })
-            .map { sanitizeFileName(it!!.name) }
-            .collect(Collectors.toList())
-            .reversed()
-            .joinToString(separator = File.separator)
+        val pathSegments =
+            Stream.iterate(parentItem, Objects::nonNull, { it!!.parent })
+                .map { sanitizeFileName(it!!.name) }
+                .collect(Collectors.toList())
+                .reversed()
+                .joinToString(separator = File.separator)
         return basePath.resolve(pathSegments)
     }
 
     private fun needsToSync(path: Path, file: CourseFile): Boolean {
-        return (Files.notExists(path) || isFileModified(path, file)) && isUnderFileLimit(file)
+        return (Files.notExists(path) ||
+            isFileModified(path, file)) && isUnderFileLimit(file)
     }
 
     private fun isUnderFileLimit(file: CourseFile): Boolean {
@@ -85,6 +98,12 @@ class ItemDownloadingItemVisitor(
                 Files.copy(it, path, StandardCopyOption.REPLACE_EXISTING)
             }
             Files.setLastModifiedTime(path, toFileTime(file.modified))
+            log.info {
+                getLocalizedMessage(
+                    "sync.download.file.finished",
+                    path.toUri()
+                )
+            }
         } catch (e: IliasHttpException) {
             // skip downloads with an unexpected HTTP status code (not 2xx).
             // in some rare cases (see issue #11) the webdav interface can
@@ -127,4 +146,20 @@ private fun toBytes(maxFileSizeInMiB: Long): Long {
 private fun isFileModified(path: Path, file: CourseFile): Boolean {
     val lastModifiedTime = Files.getLastModifiedTime(path)
     return lastModifiedTime != toFileTime(file.modified)
+}
+
+private val units = arrayOf("B", "kB", "MB", "GB", "TB")
+private val fileSizeFormat = DecimalFormat("#,##0.#")
+
+// based on https://stackoverflow.com/a/5599842
+private fun humanReadableFileSize(size: Int): String {
+    if (size <= 0) return "0"
+    val iecBase = IEC_BASE.toDouble()
+    val digitGroups: Int =
+        (Math.log10(size.toDouble()) / Math.log10(iecBase)).toInt()
+    return fileSizeFormat.format(
+        size / Math.pow(
+            iecBase, digitGroups.toDouble()
+        )
+    ) + " " + units[digitGroups]
 }
