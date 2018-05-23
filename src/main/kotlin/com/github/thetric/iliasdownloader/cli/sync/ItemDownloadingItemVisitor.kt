@@ -60,6 +60,7 @@ class ItemDownloadingItemVisitor(
         return IliasItemVisitor.VisitResult.CONTINUE
     }
 
+    @Suppress("SpreadOperator")
     private fun getLocalizedMessage(
         bundleKey: String,
         vararg msgArgs: Any

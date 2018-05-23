@@ -19,15 +19,20 @@ internal class LoginServiceImpl(
     private val iliasProvider: (String) -> IliasService,
     private val resourceBundle: ResourceBundle,
     private val preferenceService: PreferenceService<UserPreferences>,
-    private val consoleService: ConsoleService)
-    : LoginService {
+    private val consoleService: ConsoleService
+) : LoginService {
 
     override fun connect(): IliasService {
-        return if (Files.exists(preferenceService.settingsFile)) createServiceFromConfig() else createFromFirstTimeSetup()
+        return if (Files.exists(preferenceService.settingsFile)) {
+            createServiceFromConfig()
+        } else createFromFirstTimeSetup()
     }
 
     private fun createServiceFromConfig(): IliasService {
-        log.debug { "Trying to load existing config from ${preferenceService.settingsFile.toAbsolutePath()}" }
+        log.debug {
+            val absolutePath = preferenceService.settingsFile.toAbsolutePath()
+            "Trying to load existing config from $absolutePath"
+        }
         val (iliasServerURL, userName) = preferenceService.loadPreferences()
         val iliasService = iliasProvider(iliasServerURL)
         val password = promptForPassword(userName)
@@ -36,13 +41,20 @@ internal class LoginServiceImpl(
     }
 
     private fun promptForPassword(username: String): String {
-        val passwordPrompt = MessageFormat.format(resourceBundle.getString("login.credentials.password"), username)
-        return consoleService.readPassword("ilias.credentials.password", passwordPrompt)
+        val passwordPrompt = MessageFormat.format(
+            resourceBundle.getString("login.credentials.password"),
+            username
+        )
+        return consoleService.readPassword(
+            "ilias.credentials.password",
+            passwordPrompt
+        )
     }
 
     private fun createFromFirstTimeSetup(): IliasService {
         log.debug { "No existing config found, starting first time setup" }
-        val iliasLoginUrl = consoleService.readLine("ilias.server.url", "Ilias Server URL")
+        val iliasLoginUrl =
+            consoleService.readLine("ilias.server.url", "Ilias Server URL")
         val iliasService = iliasProvider(iliasLoginUrl)
         val credentials = promptForCredentials()
         iliasService.login(credentials)
@@ -58,7 +70,11 @@ internal class LoginServiceImpl(
     }
 
     private fun promptForUserName(): String {
-        val usernamePrompt = resourceBundle.getString("login.credentials.username")
-        return consoleService.readLine("ilias.credentials.username", usernamePrompt).trim { it <= ' ' }
+        val usernamePrompt =
+            resourceBundle.getString("login.credentials.username")
+        return consoleService.readLine(
+            "ilias.credentials.username",
+            usernamePrompt
+        ).trim { it <= ' ' }
     }
 }

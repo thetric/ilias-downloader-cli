@@ -9,7 +9,7 @@ import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServic
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging
-import java.util.ResourceBundle
+import java.util.*
 
 private val log = KotlinLogging.logger {}
 
@@ -26,18 +26,25 @@ internal class CliController(
     fun startCliController() {
         try {
             val iliasService = createIliasService()
-            val preferencesUpdateService = UserPreferencesUpdateServiceImpl(iliasService,
-                resourceBundle,
-                preferenceService,
-                consoleService)
-            val syncSettings = preferencesUpdateService.updatePreferences(cliOptions)
-            val itemVisitor = ItemDownloadingItemVisitor(cliOptions.syncDir,
+            val preferencesUpdateService = UserPreferencesUpdateServiceImpl(
                 iliasService,
                 resourceBundle,
-                syncSettings.maxFileSizePerFileInMiB)
-            val syncController = SyncController(iliasService,
+                preferenceService,
+                consoleService
+            )
+            val syncSettings =
+                preferencesUpdateService.updatePreferences(cliOptions)
+            val itemVisitor = ItemDownloadingItemVisitor(
+                cliOptions.syncDir,
+                iliasService,
+                resourceBundle,
+                syncSettings.maxFileSizePerFileInMiB
+            )
+            val syncController = SyncController(
+                iliasService,
                 itemVisitor,
-                resourceBundle)
+                resourceBundle
+            )
             syncController.startSync(syncSettings.courses)
         } catch (authEx: IliasAuthenticationException) {
             log.error(authEx) { resourceBundle.getString("login.error") }
@@ -50,7 +57,12 @@ internal class CliController(
             WebParserIliasServiceProvider(cookieService, url).newInstance()
         }
 
-        val loginService = LoginServiceImpl(iliasProvider, resourceBundle, preferenceService, consoleService)
+        val loginService = LoginServiceImpl(
+            iliasProvider,
+            resourceBundle,
+            preferenceService,
+            consoleService
+        )
 
         return loginService.connect()
     }

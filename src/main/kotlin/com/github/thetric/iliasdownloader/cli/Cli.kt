@@ -7,7 +7,7 @@ import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import com.xenomachina.argparser.ArgParser
 import com.xenomachina.argparser.mainBody
 import mu.KotlinLogging
-import java.util.ResourceBundle
+import java.util.*
 
 private const val SETTINGS_FILE_NAME = ".ilias-downloader.json"
 private val log = KotlinLogging.logger {}
@@ -26,8 +26,14 @@ fun main(args: Array<String>) {
         val settingsPath = cliOptions.syncDir.resolve(SETTINGS_FILE_NAME)
         log.info { "Settings path: ${settingsPath.toAbsolutePath()}" }
         val consoleService = SystemEnvironmentAwareConsoleService()
-        val preferenceService: PreferenceService<UserPreferences> = JsonPreferenceService(settingsPath, UserPreferences::class.java)
-        CliController(resourceBundle, cliOptions, consoleService, preferenceService).startCliController()
+        val preferenceService: PreferenceService<UserPreferences> =
+            JsonPreferenceService(settingsPath, UserPreferences::class.java)
+        CliController(
+            resourceBundle,
+            cliOptions,
+            consoleService,
+            preferenceService
+        ).startCliController()
     } catch (ue: InvalidUsageException) {
         log.trace(ue) { "Startup failed" }
     }

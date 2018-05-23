@@ -6,7 +6,7 @@ import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging
-import java.util.ResourceBundle
+import java.util.*
 
 private val log = KotlinLogging.logger {}
 
@@ -29,7 +29,8 @@ internal class SyncController(
     }
 
     private fun printSelectedCourses(coursesToSync: Collection<Course>) {
-        val courseList = coursesToSync.map { it.name }.joinToString(separator = ", ")
+        val courseList =
+            coursesToSync.map { it.name }.joinToString(separator = ", ")
         log.info { "Syncing ${coursesToSync.size} courses: $courseList" }
     }
 
