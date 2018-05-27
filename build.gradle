@@ -40,13 +40,6 @@ dependencies {
     // logging libs
     compile 'io.github.microutils:kotlin-logging:1.5.4'
     runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
-
-    // test
-    testCompile 'org.codehaus.groovy:groovy:2.4.15'
-    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
-        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-    }
-    testCompile 'net.bytebuddy:byte-buddy:1.8.3'
 }
 
 apply from: rootProject.file('gradle/coverage.gradle')
