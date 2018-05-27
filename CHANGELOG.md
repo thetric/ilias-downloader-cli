@@ -1,3 +1,13 @@
+<a name="3.2.1"></a>
+## [3.2.1](https://github.com/thetric/ilias-downloader-cli/compare/3.2.0...3.2.1) (2018-05-27)
+
+
+### Performance Improvements
+
+* **sync:** simplify ilias item path lookup ([6840a3b](https://github.com/thetric/ilias-downloader-cli/commit/6840a3b))
+
+
+
 <a name="3.2.0"></a>
 # [3.2.0](https://github.com/thetric/ilias-downloader-cli/compare/3.1.0...3.2.0) (2018-04-22)
 
