@@ -22,6 +22,9 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+sourceCompatibility = 10
+targetCompatibility = 10
+
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
