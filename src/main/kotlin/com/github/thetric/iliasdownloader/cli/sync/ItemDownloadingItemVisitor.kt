@@ -1,13 +1,12 @@
 package com.github.thetric.iliasdownloader.cli.sync
 
-import com.github.thetric.iliasdownloader.service.IliasItemVisitor
+import com.github.thetric.iliasdownloader.service.ContextAwareIliasItemVisitor
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.CourseFile
 import com.github.thetric.iliasdownloader.service.model.CourseFolder
 import com.github.thetric.iliasdownloader.service.model.IliasItem
 import com.github.thetric.iliasdownloader.service.webparser.impl.IliasHttpException
 import mu.KotlinLogging
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -17,8 +16,6 @@ import java.text.MessageFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 
 private val systemZone = ZoneId.systemDefault()
@@ -30,23 +27,22 @@ private val log = KotlinLogging.logger {}
  * Downloads new or updated [CourseFile]s.
  */
 class ItemDownloadingItemVisitor(
-    private val basePath: Path,
     private val iliasService: IliasService,
     private val bundle: ResourceBundle,
     maxFileSizeInMiB: Long
-) : IliasItemVisitor {
+) : ContextAwareIliasItemVisitor<Path> {
     private val downloadSizeLimitInBytes: Long = if (maxFileSizeInMiB > 0) {
         toBytes(maxFileSizeInMiB)
     } else java.lang.Long.MAX_VALUE
 
-    override fun handleFolder(folder: CourseFolder): IliasItemVisitor.VisitResult {
+    override fun handleFolder(parentContext: Path, folder: CourseFolder): Path {
         log.debug { getLocalizedMessage("sync.course.found", folder.name) }
-        return IliasItemVisitor.VisitResult.CONTINUE
+        return resolvePathAndCreateMissingDirs(parentContext, folder)
     }
 
-    override fun handleFile(file: CourseFile): IliasItemVisitor.VisitResult {
+    override fun handleFile(parentContext: Path, file: CourseFile) {
         log.debug { getLocalizedMessage("sync.file.found", file.name) }
-        val filePath = resolvePathAndCreateMissingDirs(file)
+        val filePath = createItemPath(parentContext, file)
         if (needsToSync(filePath, file)) {
             log.info {
                 getLocalizedMessage(
@@ -57,8 +53,12 @@ class ItemDownloadingItemVisitor(
             }
             syncAndSaveFile(filePath, file)
         }
-        return IliasItemVisitor.VisitResult.CONTINUE
     }
+
+    private fun createItemPath(
+        parentContext: Path,
+        item: IliasItem
+    ) = parentContext.resolve(sanitizeFileName(item.name))
 
     @Suppress("SpreadOperator")
     private fun getLocalizedMessage(
@@ -68,20 +68,12 @@ class ItemDownloadingItemVisitor(
         return MessageFormat.format(bundle.getString(bundleKey), *msgArgs)
     }
 
-    private fun resolvePathAndCreateMissingDirs(iliasItem: IliasItem): Path {
-        val parentItemPath = resolvePathOfParent(iliasItem.parent)
-        Files.createDirectories(parentItemPath)
-        return parentItemPath.resolve(sanitizeFileName(iliasItem.name))
-    }
-
-    private fun resolvePathOfParent(parentItem: IliasItem?): Path {
-        val pathSegments =
-            Stream.iterate(parentItem, Objects::nonNull, { it!!.parent })
-                .map { sanitizeFileName(it!!.name) }
-                .collect(Collectors.toList())
-                .reversed()
-                .joinToString(separator = File.separator)
-        return basePath.resolve(pathSegments)
+    private fun resolvePathAndCreateMissingDirs(
+        parentContext: Path,
+        iliasItem: IliasItem
+    ): Path {
+        val itemPath = createItemPath(parentContext, iliasItem)
+        return Files.createDirectories(itemPath)
     }
 
     private fun needsToSync(path: Path, file: CourseFile): Boolean {

@@ -1,11 +1,12 @@
 package com.github.thetric.iliasdownloader.cli
 
-import com.github.thetric.iliasdownloader.service.IliasItemVisitor
+import com.github.thetric.iliasdownloader.service.ContextAwareIliasItemVisitor
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging
+import java.nio.file.Path
 import java.util.*
 
 private val log = KotlinLogging.logger {}
@@ -19,8 +20,9 @@ private val log = KotlinLogging.logger {}
  */
 internal class SyncController(
     private val iliasService: IliasService,
-    private val iliasItemVisitor: IliasItemVisitor,
-    private val resourceBundle: ResourceBundle
+    private val iliasItemVisitor: ContextAwareIliasItemVisitor<Path>,
+    private val resourceBundle: ResourceBundle,
+    private val syncBaseDir: Path
 ) {
 
     fun startSync(courses: Collection<Course>) {
@@ -37,7 +39,7 @@ internal class SyncController(
     private fun executeSync(courses: Collection<Course>) {
         log.info(resourceBundle.getString("sync.started"))
         courses.forEach {
-            iliasService.visit(it, iliasItemVisitor)
+            iliasService.visit(it, iliasItemVisitor, syncBaseDir)
         }
         log.info(resourceBundle.getString("sync.finished"))
     }

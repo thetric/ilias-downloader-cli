@@ -35,7 +35,6 @@ internal class CliController(
             val syncSettings =
                 preferencesUpdateService.updatePreferences(cliOptions)
             val itemVisitor = ItemDownloadingItemVisitor(
-                cliOptions.syncDir,
                 iliasService,
                 resourceBundle,
                 syncSettings.maxFileSizePerFileInMiB
@@ -43,7 +42,8 @@ internal class CliController(
             val syncController = SyncController(
                 iliasService,
                 itemVisitor,
-                resourceBundle
+                resourceBundle,
+                cliOptions.syncDir
             )
             syncController.startSync(syncSettings.courses)
         } catch (authEx: IliasAuthenticationException) {
