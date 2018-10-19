@@ -1,9 +1,0 @@
-detekt {
-    version = '1.0.0.RC7'
-    profile("main") {
-        input = file('src/main/kotlin')
-        config = file('gradle/detekt.yml')
-    }
-}
-
-check.dependsOn detektCheck

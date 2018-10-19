@@ -12,7 +12,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.1'
     id 'groovy'
     id 'net.saliman.cobertura' version '2.5.4'
-    id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC7'
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC9.2'
 }
 
 apply plugin: 'kotlin'
@@ -46,7 +46,14 @@ dependencies {
 }
 
 apply from: rootProject.file('gradle/coverage.gradle')
-apply from: file('gradle/detekt.gradle')
+
+detekt {
+    version = '1.0.0.RC9.2'
+    input = files('src/main/kotlin')
+    config = files('gradle/detekt.yml')
+}
+
+check.dependsOn "detekt"
 
 jar {
   manifest {
