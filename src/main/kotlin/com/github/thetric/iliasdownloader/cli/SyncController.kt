@@ -1,5 +1,6 @@
 package com.github.thetric.iliasdownloader.cli
 
+import com.github.thetric.iliasdownloader.cli.sync.sanitizeFileName
 import com.github.thetric.iliasdownloader.service.ContextAwareIliasItemVisitor
 import com.github.thetric.iliasdownloader.service.IliasService
 import com.github.thetric.iliasdownloader.service.model.Course
@@ -39,7 +40,8 @@ internal class SyncController(
     private fun executeSync(courses: Collection<Course>) {
         log.info(resourceBundle.getString("sync.started"))
         courses.forEach {
-            iliasService.visit(it, iliasItemVisitor, syncBaseDir)
+            val courseDir = syncBaseDir.resolve(sanitizeFileName(it.name))
+            iliasService.visit(it, iliasItemVisitor, courseDir)
         }
         log.info(resourceBundle.getString("sync.finished"))
     }

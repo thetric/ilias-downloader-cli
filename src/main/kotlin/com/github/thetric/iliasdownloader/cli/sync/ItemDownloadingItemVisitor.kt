@@ -123,7 +123,7 @@ class ItemDownloadingItemVisitor(
  * @param fileName
  * @return file name without invalid NTFS characters
  */
-private fun sanitizeFileName(fileName: String): String {
+internal fun sanitizeFileName(fileName: String): String {
     return fileName.replace("""[\\/:*?"<>|]""".toRegex(), "")
 }
 
