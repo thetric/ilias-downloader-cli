@@ -10,7 +10,6 @@ buildscript {
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.1'
-    id 'net.saliman.cobertura' version '2.5.4'
     id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC9.2'
 }
 
@@ -43,8 +42,6 @@ dependencies {
     compile 'io.github.microutils:kotlin-logging:1.6.10'
     runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
 }
-
-apply from: rootProject.file('gradle/coverage.gradle')
 
 detekt {
     version = '1.0.0.RC9.2'
