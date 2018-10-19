@@ -29,7 +29,6 @@ compileKotlin {
     }
 }
 
-version '3.2.2'
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -51,6 +50,7 @@ detekt {
 
 check.dependsOn "detekt"
 
+version '3.2.2'
 jar {
   manifest {
     attributes(
