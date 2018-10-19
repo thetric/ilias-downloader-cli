@@ -1,3 +1,13 @@
+<a name="3.2.2"></a>
+## [3.2.2](https://github.com/thetric/ilias-downloader-cli/compare/3.2.1...3.2.2) (2018-10-19)
+
+
+### Bug Fixes
+
+* download courses to folders ([1eab384](https://github.com/thetric/ilias-downloader-cli/commit/1eab384)), closes [#16](https://github.com/thetric/ilias-downloader-cli/issues/16)
+
+
+
 <a name="3.2.1"></a>
 ## [3.2.1](https://github.com/thetric/ilias-downloader-cli/compare/3.2.0...3.2.1) (2018-05-27)
 
