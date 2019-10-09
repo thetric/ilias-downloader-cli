@@ -12,8 +12,8 @@ private val log = KotlinLogging.logger {}
 class SystemEnvironmentAwareConsoleService : ConsoleService {
     private val scanner = Scanner(System.`in`)
 
-    override fun readLine(systemProp: String, prompt: String): String {
-        val property = System.getProperty(systemProp)
+    override fun readLine(envVar: String, prompt: String): String {
+        val property = System.getenv(envVar)
         if (property != null) {
             return property
         }
@@ -27,12 +27,12 @@ class SystemEnvironmentAwareConsoleService : ConsoleService {
      * password prompt is unavailable so we're using plaintext input.
      * It is recommended to define system environment variables instead.
      *
-     * @param systemProp  System environment variable to load the password from
+     * @param envVar  System environment variable to load the password from
      * @param prompt  printed before the prompt
      * @return the password
      */
-    override fun readPassword(systemProp: String, prompt: String): String {
-        val credentials = System.getProperty(systemProp)
+    override fun readPassword(envVar: String, prompt: String): String {
+        val credentials = System.getenv(envVar)
         if (credentials != null) {
             return credentials
         }
