@@ -7,5 +7,5 @@ import java.io.IOException
  */
 interface CookieService {
     @Throws(IOException::class)
-    fun getCookieFromUrl(url: String, cookieName: String): String
+    fun getCookieFromUrl(url: String, cookieName: String): String?
 }

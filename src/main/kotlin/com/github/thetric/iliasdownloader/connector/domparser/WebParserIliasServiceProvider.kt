@@ -51,11 +51,13 @@ constructor(
 
     @Throws(IOException::class)
     private fun retrieveClientId(loginPage: String): String {
-        val id: String
         try {
-            id = cookieService.getCookieFromUrl(
+            return cookieService.getCookieFromUrl(
                 loginPage,
                 ILIAS_CLIENT_ID_COOKIE_NAME
+            ) ?: throw CookieNotFoundException(
+                "Konnte das Cookie '$ILIAS_CLIENT_ID_COOKIE_NAME\' nicht in der Response von der Seite " +
+                    "$loginPage finden"
             )
         } catch (e: IOException) {
             throw IOException(
@@ -63,14 +65,6 @@ constructor(
                 e
             )
         }
-
-        return Optional.ofNullable(id)
-            .orElseThrow {
-                val msg =
-                    "Konnte das Cookie '$ILIAS_CLIENT_ID_COOKIE_NAME\' nicht in der Response von der Seite " +
-                        "$loginPage finden"
-                CookieNotFoundException(msg)
-            }
     }
 
     override fun newInstance(): IliasService {
