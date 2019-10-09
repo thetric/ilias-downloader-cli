@@ -48,7 +48,7 @@ class OkHttpIliasWebClient(
             .build()
         loginClient.newCall(request).execute().use {
             checkResponse(loginPage, it)
-            if (it.request().url().toString().startsWith(loginPage)) {
+            if (it.request.url.toString().startsWith(loginPage)) {
                 clearCookies()
                 throw IliasAuthenticationException("Login at $loginPage failed. Invalid credentials")
             }
@@ -76,19 +76,19 @@ class OkHttpIliasWebClient(
     override fun getHtml(url: String): String {
         val response = executeGetRequest(url)
         checkResponse(url, response)
-        return response.body()!!.string()
+        return response.body!!.string()
     }
 
     override fun getAsInputStream(url: String): InputStream {
         val response = executeGetRequest(url)
         checkResponse(url, response)
-        return response.body()!!.byteStream()
+        return response.body!!.byteStream()
     }
 
     private fun checkResponse(url: String, response: Response) {
         if (!response.isSuccessful) {
-            val msg = "Failed to GET $url: ${response.message()}"
-            throw IliasHttpException(msg, url, response.code())
+            val msg = "Failed to GET $url: ${response.message}"
+            throw IliasHttpException(msg, url, response.code)
         }
     }
 }
