@@ -31,15 +31,21 @@ compileKotlin {
 
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile 'com.xenomachina:kotlin-argparser:2.0.7'
-
-    compile 'com.github.thetric:ilias-downloader-connector-domparser:5.0.0'
-    compile 'com.github.thetric:ilias-downloader-ui-common:5.0.4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'com.xenomachina:kotlin-argparser:2.0.7'
 
     // logging libs
-    compile 'io.github.microutils:kotlin-logging:1.7.6'
+    implementation 'io.github.microutils:kotlin-logging:1.7.6'
     runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
+
+    // store settings as JSON
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    // DOM parser deps
+    compile 'org.jsoup:jsoup:1.11.3'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
+
 }
 
 detekt {

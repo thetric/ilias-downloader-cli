@@ -1,6 +1,6 @@
 package com.github.thetric.iliasdownloader.cli
 
-import com.github.thetric.iliasdownloader.service.IliasService
+import com.github.thetric.iliasdownloader.connector.api.IliasService
 
 /**
  * Creates a [IliasService] either from previous settings or shows a setup

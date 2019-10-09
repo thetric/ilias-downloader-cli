@@ -1,8 +1,8 @@
 package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
-import com.github.thetric.iliasdownloader.service.IliasService
-import com.github.thetric.iliasdownloader.service.model.LoginCredentials
+import com.github.thetric.iliasdownloader.connector.api.IliasService
+import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging

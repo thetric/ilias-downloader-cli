@@ -1,9 +1,9 @@
 package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.cli.sync.sanitizeFileName
-import com.github.thetric.iliasdownloader.service.ContextAwareIliasItemVisitor
-import com.github.thetric.iliasdownloader.service.IliasService
-import com.github.thetric.iliasdownloader.service.model.Course
+import com.github.thetric.iliasdownloader.connector.api.ContextAwareIliasItemVisitor
+import com.github.thetric.iliasdownloader.connector.api.IliasService
+import com.github.thetric.iliasdownloader.connector.api.model.Course
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging

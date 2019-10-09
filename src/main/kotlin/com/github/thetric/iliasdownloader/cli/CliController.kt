@@ -2,10 +2,10 @@ package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.cli.console.ConsoleService
 import com.github.thetric.iliasdownloader.cli.sync.ItemDownloadingItemVisitor
-import com.github.thetric.iliasdownloader.service.IliasService
-import com.github.thetric.iliasdownloader.service.exception.IliasAuthenticationException
-import com.github.thetric.iliasdownloader.service.webparser.JsoupCookieService
-import com.github.thetric.iliasdownloader.service.webparser.WebParserIliasServiceProvider
+import com.github.thetric.iliasdownloader.connector.api.IliasService
+import com.github.thetric.iliasdownloader.connector.api.exception.IliasAuthenticationException
+import com.github.thetric.iliasdownloader.connector.domparser.JsoupCookieService
+import com.github.thetric.iliasdownloader.connector.domparser.WebParserIliasServiceProvider
 import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
 import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging
