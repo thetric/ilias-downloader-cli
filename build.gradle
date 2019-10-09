@@ -38,7 +38,7 @@ dependencies {
     compile 'com.github.thetric:ilias-downloader-ui-common:5.0.4'
 
     // logging libs
-    compile 'io.github.microutils:kotlin-logging:1.6.10'
+    compile 'io.github.microutils:kotlin-logging:1.7.6'
     runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
 }
 
