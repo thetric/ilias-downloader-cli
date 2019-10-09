@@ -10,7 +10,6 @@ import com.github.thetric.iliasdownloader.connector.domparser.impl.course.IliasI
 import com.github.thetric.iliasdownloader.connector.domparser.impl.course.jsoup.JSoupParserServiceImpl
 import com.github.thetric.iliasdownloader.connector.domparser.impl.webclient.OkHttpIliasWebClient
 import java.io.IOException
-import java.util.*
 
 private const val LOGIN_PAGE_NAME = "login.php"
 private const val ILIAS_CLIENT_ID_COOKIE_NAME = "ilClientId"
