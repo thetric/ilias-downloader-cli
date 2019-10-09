@@ -26,6 +26,13 @@ console-reports:
      - 'FileBasedFindingsReport'
   #  - 'BuildFailureReport'
 
+output-reports:
+    active: true
+    exclude:
+    #  - 'HtmlOutputReport'
+      - 'TxtOutputReport'
+      - 'XmlOutputReport'
+
 comments:
   active: true
   excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
