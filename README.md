@@ -8,8 +8,7 @@ The Ilias Downloader enables you to easily download the files from your Ilias ac
 
 ## Usage
 
-**IMPORTANT:** In order to use the application you should have the latest JRE 10 installed.
-Older versions aren't supported.
+**IMPORTANT:** In order to use the application you must have JDK version 11 or higher installed.
 
 ```sh
 java -jar ilias-downloader-cli-$VERSION.jar <CLI options>
