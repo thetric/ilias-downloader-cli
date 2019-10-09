@@ -33,7 +33,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
 
     // DOM parser deps
-    compile 'org.jsoup:jsoup:1.11.3'
+    compile 'org.jsoup:jsoup:1.12.1'
     compile 'com.squareup.okhttp3:okhttp:4.2.2'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:4.2.2'
 
