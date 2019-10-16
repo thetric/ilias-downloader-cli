@@ -92,9 +92,7 @@ private fun parseLink(
     val startIndex = secondPosSeparator + ROW_SEPARATOR.length
     val matcher =
         courseLinkRegex.matcher(itemRow.subSequence(startIndex, itemRow.length))
-    if (!matcher.matches()) {
-        throw IllegalStateException("Failed to parse $itemRow")
-    }
+    require(matcher.matches()) { "Failed to parse $itemRow" }
     return ParsedIliasTableRow(matcher.group("name"), matcher.group("url"))
 }
 

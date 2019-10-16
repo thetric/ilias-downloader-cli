@@ -100,9 +100,7 @@ class CourseSyncServiceImpl(
     }
 
     private fun checkItemListIndex(index: Int, name: String, item: IliasItem) {
-        if (index == -1) {
-            throw IllegalArgumentException("$name of item list not found! Search URL is ${item.url}")
-        }
+        require(index != -1) { "$name of item list not found! Search URL is ${item.url}" }
     }
 
     private fun <C> walkIliasItemNode(
