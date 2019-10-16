@@ -32,8 +32,8 @@ constructor(
 
     private fun retrieveBaseUrl(loginPage: String): String {
         var trimmed = loginPage.trim { it <= ' ' }
-        if (trimmed.isEmpty()) {
-            throw IllegalArgumentException("Die angegebene Loginseiten URL darf nicht leer sein")
+        require(trimmed.isNotEmpty()) {
+            "Die angegebene Loginseiten URL darf nicht leer sein"
         }
 
         if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
@@ -41,8 +41,8 @@ constructor(
         }
 
         val loginPageNameIndex = trimmed.indexOf(LOGIN_PAGE_NAME)
-        if (loginPageNameIndex == -1) {
-            throw IllegalArgumentException("Die angegebene URL enthält kein \'$LOGIN_PAGE_NAME\'")
+        require(loginPageNameIndex != -1) {
+            "Die angegebene URL enthält kein \'$LOGIN_PAGE_NAME\'"
         }
 
         return trimmed.substring(0, loginPageNameIndex)
