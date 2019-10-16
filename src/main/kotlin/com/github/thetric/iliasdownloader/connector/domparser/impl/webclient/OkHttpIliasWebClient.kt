@@ -21,8 +21,9 @@ class OkHttpIliasWebClient(
 ) : IliasWebClient {
     private val client: OkHttpClient
     private val cookieManager: CookieManager = CookieManager()
-    private val loginPage: String = "${iliasBaseUrl}ilias.php?lang=en&cmd=post&cmdClass=ilstartupgui&cmdNode=w9&baseClass=ilStartUpGUI&rtoken="
-    private val logoutPage: String = "${iliasBaseUrl}logout.php"
+    private val loginPage =
+        "${iliasBaseUrl}ilias.php?lang=en&cmd=post&cmdClass=ilstartupgui&cmdNode=w9&baseClass=ilStartUpGUI&rtoken="
+    private val logoutPage = "${iliasBaseUrl}logout.php"
     private val log = KotlinLogging.logger {}
 
     init {
