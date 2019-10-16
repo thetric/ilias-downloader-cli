@@ -16,6 +16,8 @@ import java.text.MessageFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
+import kotlin.math.log10
+import kotlin.math.pow
 
 
 private val systemZone = ZoneId.systemDefault()
@@ -149,10 +151,8 @@ private fun humanReadableFileSize(size: Int): String {
     if (size <= 0) return "0"
     val iecBase = IEC_BASE.toDouble()
     val digitGroups: Int =
-        (Math.log10(size.toDouble()) / Math.log10(iecBase)).toInt()
+        (log10(size.toDouble()) / log10(iecBase)).toInt()
     return fileSizeFormat.format(
-        size / Math.pow(
-            iecBase, digitGroups.toDouble()
-        )
+        size / iecBase.pow(digitGroups.toDouble())
     ) + " " + units[digitGroups]
 }
