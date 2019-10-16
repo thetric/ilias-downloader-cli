@@ -39,6 +39,8 @@ class OkHttpIliasWebClient(
         val loginForm = FormBody.Builder()
             .add("username", credentials.userName)
             .add("password", credentials.password)
+            // magic string to make the login work
+            .add("cmd[doStandardAuthentication]", "Anmelden")
             .build()
         val request = Request.Builder()
             .url(loginPage)
