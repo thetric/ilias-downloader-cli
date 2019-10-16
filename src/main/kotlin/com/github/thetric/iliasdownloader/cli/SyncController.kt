@@ -33,7 +33,7 @@ internal class SyncController(
 
     private fun printSelectedCourses(coursesToSync: Collection<Course>) {
         val courseList =
-            coursesToSync.map { it.name }.joinToString(separator = ", ")
+            coursesToSync.joinToString(separator = ", ") { it.name }
         log.info { "Syncing ${coursesToSync.size} courses: $courseList" }
     }
 
