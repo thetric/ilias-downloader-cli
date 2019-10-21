@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/thetric/ilias-downloader-cli/compare/v4.0.0...v4.0.1) (2019-10-21)
+
+
+### Bug Fixes
+
+* **connector/domparser:** shutdown connections after sync ([fe1c0e1](https://github.com/thetric/ilias-downloader-cli/commit/fe1c0e1bfcf1ae3f4bdb4b27a35d072489849140)), closes [#18](https://github.com/thetric/ilias-downloader-cli/issues/18)
+
 ## 4.0.0 (2019-10-16)
 
 
