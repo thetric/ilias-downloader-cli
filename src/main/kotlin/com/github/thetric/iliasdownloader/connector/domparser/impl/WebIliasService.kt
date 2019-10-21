@@ -36,4 +36,8 @@ class WebIliasService(
     ) {
         courseSyncService.visit(initialContext, courseItem, itemVisitor)
     }
+
+    override fun close() {
+        iliasWebClient.close()
+    }
 }

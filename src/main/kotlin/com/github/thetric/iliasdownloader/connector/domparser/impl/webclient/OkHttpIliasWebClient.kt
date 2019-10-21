@@ -94,4 +94,10 @@ class OkHttpIliasWebClient(
             throw IliasHttpException(msg, url, response.code)
         }
     }
+
+    override fun close() {
+        client.dispatcher.executorService.shutdown()
+        client.connectionPool.evictAll()
+        client.cache?.close()
+    }
 }

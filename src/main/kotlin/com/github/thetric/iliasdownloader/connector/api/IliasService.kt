@@ -11,7 +11,7 @@ import java.io.InputStream
  * This interface provides some methods for basic session management (login,
  * logout) and it can list the courses (with/without their contents).
  */
-interface IliasService {
+interface IliasService : AutoCloseable {
     // Session management
 
     /**

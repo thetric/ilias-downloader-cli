@@ -24,8 +24,8 @@ internal class CliController(
 ) {
 
     fun startCliController() {
+        val iliasService = createIliasService()
         try {
-            val iliasService = createIliasService()
             val preferencesUpdateService = UserPreferencesUpdateServiceImpl(
                 iliasService,
                 resourceBundle,
@@ -48,6 +48,8 @@ internal class CliController(
             syncController.startSync(syncSettings.courses)
         } catch (authEx: IliasAuthenticationException) {
             log.error(authEx) { resourceBundle.getString("login.error") }
+        } finally {
+            iliasService.close()
         }
     }
 
