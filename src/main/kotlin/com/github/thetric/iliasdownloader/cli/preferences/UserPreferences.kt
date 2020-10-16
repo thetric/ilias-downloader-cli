@@ -1,10 +1,13 @@
 package com.github.thetric.iliasdownloader.cli.preferences
 
+import kotlinx.serialization.Serializable
+
 /**
  * Contains the user preferences.
  *
  * @see JsonPreferenceService
  */
+@Serializable
 data class UserPreferences(
     var iliasServerURL: String,
     val userName: String,

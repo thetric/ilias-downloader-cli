@@ -1,6 +1,8 @@
 package com.github.thetric.iliasdownloader.cli.preferences
 
-import com.google.gson.GsonBuilder
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
@@ -9,19 +11,18 @@ import java.nio.file.Path
  * Saves and loads [UserPreferences] as JSON
  */
 class JsonPreferenceService(val settingsFile: Path) {
-    private val gson = GsonBuilder().setPrettyPrinting().create()
+    private val json = Json { prettyPrint = true }
 
     fun loadPreferences(): UserPreferences {
-        Files.newBufferedReader(settingsFile, StandardCharsets.UTF_8).use {
-            return gson.fromJson(it, UserPreferences::class.java)
-        }
+        val jsonContent = Files.newBufferedReader(settingsFile, StandardCharsets.UTF_8).readText()
+        return json.decodeFromString(jsonContent)
     }
 
     fun savePreferences(userPreferences: UserPreferences) {
-        val json = gson.toJson(userPreferences)
+        val jsonString = json.encodeToString(userPreferences)
         Files.createDirectories(settingsFile.parent)
         Files.newBufferedWriter(settingsFile, StandardCharsets.UTF_8).use {
-            it.write(json)
+            it.write(jsonString)
         }
     }
 }
