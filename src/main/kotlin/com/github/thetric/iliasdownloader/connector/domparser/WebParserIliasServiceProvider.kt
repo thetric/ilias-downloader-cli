@@ -22,8 +22,8 @@ constructor(
     private val cookieService: CookieService,
     loginPage: String
 ) : IliasServiceProvider {
-    val iliasBaseUrl: String
-    val clientId: String
+    private val iliasBaseUrl: String
+    private val clientId: String
 
     init {
         iliasBaseUrl = retrieveBaseUrl(loginPage)
@@ -59,18 +59,14 @@ constructor(
                     "$loginPage finden"
             )
         } catch (e: IOException) {
-            throw IOException(
-                "Konnte die URL \'$loginPage\' nicht erreichen",
-                e
-            )
+            throw IOException("Konnte die URL \'$loginPage\' nicht erreichen", e)
         }
     }
 
     override fun newInstance(): IliasService {
         val jSoupParserService = JSoupParserServiceImpl()
         val iliasWebClient = OkHttpIliasWebClient(iliasBaseUrl)
-        val courseOverview =
-            "${iliasBaseUrl}ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems"
+        val courseOverview = "${iliasBaseUrl}ilias.php?baseClass=ilrepositorygui&reloadpublic=1&cmd=frameset&ref_id=1"
         val courseLinkPrefix = "${iliasBaseUrl}goto_${clientId}_crs_"
         val courseWebDavPrefix = "${iliasBaseUrl}webdav.php/$clientId/ref_"
         val itemParser: IliasItemParser =
