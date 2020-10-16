@@ -41,7 +41,7 @@ detekt {
 
 check.dependsOn "detekt"
 
-version '4.0.1'
+version '4.0.2'
 jar {
   manifest {
     attributes(

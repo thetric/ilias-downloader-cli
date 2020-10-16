@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.2](https://github.com/thetric/ilias-downloader-cli/compare/v4.0.1...v4.0.2) (2020-10-16)
+
+
+### Bug Fixes
+
+* adjust course overview URL ([85c436a](https://github.com/thetric/ilias-downloader-cli/commit/85c436a27439272f1c0552243760110d9bd7433d)), closes [#19](https://github.com/thetric/ilias-downloader-cli/issues/19)
+
 ### [4.0.1](https://github.com/thetric/ilias-downloader-cli/compare/v4.0.0...v4.0.1) (2019-10-21)
 
 
