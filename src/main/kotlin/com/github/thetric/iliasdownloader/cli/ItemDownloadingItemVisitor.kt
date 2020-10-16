@@ -5,7 +5,7 @@ import com.github.thetric.iliasdownloader.connector.api.IliasService
 import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
 import com.github.thetric.iliasdownloader.connector.api.model.CourseFolder
 import com.github.thetric.iliasdownloader.connector.api.model.IliasItem
-import com.github.thetric.iliasdownloader.connector.domparser.impl.IliasHttpException
+import com.github.thetric.iliasdownloader.connector.domparser.IliasHttpException
 import mu.KotlinLogging
 import java.nio.file.Files
 import java.nio.file.Path

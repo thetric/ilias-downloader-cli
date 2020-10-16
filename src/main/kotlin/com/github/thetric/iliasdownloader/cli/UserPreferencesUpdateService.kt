@@ -13,7 +13,7 @@ private val log = KotlinLogging.logger {}
  * Updates the [UserPreferences]. It updates the file size limit and the courses
  * to sync.
  */
-internal class UserPreferencesUpdateServiceImpl(
+internal class UserPreferencesUpdateService(
     private val iliasService: IliasService,
     private val resourceBundle: ResourceBundle,
     private val preferenceService: JsonPreferenceService,

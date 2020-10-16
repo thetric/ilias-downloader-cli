@@ -1,28 +1,23 @@
-package com.github.thetric.iliasdownloader.connector.domparser.impl.course
+package com.github.thetric.iliasdownloader.connector.domparser
 
 import com.github.thetric.iliasdownloader.connector.api.ContextAwareIliasItemVisitor
 import com.github.thetric.iliasdownloader.connector.api.model.Course
 import com.github.thetric.iliasdownloader.connector.api.model.IliasItem
-import com.github.thetric.iliasdownloader.connector.domparser.impl.course.jsoup.JSoupParserService
-import com.github.thetric.iliasdownloader.connector.domparser.impl.webclient.IliasWebClient
 import mu.KotlinLogging
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 private const val COURSE_SELECTOR = "a[href*='_crs_'].il_ContainerItemTitle"
 
 
-/**
- * [CourseSyncService] based on HTML parsing.
- */
-class CourseSyncServiceImpl(
-    private val jSoupParserService: JSoupParserService,
+internal class CourseSyncService(
     private val webClient: IliasWebClient,
     private val itemParser: IliasItemParser,
     private val courseOverview: String
-) : CourseSyncService {
+) {
     private val log = KotlinLogging.logger {}
 
-    override val joinedCourses: Collection<Course>
+    val joinedCourses: Collection<Course>
         get() {
             log.info { "Get all courses and groups from $courseOverview" }
             val document = connectAndGetDocument(courseOverview)
@@ -31,7 +26,7 @@ class CourseSyncServiceImpl(
 
     private fun connectAndGetDocument(url: String): Document {
         val html = getHtml(url)
-        return jSoupParserService.parse(html)
+        return Jsoup.parse(html)
     }
 
     private fun getHtml(url: String): String {
@@ -43,7 +38,7 @@ class CourseSyncServiceImpl(
             .map { itemParser.parseCourse(it) }
     }
 
-    override fun <C> visit(
+    fun <C> visit(
         parentContext: C,
         courseItem: IliasItem,
         itemVisitor: ContextAwareIliasItemVisitor<C>

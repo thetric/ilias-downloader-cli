@@ -1,9 +1,8 @@
-package com.github.thetric.iliasdownloader.connector.domparser.impl.course
+package com.github.thetric.iliasdownloader.connector.domparser
 
 import com.github.thetric.iliasdownloader.connector.api.model.Course
 import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
 import com.github.thetric.iliasdownloader.connector.api.model.CourseFolder
-import com.github.thetric.iliasdownloader.connector.domparser.impl.IliasItemIdStringParsingException
 import org.jsoup.nodes.Element
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -11,11 +10,11 @@ import java.util.regex.Pattern
 
 private const val ROW_SEPARATOR = "  "
 
-class IliasItemParserImpl(
+internal class IliasItemParser(
     private val courseWebDavPrefix: String,
     private val courseLinkPrefix: String
-) : IliasItemParser {
-    override fun parseCourse(courseElement: Element): Course {
+) {
+    fun parseCourse(courseElement: Element): Course {
         val courseId = getCourseId(courseElement)
         val courseName = courseElement.text()
         val courseUrl = "$courseWebDavPrefix$courseId/"
@@ -25,23 +24,18 @@ class IliasItemParserImpl(
     private fun getCourseId(aTag: Element): Long {
         val href = aTag.attr("href")
         // href="http://www.ilias.fh-dortmund.de/ilias/goto_ilias-fhdo_crs_\d+.html"
-        val idString =
-            href.replaceFirst(courseLinkPrefix, "")
-                .replace(".html", "")
+        val idString = href.replaceFirst(courseLinkPrefix, "").replace(".html", "")
         // der Rest muss ein int sein
         return parseId(href, idString)
     }
 
-    override fun isFolder(itemRow: String): Boolean {
+    fun isFolder(itemRow: String): Boolean {
         return itemRow[0] == '-'
     }
 
-    override fun parseFolder(currentUrl: String, itemRow: String): CourseFolder {
+    fun parseFolder(currentUrl: String, itemRow: String): CourseFolder {
         val firstPosSeparator = itemRow.indexOf(ROW_SEPARATOR)
-        val secondPosSeparator = itemRow.indexOf(
-            ROW_SEPARATOR,
-            firstPosSeparator + ROW_SEPARATOR.length
-        )
+        val secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length)
         val parsedLink = parseLink(itemRow, secondPosSeparator)
         return CourseFolder(
             name = parsedLink.name!!,
@@ -49,12 +43,9 @@ class IliasItemParserImpl(
         )
     }
 
-    override fun parseFile(currentUrl: String, itemRow: String): CourseFile {
+    fun parseFile(currentUrl: String, itemRow: String): CourseFile {
         val firstPosSeparator = itemRow.indexOf(ROW_SEPARATOR)
-        val secondPosSeparator = itemRow.indexOf(
-            ROW_SEPARATOR,
-            firstPosSeparator + ROW_SEPARATOR.length
-        )
+        val secondPosSeparator = itemRow.indexOf(ROW_SEPARATOR, firstPosSeparator + ROW_SEPARATOR.length)
 
         val parsedLinkName = parseLink(itemRow, secondPosSeparator)
         return CourseFile(
@@ -85,19 +76,22 @@ private fun parseFileSize(itemRow: String, firstPosSeparator: Int): Int {
 private val courseLinkRegex =
     Pattern.compile("""<a href="(?<url>.+)">(?<name>.+)</a>""")
 
+internal data class ParsedIliasTableRow(
+    val name: String? = null,
+    val url: String? = null
+)
+
 private fun parseLink(
     itemRow: String,
     secondPosSeparator: Int
 ): ParsedIliasTableRow {
     val startIndex = secondPosSeparator + ROW_SEPARATOR.length
-    val matcher =
-        courseLinkRegex.matcher(itemRow.subSequence(startIndex, itemRow.length))
+    val matcher = courseLinkRegex.matcher(itemRow.subSequence(startIndex, itemRow.length))
     require(matcher.matches()) { "Failed to parse $itemRow" }
     return ParsedIliasTableRow(matcher.group("name"), matcher.group("url"))
 }
 
-private val lastModifiedFormatter =
-    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+private val lastModifiedFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
 private fun parseLastModified(
     itemRow: String,
@@ -113,8 +107,7 @@ private fun parseId(href: String, probableIdString: String): Long {
     try {
         return probableIdString.toLong()
     } catch (e: NumberFormatException) {
-        val msg =
-            "Failed to parse \'$probableIdString\', original string was \'$href\'"
+        val msg = "Failed to parse \'$probableIdString\', original string was \'$href\'"
         throw IliasItemIdStringParsingException(msg, e)
     }
 }

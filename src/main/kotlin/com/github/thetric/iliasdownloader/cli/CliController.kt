@@ -3,7 +3,6 @@ package com.github.thetric.iliasdownloader.cli
 import com.github.thetric.iliasdownloader.cli.preferences.JsonPreferenceService
 import com.github.thetric.iliasdownloader.connector.api.IliasService
 import com.github.thetric.iliasdownloader.connector.api.exception.IliasAuthenticationException
-import com.github.thetric.iliasdownloader.connector.domparser.JsoupCookieService
 import com.github.thetric.iliasdownloader.connector.domparser.WebParserIliasServiceProvider
 import mu.KotlinLogging
 import java.util.*
@@ -21,9 +20,9 @@ internal class CliController(
 ) {
 
     fun startCliController() {
-        val iliasService = createIliasService()
+        val iliasService = connectToIlias()
         try {
-            val preferencesUpdateService = UserPreferencesUpdateServiceImpl(
+            val preferencesUpdateService = UserPreferencesUpdateService(
                 iliasService,
                 resourceBundle,
                 preferenceService,
@@ -50,10 +49,9 @@ internal class CliController(
         }
     }
 
-    private fun createIliasService(): IliasService {
-        val cookieService = JsoupCookieService()
+    private fun connectToIlias(): IliasService {
         val iliasProvider = { url: String ->
-            WebParserIliasServiceProvider(cookieService, url).newInstance()
+            WebParserIliasServiceProvider(url).newInstance()
         }
 
         val loginService = IliasServiceFactory(

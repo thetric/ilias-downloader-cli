@@ -1,24 +1,14 @@
-package com.github.thetric.iliasdownloader.connector.domparser.impl.webclient
+package com.github.thetric.iliasdownloader.connector.domparser
 
 import com.github.thetric.iliasdownloader.connector.api.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
-import com.github.thetric.iliasdownloader.connector.domparser.impl.IliasHttpException
 import mu.KotlinLogging
-import okhttp3.FormBody
-import okhttp3.JavaNetCookieJar
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import java.io.InputStream
 import java.net.CookieManager
 import java.net.CookiePolicy
 
-/**
- * [IliasWebClient] communicating with the Ilias with OkHttp.
- */
-class OkHttpIliasWebClient(
-    iliasBaseUrl: String
-) : IliasWebClient {
+internal class IliasWebClient(iliasBaseUrl: String) : AutoCloseable {
     private val client: OkHttpClient
     private val cookieManager: CookieManager = CookieManager()
     private val loginPage =
@@ -34,7 +24,7 @@ class OkHttpIliasWebClient(
             .build()
     }
 
-    override fun login(credentials: LoginCredentials) {
+    fun login(credentials: LoginCredentials) {
         log.info { "Logging in at $loginPage" }
         val loginForm = FormBody.Builder()
             .add("username", credentials.userName)
@@ -59,7 +49,7 @@ class OkHttpIliasWebClient(
         }
     }
 
-    override fun logout() {
+    fun logout() {
         log.info { "Logging out: $logoutPage" }
         val response = executeGetRequest(logoutPage)
         clearCookies()
@@ -76,13 +66,13 @@ class OkHttpIliasWebClient(
         return client.newCall(request).execute()
     }
 
-    override fun getHtml(url: String): String {
+    fun getHtml(url: String): String {
         val response = executeGetRequest(url)
         checkResponse(url, response)
         return response.body!!.string()
     }
 
-    override fun getAsInputStream(url: String): InputStream {
+    fun getAsInputStream(url: String): InputStream {
         val response = executeGetRequest(url)
         checkResponse(url, response)
         return response.body!!.byteStream()

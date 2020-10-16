@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.connector.domparser.impl
+package com.github.thetric.iliasdownloader.connector.domparser
 
 import com.github.thetric.iliasdownloader.connector.api.exception.IliasException
 

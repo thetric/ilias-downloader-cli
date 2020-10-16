@@ -1,18 +1,16 @@
-package com.github.thetric.iliasdownloader.connector.domparser.impl
+package com.github.thetric.iliasdownloader.connector.domparser
 
 import com.github.thetric.iliasdownloader.connector.api.ContextAwareIliasItemVisitor
 import com.github.thetric.iliasdownloader.connector.api.IliasService
 import com.github.thetric.iliasdownloader.connector.api.model.Course
 import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
 import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
-import com.github.thetric.iliasdownloader.connector.domparser.impl.course.CourseSyncService
-import com.github.thetric.iliasdownloader.connector.domparser.impl.webclient.IliasWebClient
 import java.io.InputStream
 
 /**
  * [IliasService] parsing the HTML from the Ilias website.
  */
-class WebIliasService(
+internal class WebIliasService(
     private val courseSyncService: CourseSyncService,
     private val iliasWebClient: IliasWebClient
 ) : IliasService {
