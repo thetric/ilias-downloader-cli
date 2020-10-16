@@ -1,0 +1,10 @@
+{
+    "name": "ilias-downloader",
+    "version": "4.0.1",
+    "devDependencies": {
+        "standard-version": "^9.0.0"
+    },
+    "scripts": {
+        "changelog": "standard-version"
+    }
+}
