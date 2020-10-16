@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.cli.sync
+package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.connector.api.ContextAwareIliasItemVisitor
 import com.github.thetric.iliasdownloader.connector.api.IliasService

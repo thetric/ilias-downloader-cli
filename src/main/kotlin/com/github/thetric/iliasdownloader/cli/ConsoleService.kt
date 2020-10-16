@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.cli.console
+package com.github.thetric.iliasdownloader.cli
 
 import mu.KotlinLogging
 import java.util.*
@@ -9,10 +9,10 @@ private val log = KotlinLogging.logger {}
  * Reads the input either from the system environment or prompts the user for
  * input.
  */
-class SystemEnvironmentAwareConsoleService : ConsoleService {
+class SystemEnvironmentAwareConsoleService  {
     private val scanner = Scanner(System.`in`)
 
-    override fun readLine(envVar: String, prompt: String): String {
+    fun readLine(envVar: String, prompt: String): String {
         val property = System.getenv(envVar)
         if (property != null) {
             return property
@@ -31,7 +31,7 @@ class SystemEnvironmentAwareConsoleService : ConsoleService {
      * @param prompt  printed before the prompt
      * @return the password
      */
-    override fun readPassword(envVar: String, prompt: String): String {
+    fun readPassword(envVar: String, prompt: String): String {
         val credentials = System.getenv(envVar)
         if (credentials != null) {
             return credentials

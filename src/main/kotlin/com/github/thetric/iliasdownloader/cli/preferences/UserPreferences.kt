@@ -1,9 +1,8 @@
-package com.github.thetric.iliasdownloader.ui.common.prefs
+package com.github.thetric.iliasdownloader.cli.preferences
 
 /**
  * Contains the user preferences.
  *
- * @see PreferenceService
  * @see JsonPreferenceService
  */
 data class UserPreferences(

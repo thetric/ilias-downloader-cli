@@ -1,10 +1,9 @@
 package com.github.thetric.iliasdownloader.cli
 
-import com.github.thetric.iliasdownloader.cli.console.ConsoleService
+import com.github.thetric.iliasdownloader.cli.preferences.JsonPreferenceService
+import com.github.thetric.iliasdownloader.cli.preferences.UserPreferences
 import com.github.thetric.iliasdownloader.connector.api.IliasService
 import com.github.thetric.iliasdownloader.connector.api.model.Course
-import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging
 import java.util.*
 
@@ -17,11 +16,11 @@ private val log = KotlinLogging.logger {}
 internal class UserPreferencesUpdateServiceImpl(
     private val iliasService: IliasService,
     private val resourceBundle: ResourceBundle,
-    private val preferenceService: PreferenceService<UserPreferences>,
-    private val consoleService: ConsoleService
-) : UserPreferencesUpdateService {
+    private val preferenceService: JsonPreferenceService,
+    private val consoleService: SystemEnvironmentAwareConsoleService
+) {
 
-    override fun updatePreferences(cliOptions: CliOptions): SyncSettings {
+    fun updatePreferences(cliOptions: CliOptions): SyncSettings {
         val prefs = getPreferences(cliOptions)
         val (coursesToSync, newPrefs) =
             updateSyncCourses(cliOptions, prefs)

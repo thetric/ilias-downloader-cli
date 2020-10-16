@@ -1,11 +1,9 @@
 package com.github.thetric.iliasdownloader.cli
 
-import com.github.thetric.iliasdownloader.cli.sync.sanitizeFileName
+import com.github.thetric.iliasdownloader.cli.preferences.UserPreferences
 import com.github.thetric.iliasdownloader.connector.api.ContextAwareIliasItemVisitor
 import com.github.thetric.iliasdownloader.connector.api.IliasService
 import com.github.thetric.iliasdownloader.connector.api.model.Course
-import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging
 import java.nio.file.Path
 import java.util.*
@@ -16,8 +14,7 @@ private val log = KotlinLogging.logger {}
  * Updates the [UserPreferences] and executes the sync.
  *
  * @see UserPreferences
- *
- * @see PreferenceService
+ * @see com.github.thetric.iliasdownloader.cli.preferences.JsonPreferenceService
  */
 internal class SyncController(
     private val iliasService: IliasService,

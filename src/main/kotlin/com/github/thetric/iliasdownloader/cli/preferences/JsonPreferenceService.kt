@@ -1,7 +1,6 @@
-package com.github.thetric.iliasdownloader.ui.common.prefs
+package com.github.thetric.iliasdownloader.cli.preferences
 
 import com.google.gson.GsonBuilder
-import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
@@ -9,21 +8,16 @@ import java.nio.file.Path
 /**
  * Saves and loads [UserPreferences] as JSON
  */
-class JsonPreferenceService<T>(
-    override val settingsFile: Path,
-    private val classType: Class<T>
-) : PreferenceService<T> {
+class JsonPreferenceService(val settingsFile: Path) {
     private val gson = GsonBuilder().setPrettyPrinting().create()
 
-    @Throws(IOException::class)
-    override fun loadPreferences(): T {
+    fun loadPreferences(): UserPreferences {
         Files.newBufferedReader(settingsFile, StandardCharsets.UTF_8).use {
-            return gson.fromJson(it, classType)
+            return gson.fromJson(it, UserPreferences::class.java)
         }
     }
 
-    @Throws(IOException::class)
-    override fun savePreferences(userPreferences: T) {
+    fun savePreferences(userPreferences: UserPreferences) {
         val json = gson.toJson(userPreferences)
         Files.createDirectories(settingsFile.parent)
         Files.newBufferedWriter(settingsFile, StandardCharsets.UTF_8).use {

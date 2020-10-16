@@ -1,10 +1,9 @@
 package com.github.thetric.iliasdownloader.cli
 
-import com.github.thetric.iliasdownloader.cli.console.ConsoleService
+import com.github.thetric.iliasdownloader.cli.preferences.JsonPreferenceService
+import com.github.thetric.iliasdownloader.cli.preferences.UserPreferences
 import com.github.thetric.iliasdownloader.connector.api.IliasService
 import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
-import com.github.thetric.iliasdownloader.ui.common.prefs.PreferenceService
-import com.github.thetric.iliasdownloader.ui.common.prefs.UserPreferences
 import mu.KotlinLogging
 import java.nio.file.Files
 import java.text.MessageFormat
@@ -15,14 +14,21 @@ private val log = KotlinLogging.logger {}
 /**
  * Creates a [IliasService] from a settings file (if found) or a setup dialog.
  */
-internal class LoginServiceImpl(
+internal class IliasServiceFactory(
     private val iliasProvider: (String) -> IliasService,
     private val resourceBundle: ResourceBundle,
-    private val preferenceService: PreferenceService<UserPreferences>,
-    private val consoleService: ConsoleService
-) : LoginService {
+    private val preferenceService: JsonPreferenceService,
+    private val consoleService: SystemEnvironmentAwareConsoleService) {
 
-    override fun connect(): IliasService {
+    /**
+     * Creates a new connected [IliasService].
+     * The settings for the connection are applied either from previous settings
+     * (if available) or from a setup dialog.
+     * In the latter case the preferences are saved.
+     *
+     * @return connected [IliasService]
+     */
+    fun connect(): IliasService {
         return if (Files.exists(preferenceService.settingsFile)) {
             createServiceFromConfig()
         } else createFromFirstTimeSetup()
