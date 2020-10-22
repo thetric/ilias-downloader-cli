@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.3](https://github.com/thetric/ilias-downloader-cli/compare/v4.0.2...v4.0.3) (2020-10-22)
+
+
+### Bug Fixes
+
+* **connector/domparser:** fix login issue ([ca204d4](https://github.com/thetric/ilias-downloader-cli/commit/ca204d41929ee816854b0c92459121c21eea7c3a))
+
 ### [4.0.2](https://github.com/thetric/ilias-downloader-cli/compare/v4.0.1...v4.0.2) (2020-10-16)
 
 

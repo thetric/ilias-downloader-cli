@@ -1,6 +1,6 @@
 {
     "name": "ilias-downloader",
-    "version": "4.0.2",
+    "version": "4.0.3",
     "devDependencies": {
         "standard-version": "^9.0.0"
     },
