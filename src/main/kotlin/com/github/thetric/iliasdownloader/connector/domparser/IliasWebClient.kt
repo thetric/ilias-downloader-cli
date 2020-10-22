@@ -3,7 +3,11 @@ package com.github.thetric.iliasdownloader.connector.domparser
 import com.github.thetric.iliasdownloader.connector.api.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
 import mu.KotlinLogging
-import okhttp3.*
+import okhttp3.FormBody
+import okhttp3.JavaNetCookieJar
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.InputStream
 import java.net.CookieManager
 import java.net.CookiePolicy
