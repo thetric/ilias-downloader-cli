@@ -1,8 +1,7 @@
-[![Travis](https://img.shields.io/travis/thetric/ilias-downloader-cli/master.svg?style=flat-square)](https://travis-ci.org/thetric/ilias-downloader-cli)
+# Ilias Downloader (CLI)
+![Java CI with Gradle](https://github.com/thetric/ilias-downloader-cli/workflows/Java%20CI%20with%20Gradle/badge.svg)
 [![GitHub release](https://img.shields.io/github/release/thetric/ilias-downloader-cli.svg?style=flat-square)](https://github.com/thetric/ilias-downloader-cli/releases)
 [![codebeat badge](https://codebeat.co/badges/af88b559-243e-4223-a01b-e86f53701da1)](https://codebeat.co/projects/github-com-thetric-ilias-downloader-cli-master)
-
-# Ilias Downloader (CLI)
 
 The Ilias Downloader enables you to easily download the files from your Ilias account through a simple CLI.
 
