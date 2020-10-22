@@ -43,18 +43,21 @@ constructor(
 
     @Throws(IOException::class)
     private fun retrieveClientId(loginPage: String): String {
-        try {
+        return try {
             val response = Jsoup.connect(loginPage).execute()
-            return response.cookie(ILIAS_CLIENT_ID_COOKIE_NAME)
-                ?: throw CookieNotFoundException("Konnte das Cookie '$ILIAS_CLIENT_ID_COOKIE_NAME\' nicht in der Response von der Seite $loginPage finden")
+            response.cookie(ILIAS_CLIENT_ID_COOKIE_NAME)
+                ?: throw CookieNotFoundException(
+                    "Konnte das Cookie '$ILIAS_CLIENT_ID_COOKIE_NAME\' nicht in der "
+                        + "Response von der Seite $loginPage finden"
+                )
         } catch (e: IOException) {
             throw IOException("Konnte die URL \'$loginPage\' nicht erreichen", e)
         }
     }
 
     override fun newInstance(): IliasService {
-        val iliasWebClient = IliasWebClient(iliasBaseUrl)
-        val courseOverview = "${iliasBaseUrl}ilias.php?baseClass=ilrepositorygui&reloadpublic=1&cmd=frameset&ref_id=1"
+        val iliasWebClient = IliasWebClient(iliasBaseUrl, clientId)
+        val courseOverview = "${iliasBaseUrl}ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems"
         val courseLinkPrefix = "${iliasBaseUrl}goto_${clientId}_crs_"
         val courseWebDavPrefix = "${iliasBaseUrl}webdav.php/$clientId/ref_"
         val itemParser = IliasItemParser(courseWebDavPrefix, courseLinkPrefix)

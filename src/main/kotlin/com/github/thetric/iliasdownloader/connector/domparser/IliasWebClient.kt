@@ -12,11 +12,11 @@ import java.io.InputStream
 import java.net.CookieManager
 import java.net.CookiePolicy
 
-internal class IliasWebClient(iliasBaseUrl: String) : AutoCloseable {
+internal class IliasWebClient(iliasBaseUrl: String, clientId: String) : AutoCloseable {
     private val client: OkHttpClient
     private val cookieManager: CookieManager = CookieManager()
     private val loginPage =
-        "${iliasBaseUrl}ilias.php?lang=en&cmd=post&cmdClass=ilstartupgui&cmdNode=w9&baseClass=ilStartUpGUI&rtoken="
+        "${iliasBaseUrl}ilias.php?lang=en&client_id=${clientId}&cmd=post&cmdClass=ilstartupgui&cmdNode=yc&baseClass=ilStartUpGUI&rtoken="
     private val logoutPage = "${iliasBaseUrl}logout.php"
     private val log = KotlinLogging.logger {}
 
@@ -34,7 +34,7 @@ internal class IliasWebClient(iliasBaseUrl: String) : AutoCloseable {
             .add("username", credentials.userName)
             .add("password", credentials.password)
             // magic string to make the login work
-            .add("cmd[doStandardAuthentication]", "Anmelden")
+            .add("cmd[doStandardAuthentication]", "Login")
             .build()
         val request = Request.Builder()
             .url(loginPage)
@@ -84,7 +84,7 @@ internal class IliasWebClient(iliasBaseUrl: String) : AutoCloseable {
 
     private fun checkResponse(url: String, response: Response) {
         if (!response.isSuccessful) {
-            val msg = "Failed to GET $url: ${response.message}"
+            val msg = "Failed to GET $url: HTTP status code ${response.code}"
             throw IliasHttpException(msg, url, response.code)
         }
     }
