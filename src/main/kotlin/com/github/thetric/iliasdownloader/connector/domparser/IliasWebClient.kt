@@ -16,7 +16,8 @@ internal class IliasWebClient(iliasBaseUrl: String, clientId: String) : AutoClos
     private val client: OkHttpClient
     private val cookieManager: CookieManager = CookieManager()
     private val loginPage =
-        "${iliasBaseUrl}ilias.php?lang=en&client_id=${clientId}&cmd=post&cmdClass=ilstartupgui&cmdNode=yc&baseClass=ilStartUpGUI&rtoken="
+        "${iliasBaseUrl}ilias.php?lang=en&client_id=${clientId}&cmd=post&cmdClass=ilstartupgui&cmdNode=yc" +
+            "&baseClass=ilStartUpGUI&rtoken="
     private val logoutPage = "${iliasBaseUrl}logout.php"
     private val log = KotlinLogging.logger {}
 
