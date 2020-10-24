@@ -1,14 +1,14 @@
-package com.github.thetric.iliasdownloader.connector.api
+package com.github.thetric.iliasdownloader.connector
 
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFolder
+import com.github.thetric.iliasdownloader.connector.model.CourseFile
+import com.github.thetric.iliasdownloader.connector.model.CourseFolder
 
 /**
  * Visitor for the traversal of the Ilias course items.
  *
  * @param C context of the traversal (e.g. the current dir, upload URL)
  */
-interface ContextAwareIliasItemVisitor<C> {
+interface IliasItemListener<C> {
 
     /**
      * Handles the visitation of a [CourseFolder].

@@ -12,6 +12,7 @@ repositories {
 compileKotlin {
     kotlinOptions {
         jvmTarget = "11"
+        useIR = true
     }
 }
 
@@ -28,9 +29,7 @@ dependencies {
 
     // DOM parser deps
     implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
-    implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.9.0'
-
+    implementation 'com.github.lookfirst:sardine:5.10'
 }
 
 detekt {

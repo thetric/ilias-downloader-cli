@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.connector.api
+package com.github.thetric.iliasdownloader.connector
 
 /**
  * Encapsulates the creation of [IliasService]s. All implementations are encouraged to implement this to simplify the

@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.connector.api.model
+package com.github.thetric.iliasdownloader.connector.model
 
 import java.time.LocalDateTime
 
@@ -10,5 +10,5 @@ data class CourseFile(
     override val url: String,
 
     val modified: LocalDateTime,
-    val size: Int
+    val size: Long
 ) : IliasItem

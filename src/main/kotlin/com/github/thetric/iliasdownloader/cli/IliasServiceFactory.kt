@@ -2,8 +2,8 @@ package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.cli.preferences.JsonPreferenceService
 import com.github.thetric.iliasdownloader.cli.preferences.UserPreferences
-import com.github.thetric.iliasdownloader.connector.api.IliasService
-import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
+import com.github.thetric.iliasdownloader.connector.IliasService
+import com.github.thetric.iliasdownloader.connector.model.LoginCredentials
 import mu.KotlinLogging
 import java.nio.file.Files
 import java.text.MessageFormat

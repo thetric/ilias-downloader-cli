@@ -1,11 +1,11 @@
 package com.github.thetric.iliasdownloader.cli
 
-import com.github.thetric.iliasdownloader.connector.api.ContextAwareIliasItemVisitor
-import com.github.thetric.iliasdownloader.connector.api.IliasService
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFolder
-import com.github.thetric.iliasdownloader.connector.api.model.IliasItem
-import com.github.thetric.iliasdownloader.connector.domparser.IliasHttpException
+import com.github.thetric.iliasdownloader.connector.IliasItemListener
+import com.github.thetric.iliasdownloader.connector.IliasService
+import com.github.thetric.iliasdownloader.connector.model.CourseFile
+import com.github.thetric.iliasdownloader.connector.model.CourseFolder
+import com.github.thetric.iliasdownloader.connector.model.IliasItem
+import com.github.thetric.iliasdownloader.connector.IliasHttpException
 import mu.KotlinLogging
 import java.nio.file.Files
 import java.nio.file.Path
@@ -15,7 +15,8 @@ import java.text.DecimalFormat
 import java.text.MessageFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.*
+import java.util.Objects
+import java.util.ResourceBundle
 import kotlin.math.log10
 import kotlin.math.pow
 
@@ -28,11 +29,11 @@ private val log = KotlinLogging.logger {}
 /**
  * Downloads new or updated [CourseFile]s.
  */
-class ItemDownloadingItemVisitor(
+class ItemDownloadingItemListener(
     private val iliasService: IliasService,
     private val bundle: ResourceBundle,
     maxFileSizeInMiB: Long
-) : ContextAwareIliasItemVisitor<Path> {
+) : IliasItemListener<Path> {
     private val downloadSizeLimitInBytes: Long = if (maxFileSizeInMiB > 0) {
         toBytes(maxFileSizeInMiB)
     } else java.lang.Long.MAX_VALUE
@@ -147,7 +148,7 @@ private val units = arrayOf("B", "kB", "MB", "GB", "TB")
 private val fileSizeFormat = DecimalFormat("#,##0.#")
 
 // based on https://stackoverflow.com/a/5599842
-private fun humanReadableFileSize(size: Int): String {
+private fun humanReadableFileSize(size: Long): String {
     if (size <= 0) return "0"
     val iecBase = IEC_BASE.toDouble()
     val digitGroups: Int =
