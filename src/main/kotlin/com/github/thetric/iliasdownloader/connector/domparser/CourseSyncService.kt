@@ -1,121 +1,59 @@
 package com.github.thetric.iliasdownloader.connector.domparser
 
-import com.github.thetric.iliasdownloader.connector.api.ContextAwareIliasItemVisitor
+import com.github.sardine.DavResource
+import com.github.sardine.Sardine
+import com.github.sardine.SardineFactory
+import com.github.thetric.iliasdownloader.connector.api.IliasItemListener
 import com.github.thetric.iliasdownloader.connector.api.model.Course
-import com.github.thetric.iliasdownloader.connector.api.model.IliasItem
-import mu.KotlinLogging
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
+import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
+import com.github.thetric.iliasdownloader.connector.api.model.CourseFolder
+import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
+import java.io.InputStream
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Date
 
-private const val COURSE_SELECTOR = "a[href*='_crs_'].il_ContainerItemTitle"
+internal class CourseSyncService(private val iliasHost: String) {
+    private lateinit var sardine: Sardine
 
-
-internal class CourseSyncService(
-    private val webClient: IliasWebClient,
-    private val itemParser: IliasItemParser,
-    private val courseOverview: String
-) {
-    private val log = KotlinLogging.logger {}
-
-    val joinedCourses: Collection<Course>
-        get() {
-            log.info { "Get all courses and groups from $courseOverview" }
-            val document = connectAndGetDocument(courseOverview)
-            return getCoursesFromHtml(document)
-        }
-
-    private fun connectAndGetDocument(url: String): Document {
-        val html = getHtml(url)
-        return Jsoup.parse(html)
+    fun login(loginCredentials: LoginCredentials) {
+        sardine = SardineFactory.begin(loginCredentials.userName, loginCredentials.password)!!
     }
 
-    private fun getHtml(url: String): String {
-        return webClient.getHtml(url)
+    fun <C> walkIliasCourse(course: Course, itemListener: IliasItemListener<C>, initialContext: C) {
+        walkIliasDirectory(course.url, itemListener, initialContext)
     }
 
-    private fun getCoursesFromHtml(document: Document): Collection<Course> {
-        return document.select(COURSE_SELECTOR)
-            .map { itemParser.parseCourse(it) }
-    }
-
-    fun <C> visit(
-        parentContext: C,
-        courseItem: IliasItem,
-        itemVisitor: ContextAwareIliasItemVisitor<C>
-    ) {
-        val itemContainer = getItemContainersFromUrl(courseItem.url)
-        for (entry in getNonEmptyEntries(itemContainer, courseItem)) {
-            walkIliasItemNode(
-                parentContext,
-                courseItem.url,
-                entry,
-                itemVisitor
-            )
-        }
-    }
-
-    private fun getItemContainersFromUrl(itemUrl: String): String {
-        val html = getHtml(itemUrl)
-        val startTag = "<pre>"
-        val startIndexTable = html.indexOf(startTag)
-        val endTag = "</pre>"
-        val endIndexTable = html.lastIndexOf(endTag)
-        val exclusiveStartIndex = startIndexTable + startTag.length
-        return html.substring(exclusiveStartIndex, endIndexTable - 1)
-    }
-
-    private fun getNonEmptyEntries(
-        itemContainer: String,
-        courseItem: IliasItem
-    ): List<String> {
-        return getIliasItemRows(itemContainer, courseItem).filter {
-            !it.isBlank()
-        }
-    }
-
-    private fun getIliasItemRows(
-        tableHtml: String,
-        courseItem: IliasItem
-    ): Collection<String> {
-        val itemListStartDelimiter = "<hr>"
-        val startIndexItemList = tableHtml.indexOf(itemListStartDelimiter)
-        checkItemListIndex(startIndexItemList, "Begin", courseItem)
-
-        val itemListEndDelimiter = "\n<hr>"
-        val endIndexItemList = tableHtml.lastIndexOf(itemListEndDelimiter)
-        checkItemListIndex(endIndexItemList, "End", courseItem)
-
-        val itemListBeginPos =
-            startIndexItemList + itemListStartDelimiter.length
-        return if (itemListBeginPos >= endIndexItemList) {
-            listOf()
-        } else tableHtml.subSequence(itemListBeginPos, endIndexItemList)
-            .split("\n")
-            .map { it.trim() }
-    }
-
-    private fun checkItemListIndex(index: Int, name: String, item: IliasItem) {
-        require(index != -1) { "$name of item list not found! Search URL is ${item.url}" }
+    private fun <C> walkIliasDirectory(url: String, itemListener: IliasItemListener<C>, context: C) {
+        sardine.list(url)
+            .drop(1) // drop self link
+            .forEach {
+                walkIliasItemNode(context, it, itemListener)
+            }
     }
 
     private fun <C> walkIliasItemNode(
         parentContext: C,
-        currentUrl: String,
-        itemRow: String,
-        itemVisitor: ContextAwareIliasItemVisitor<C>
+        davResource: DavResource,
+        itemListener: IliasItemListener<C>
     ) {
-        if (itemParser.isFolder(itemRow)) {
-            val courseFolder = itemParser.parseFolder(currentUrl, itemRow)
-            val newParentCtx =
-                itemVisitor.handleFolder(parentContext, courseFolder)
-            visit(newParentCtx, courseFolder, itemVisitor)
+        val url = iliasHost + davResource.href.toString()
+        if (davResource.isDirectory) {
+            val courseFolder = CourseFolder(davResource.name, url)
+            val newParentCtx = itemListener.handleFolder(parentContext, courseFolder)
+            walkIliasDirectory(courseFolder.url, itemListener, newParentCtx)
         } else {
-            // assume it is a file
-            itemVisitor.handleFile(
-                parentContext,
-                itemParser.parseFile(currentUrl, itemRow)
-            )
+            val modifiedTimestamp = javaUtilDateToLocalDateTime(davResource.modified)
+            val file = CourseFile(davResource.name, url, modifiedTimestamp, davResource.contentLength)
+            itemListener.handleFile(parentContext, file)
         }
     }
 
+    private fun javaUtilDateToLocalDateTime(date: Date): LocalDateTime {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+    }
+
+    fun getContentAsStream(file: CourseFile): InputStream {
+        return sardine.get(file.url)
+    }
 }

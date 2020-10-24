@@ -8,7 +8,7 @@ import com.github.thetric.iliasdownloader.connector.api.model.CourseFolder
  *
  * @param C context of the traversal (e.g. the current dir, upload URL)
  */
-interface ContextAwareIliasItemVisitor<C> {
+interface IliasItemListener<C> {
 
     /**
      * Handles the visitation of a [CourseFolder].

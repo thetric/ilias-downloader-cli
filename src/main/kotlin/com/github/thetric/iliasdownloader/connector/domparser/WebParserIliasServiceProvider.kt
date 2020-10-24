@@ -4,6 +4,7 @@ import com.github.thetric.iliasdownloader.connector.api.IliasService
 import com.github.thetric.iliasdownloader.connector.api.IliasServiceProvider
 import org.jsoup.Jsoup
 import java.io.IOException
+import java.net.URL
 
 private const val LOGIN_PAGE_NAME = "login.php"
 private const val ILIAS_CLIENT_ID_COOKIE_NAME = "ilClientId"
@@ -15,11 +16,13 @@ class WebParserIliasServiceProvider @Throws(IOException::class)
 constructor(
     loginPage: String
 ) : IliasServiceProvider {
+    private val iliasHost: String
     private val iliasBaseUrl: String
     private val clientId: String
 
     init {
         iliasBaseUrl = retrieveBaseUrl(loginPage)
+        iliasHost = "https://${URL(iliasBaseUrl).host}"
         clientId = retrieveClientId(loginPage)
     }
 
@@ -56,12 +59,11 @@ constructor(
     }
 
     override fun newInstance(): IliasService {
-        val iliasWebClient = IliasWebClient(iliasBaseUrl, clientId)
         val courseOverview = "${iliasBaseUrl}ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSelectedItems"
         val courseLinkPrefix = "${iliasBaseUrl}goto_${clientId}_crs_"
         val courseWebDavPrefix = "${iliasBaseUrl}webdav.php/$clientId/ref_"
         val itemParser = IliasItemParser(courseWebDavPrefix, courseLinkPrefix)
-        val courseSyncServiceProvider = CourseSyncService(iliasWebClient, itemParser, courseOverview)
-        return WebIliasService(courseSyncServiceProvider, iliasWebClient)
+        val courseSyncService = CourseSyncService(iliasHost)
+        return WebIliasService(itemParser, courseSyncService, iliasBaseUrl, clientId, courseOverview)
     }
 }

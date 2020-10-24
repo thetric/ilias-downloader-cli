@@ -41,7 +41,7 @@ interface IliasService : AutoCloseable {
 
     fun <C> visit(
         courseItem: Course,
-        itemVisitor: ContextAwareIliasItemVisitor<C>,
+        itemListener: IliasItemListener<C>,
         initialContext: C
     )
 

@@ -5,7 +5,7 @@ import com.github.thetric.iliasdownloader.connector.api.IliasService
 import com.github.thetric.iliasdownloader.connector.api.exception.IliasAuthenticationException
 import com.github.thetric.iliasdownloader.connector.domparser.WebParserIliasServiceProvider
 import mu.KotlinLogging
-import java.util.*
+import java.util.ResourceBundle
 
 private val log = KotlinLogging.logger {}
 
@@ -30,7 +30,7 @@ internal class CliController(
             )
             val syncSettings =
                 preferencesUpdateService.updatePreferences(cliOptions)
-            val itemVisitor = ItemDownloadingItemVisitor(
+            val itemVisitor = ItemDownloadingItemListener(
                 iliasService,
                 resourceBundle,
                 syncSettings.maxFileSizePerFileInMiB

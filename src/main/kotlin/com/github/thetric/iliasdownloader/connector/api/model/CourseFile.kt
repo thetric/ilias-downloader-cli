@@ -10,5 +10,5 @@ data class CourseFile(
     override val url: String,
 
     val modified: LocalDateTime,
-    val size: Int
+    val size: Long
 ) : IliasItem
