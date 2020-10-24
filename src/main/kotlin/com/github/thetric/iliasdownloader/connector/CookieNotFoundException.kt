@@ -1,6 +1,6 @@
-package com.github.thetric.iliasdownloader.connector.domparser
+package com.github.thetric.iliasdownloader.connector
 
-import com.github.thetric.iliasdownloader.connector.api.exception.IliasException
+import com.github.thetric.iliasdownloader.connector.exception.IliasException
 
 /**
  * Thrown if a specified cookie cannot be found in a response.

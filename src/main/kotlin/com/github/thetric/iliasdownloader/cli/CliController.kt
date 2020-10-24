@@ -1,9 +1,9 @@
 package com.github.thetric.iliasdownloader.cli
 
 import com.github.thetric.iliasdownloader.cli.preferences.JsonPreferenceService
-import com.github.thetric.iliasdownloader.connector.api.IliasService
-import com.github.thetric.iliasdownloader.connector.api.exception.IliasAuthenticationException
-import com.github.thetric.iliasdownloader.connector.domparser.WebParserIliasServiceProvider
+import com.github.thetric.iliasdownloader.connector.IliasService
+import com.github.thetric.iliasdownloader.connector.exception.IliasAuthenticationException
+import com.github.thetric.iliasdownloader.connector.WebParserIliasServiceProvider
 import mu.KotlinLogging
 import java.util.ResourceBundle
 

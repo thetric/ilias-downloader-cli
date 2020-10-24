@@ -1,7 +1,5 @@
-package com.github.thetric.iliasdownloader.connector.domparser
+package com.github.thetric.iliasdownloader.connector
 
-import com.github.thetric.iliasdownloader.connector.api.IliasService
-import com.github.thetric.iliasdownloader.connector.api.IliasServiceProvider
 import org.jsoup.Jsoup
 import java.io.IOException
 import java.net.URL

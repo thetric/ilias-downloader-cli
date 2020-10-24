@@ -1,10 +1,8 @@
-package com.github.thetric.iliasdownloader.connector.domparser
+package com.github.thetric.iliasdownloader.connector
 
-import com.github.thetric.iliasdownloader.connector.api.IliasItemListener
-import com.github.thetric.iliasdownloader.connector.api.IliasService
-import com.github.thetric.iliasdownloader.connector.api.model.Course
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
-import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
+import com.github.thetric.iliasdownloader.connector.model.Course
+import com.github.thetric.iliasdownloader.connector.model.CourseFile
+import com.github.thetric.iliasdownloader.connector.model.LoginCredentials
 import mu.KotlinLogging
 import org.apache.http.HttpStatus
 import org.jsoup.Connection

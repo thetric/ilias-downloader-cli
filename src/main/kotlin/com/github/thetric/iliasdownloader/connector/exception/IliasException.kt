@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.connector.api.exception
+package com.github.thetric.iliasdownloader.connector.exception
 
 /**
  * Base class for all Ilias exceptions.

@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.connector.api.model
+package com.github.thetric.iliasdownloader.connector.model
 
 data class Course(
     val id: Long,

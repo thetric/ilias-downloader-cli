@@ -1,7 +1,7 @@
-package com.github.thetric.iliasdownloader.connector.api
+package com.github.thetric.iliasdownloader.connector
 
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFolder
+import com.github.thetric.iliasdownloader.connector.model.CourseFile
+import com.github.thetric.iliasdownloader.connector.model.CourseFolder
 
 /**
  * Visitor for the traversal of the Ilias course items.

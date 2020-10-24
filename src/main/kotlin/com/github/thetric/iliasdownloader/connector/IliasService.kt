@@ -1,8 +1,8 @@
-package com.github.thetric.iliasdownloader.connector.api
+package com.github.thetric.iliasdownloader.connector
 
-import com.github.thetric.iliasdownloader.connector.api.model.Course
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
-import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
+import com.github.thetric.iliasdownloader.connector.model.Course
+import com.github.thetric.iliasdownloader.connector.model.CourseFile
+import com.github.thetric.iliasdownloader.connector.model.LoginCredentials
 import java.io.IOException
 import java.io.InputStream
 
@@ -50,7 +50,7 @@ interface IliasService : AutoCloseable {
      *
      * @param file [CourseFile] to download
      * @return [InputStream] content of the file
-     * @see com.github.thetric.iliasdownloader.connector.api.exception.IliasException
+     * @see com.github.thetric.iliasdownloader.connector.exception.IliasException
      */
     @Throws(IOException::class)
     fun getContentAsStream(file: CourseFile): InputStream

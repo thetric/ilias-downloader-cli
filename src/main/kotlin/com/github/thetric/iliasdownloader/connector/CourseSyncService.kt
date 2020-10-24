@@ -1,13 +1,12 @@
-package com.github.thetric.iliasdownloader.connector.domparser
+package com.github.thetric.iliasdownloader.connector
 
 import com.github.sardine.DavResource
 import com.github.sardine.Sardine
 import com.github.sardine.SardineFactory
-import com.github.thetric.iliasdownloader.connector.api.IliasItemListener
-import com.github.thetric.iliasdownloader.connector.api.model.Course
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFolder
-import com.github.thetric.iliasdownloader.connector.api.model.LoginCredentials
+import com.github.thetric.iliasdownloader.connector.model.Course
+import com.github.thetric.iliasdownloader.connector.model.CourseFile
+import com.github.thetric.iliasdownloader.connector.model.CourseFolder
+import com.github.thetric.iliasdownloader.connector.model.LoginCredentials
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.ZoneId

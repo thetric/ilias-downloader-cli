@@ -1,11 +1,11 @@
 package com.github.thetric.iliasdownloader.cli
 
-import com.github.thetric.iliasdownloader.connector.api.IliasItemListener
-import com.github.thetric.iliasdownloader.connector.api.IliasService
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFile
-import com.github.thetric.iliasdownloader.connector.api.model.CourseFolder
-import com.github.thetric.iliasdownloader.connector.api.model.IliasItem
-import com.github.thetric.iliasdownloader.connector.domparser.IliasHttpException
+import com.github.thetric.iliasdownloader.connector.IliasItemListener
+import com.github.thetric.iliasdownloader.connector.IliasService
+import com.github.thetric.iliasdownloader.connector.model.CourseFile
+import com.github.thetric.iliasdownloader.connector.model.CourseFolder
+import com.github.thetric.iliasdownloader.connector.model.IliasItem
+import com.github.thetric.iliasdownloader.connector.IliasHttpException
 import mu.KotlinLogging
 import java.nio.file.Files
 import java.nio.file.Path

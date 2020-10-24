@@ -1,4 +1,4 @@
-package com.github.thetric.iliasdownloader.connector.api.model
+package com.github.thetric.iliasdownloader.connector.model
 
 /**
  * Base interface for all Ilias items.

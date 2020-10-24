@@ -1,6 +1,6 @@
-package com.github.thetric.iliasdownloader.connector.domparser
+package com.github.thetric.iliasdownloader.connector
 
-import com.github.thetric.iliasdownloader.connector.api.model.Course
+import com.github.thetric.iliasdownloader.connector.model.Course
 import org.jsoup.nodes.Element
 
 internal class IliasItemParser(
