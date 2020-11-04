@@ -43,6 +43,7 @@ internal class WebIliasService(
             .followRedirects(true)
             .execute()
         checkResponse(loginPage, response)
+        log.debug { "Login response location ${response.url()}" }
         cookies.putAll(response.cookies())
         log.info { "Login at $loginPage succeeded " }
         courseSyncService.login(loginCredentials)
@@ -64,7 +65,7 @@ internal class WebIliasService(
         val response = Jsoup.connect(logoutPage).execute()
         clearCookies()
         checkResponse(logoutPage, response)
-        log.info { "Logout at ${logoutPage}succeeded" }
+        log.info { "Logout at $logoutPage succeeded" }
     }
 
     override fun getJoinedCourses(): Collection<Course> {
