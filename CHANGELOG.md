@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.5](https://github.com/thetric/ilias-downloader-cli/compare/v4.0.4...v4.0.5) (2020-11-04)
+
+
+### Bug Fixes
+
+* **connector:** improve debug log for login ([0500ee2](https://github.com/thetric/ilias-downloader-cli/commit/0500ee2b41a95ea049173bc6d86a573db7a18e59))
+* **logging:** include jansi to fix color output under windows ([e5518d8](https://github.com/thetric/ilias-downloader-cli/commit/e5518d8b5fa63d5ed6592f79743a4353e7a20d7a))
+
 ### [4.0.4](https://github.com/thetric/ilias-downloader-cli/compare/v4.0.3...v4.0.4) (2020-10-24)
 
 
