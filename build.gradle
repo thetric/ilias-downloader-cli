@@ -25,7 +25,7 @@ dependencies {
     runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
 
     // store settings as JSON
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1'
 
     // DOM parser deps
     implementation 'org.jsoup:jsoup:1.13.1'
