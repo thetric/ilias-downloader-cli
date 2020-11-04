@@ -8,7 +8,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>%highlight(%msg) %n</pattern>
+            <pattern>%highlight(%msg)%n</pattern>
         </encoder>
     </appender>
     <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
@@ -20,7 +20,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>[%thread] %-5level %logger{15} - %msg%n</pattern>
+            <pattern>%-5level %logger{15} - %msg%n</pattern>
         </encoder>
     </appender>
     <root level="INFO">
