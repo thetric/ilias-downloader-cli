@@ -19,10 +19,13 @@ java -jar ilias-downloader-cli-$VERSION.jar <CLI options>
  -d,--dir <Directory>   Directory for the sync (required)
 
 # optional
- -c,--select-courses    show dialog to select courses to sync
- -s,--max-size <arg>    size limit in MiB per file download (exclusive)
+ -c,--select-courses    show dialog to select courses to sync. Your choice will be saved.
+ -s,--max-size <arg>    size limit in MiB per file download (exclusive). Your choice will be saved.
 ```
 
 ## Debugging
 
-For more debug output add `-Dlogback.configurationFile=logback-debug.xml` to the command line.
+For more debug output add `-Dlogback.configurationFile=logback-debug.xml` to the command line:
+```sh
+java -jar -Dlogback.configurationFile=logback-debug.xml ilias-downloader-cli-VERSION.jar <CLI options>
+```
