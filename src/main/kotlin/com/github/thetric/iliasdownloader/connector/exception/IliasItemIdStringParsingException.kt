@@ -1,6 +1,4 @@
-package com.github.thetric.iliasdownloader.connector
-
-import com.github.thetric.iliasdownloader.connector.exception.IliasException
+package com.github.thetric.iliasdownloader.connector.exception
 
 /**
  * Indicates an error when parsing an Ilias item ID string.

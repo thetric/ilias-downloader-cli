@@ -17,11 +17,12 @@ private const val COURSE_SELECTOR = "a[href*='_crs_'].il_ContainerItemTitle"
 internal class WebIliasService(
     private val itemParser: IliasItemParser,
     private val courseSyncService: CourseSyncService,
-    iliasBaseUrl: String, clientId: String,
+    iliasBaseUrl: String,
+    private val loginFormInformation: LoginFormInformation,
     private val courseOverview: String
 ) : IliasService {
     private val loginPage =
-        "${iliasBaseUrl}ilias.php?lang=en&client_id=${clientId}&cmd=post&cmdClass=ilstartupgui&cmdNode=yc" +
+        "${iliasBaseUrl}ilias.php?lang=en&client_id=${loginFormInformation.clientId}&cmd=post&cmdClass=ilstartupgui&cmdNode=yc" +
             "&baseClass=ilStartUpGUI&rtoken="
     private val logoutPage = "${iliasBaseUrl}logout.php"
     private val log = KotlinLogging.logger {}
@@ -36,10 +37,9 @@ internal class WebIliasService(
         log.info { "Logging in at $loginPage" }
         val response = Jsoup.connect(loginPage)
             .method(Connection.Method.POST)
-            .data("username", loginCredentials.userName)
-            .data("password", loginCredentials.password)
-            // magic string to make the login work
-            .data("cmd[doStandardAuthentication]", "Login")
+            .data(loginFormInformation.userNameFieldName, loginCredentials.userName)
+            .data(loginFormInformation.passwordFieldName, loginCredentials.password)
+            .data(loginFormInformation.hiddenValues)
             .followRedirects(true)
             .execute()
         checkResponse(loginPage, response)
