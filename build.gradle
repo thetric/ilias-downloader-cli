@@ -23,7 +23,7 @@ dependencies {
     // logging libs
     implementation 'io.github.microutils:kotlin-logging-jvm:2.0.3'
     runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
-    runtimeOnly 'org.fusesource.jansi:jansi:2.0.1'
+    runtimeOnly 'org.fusesource.jansi:jansi:2.3.1'
 
     // store settings as JSON
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1'
