@@ -1,5 +1,6 @@
 package com.github.thetric.iliasdownloader.connector
 
+import com.github.thetric.iliasdownloader.connector.exception.IliasItemIdStringParsingException
 import com.github.thetric.iliasdownloader.connector.model.Course
 import org.jsoup.nodes.Element
 
